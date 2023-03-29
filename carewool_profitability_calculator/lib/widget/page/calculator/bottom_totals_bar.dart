@@ -59,7 +59,7 @@ class _BottomTotalBarState extends State<BottomTotalBar> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: ElevatedButton(
                 onPressed: () {},
                 child: const Text('Save'),
@@ -68,11 +68,9 @@ class _BottomTotalBarState extends State<BottomTotalBar> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: ElevatedButton(
-                onPressed: () {
-                  widget.formKey.currentState!.reset();
-                },
+                onPressed: () => widget.formKey.currentState!.reset(),
                 child: const Text('Reset'),
               ),
             ),

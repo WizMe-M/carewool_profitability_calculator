@@ -7,6 +7,7 @@ class RubleInput extends StatelessWidget {
       required this.validator,
       this.textInputAction = TextInputAction.next,
       this.focusNode,
+      this.autofocus = false,
       Key? key})
       : super(key: key);
 
@@ -15,6 +16,7 @@ class RubleInput extends StatelessWidget {
   final TextInputAction textInputAction;
   final String? Function(String?) validator;
   final FocusNode? focusNode;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class RubleInput extends StatelessWidget {
       focusNode: focusNode,
       textInputAction: textInputAction,
       validator: validator,
+      autofocus: autofocus,
     );
   }
 }
