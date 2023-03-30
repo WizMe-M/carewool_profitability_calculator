@@ -12,10 +12,10 @@ class CalcAppBar extends AppBar {
   final Event titleResetEvent;
 
   @override
-  State<CalcAppBar> createState() => _TopTitleAppBarState();
+  State<CalcAppBar> createState() => _CalcAppBarState();
 }
 
-class _TopTitleAppBarState extends State<CalcAppBar> {
+class _CalcAppBarState extends State<CalcAppBar> {
   static const String defaultTitle = 'Калькулятор себестоимости';
 
   String? title;
