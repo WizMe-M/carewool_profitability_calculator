@@ -1,5 +1,5 @@
 import 'package:carewool_profitability_calculator/widget/page/calculator/bottom_totals_bar.dart';
-import 'package:carewool_profitability_calculator/widget/page/calculator/calc_form_widget.dart';
+import 'package:carewool_profitability_calculator/widget/page/calculator/form/calc_form.dart';
 import 'package:carewool_profitability_calculator/widget/page/calculator/change_name_widget.dart';
 import 'package:carewool_profitability_calculator/widget/page/calculator/top_title_bar.dart';
 import 'package:carewool_profitability_calculator/widget/util/space.dart';
@@ -38,7 +38,7 @@ class CalculatorPage extends StatelessWidget {
                       titleResetEvent: titleResetEvent,
                     ),
                     const Space(16),
-                    CalcFormWidget(
+                    CalcForm(
                       formKey: _formKey,
                       formChangedEvent: _formChangedEvent,
                     ),

@@ -2,8 +2,8 @@ import 'package:carewool_profitability_calculator/model/number_controller.dart';
 import 'package:decimal/decimal.dart';
 import 'package:flutter/cupertino.dart';
 
-class InputModel {
-  InputModel({required this.label});
+class InputViewModel {
+  InputViewModel({required this.label});
 
   final String label;
   final _numberController = NumberController();
