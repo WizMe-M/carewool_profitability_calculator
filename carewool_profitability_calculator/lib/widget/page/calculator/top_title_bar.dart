@@ -1,21 +1,21 @@
 import 'package:event/event.dart';
 import 'package:flutter/material.dart';
 
-class TopTitleBar extends StatefulWidget {
-  const TopTitleBar({
-    Key? key,
+class CalcAppBar extends AppBar {
+  CalcAppBar({
     required this.titleChangeEvent,
     required this.titleResetEvent,
-  }) : super(key: key);
+    super.key,
+  });
 
   final Event<Value<String>> titleChangeEvent;
   final Event titleResetEvent;
 
   @override
-  State<TopTitleBar> createState() => _TopTitleBarState();
+  State<CalcAppBar> createState() => _TopTitleAppBarState();
 }
 
-class _TopTitleBarState extends State<TopTitleBar> {
+class _TopTitleAppBarState extends State<CalcAppBar> {
   static const String defaultTitle = 'Калькулятор себестоимости';
 
   String? title;
@@ -39,21 +39,8 @@ class _TopTitleBarState extends State<TopTitleBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).colorScheme.inversePrimary,
-      child: SizedBox(
-        width: double.infinity,
-        height: 64,
-        child: Center(
-          child: Text(
-            currentTitle,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
+    return AppBar(
+      title: Text(currentTitle),
     );
   }
 }
