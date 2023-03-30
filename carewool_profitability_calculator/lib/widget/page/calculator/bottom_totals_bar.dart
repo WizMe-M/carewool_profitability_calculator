@@ -42,14 +42,22 @@ class _BottomTotalBarState extends State<BottomTotalBar> {
           Padding(
             padding: const EdgeInsets.only(left: 32),
             child: SizedBox(
-              width: 100,
+              width: 140,
               child: Row(
                 children: [
-                  const Text('Итого:'),
+                  const Text(
+                    'Итого:',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
                   const Space(4),
                   Text(
                     '$_total₽',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
@@ -57,16 +65,7 @@ class _BottomTotalBarState extends State<BottomTotalBar> {
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: ElevatedButton(
-                onPressed: () {},
-                child: const Text('Save'),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 32),
               child: ElevatedButton(
                 onPressed: () => widget.formKey.currentState!.reset(),
                 child: const Text('Reset'),
