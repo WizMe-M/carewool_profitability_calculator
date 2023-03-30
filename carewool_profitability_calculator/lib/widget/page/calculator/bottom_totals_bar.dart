@@ -27,9 +27,7 @@ class _BottomTotalBarState extends State<BottomTotalBar> {
   @override
   void initState() {
     super.initState();
-    if (widget.recountEvent.subscriberCount > 0) {
-      widget.recountEvent.unsubscribe(recount);
-    }
+    widget.recountEvent.unsubscribeAll();
     widget.recountEvent.subscribe(recount);
   }
 

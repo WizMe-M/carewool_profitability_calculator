@@ -1,5 +1,8 @@
 import 'package:carewool_profitability_calculator/widget/page/calculator/bottom_totals_bar.dart';
 import 'package:carewool_profitability_calculator/widget/page/calculator/calc_form_widget.dart';
+import 'package:carewool_profitability_calculator/widget/page/calculator/change_name_widget.dart';
+import 'package:carewool_profitability_calculator/widget/page/calculator/top_title_bar.dart';
+import 'package:carewool_profitability_calculator/widget/util/space.dart';
 import 'package:decimal/decimal.dart';
 import 'package:event/event.dart';
 import 'package:flutter/material.dart';
@@ -9,17 +12,19 @@ class CalculatorPage extends StatelessWidget {
 
   final _formKey = GlobalKey<FormState>();
   final _formChangedEvent = Event<Value<Decimal>>();
+  final titleChangeEvent = Event<Value<String>>();
+  final titleResetEvent = Event();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Калькулятор себестоимости'),
-      ),
       body: SafeArea(
         child: Column(
           children: [
+            TopTitleBar(
+              titleChangeEvent: titleChangeEvent,
+              titleResetEvent: titleResetEvent,
+            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
@@ -27,9 +32,18 @@ class CalculatorPage extends StatelessWidget {
                     vertical: 12,
                     horizontal: 28,
                   ),
-                  child: CalcFormWidget(
-                    formKey: _formKey,
-                    formChangedEvent: _formChangedEvent,
+                  child: Column(
+                    children: [
+                      ChangeNameWidget(
+                        titleChangeEvent: titleChangeEvent,
+                        titleResetEvent: titleResetEvent,
+                      ),
+                      const Space(16),
+                      CalcFormWidget(
+                        formKey: _formKey,
+                        formChangedEvent: _formChangedEvent,
+                      ),
+                    ],
                   ),
                 ),
               ),
