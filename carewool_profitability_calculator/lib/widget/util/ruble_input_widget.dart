@@ -5,7 +5,7 @@ class RubleInput extends StatelessWidget {
       {required this.controller,
       required this.labelText,
       required this.validator,
-      this.textInputAction = TextInputAction.next,
+      this.textInputAction,
       this.focusNode,
       this.autofocus = false,
       Key? key})
@@ -13,7 +13,7 @@ class RubleInput extends StatelessWidget {
 
   final TextEditingController controller;
   final String labelText;
-  final TextInputAction textInputAction;
+  final TextInputAction? textInputAction;
   final String? Function(String?) validator;
   final FocusNode? focusNode;
   final bool autofocus;
@@ -24,11 +24,12 @@ class RubleInput extends StatelessWidget {
       controller: controller,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15)),
-          ),
-          label: Text(labelText),
-          suffixIcon: const Icon(Icons.currency_ruble)),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        label: Text(labelText),
+        suffixIcon: const Icon(Icons.currency_ruble),
+      ),
       focusNode: focusNode,
       textInputAction: textInputAction,
       validator: validator,

@@ -1,27 +1,51 @@
+import 'package:carewool_profitability_calculator/model/form_block.dart';
+import 'package:carewool_profitability_calculator/model/input_model.dart';
 import 'package:decimal/decimal.dart';
-import 'package:flutter/material.dart';
 
 class CalcForm {
-  final capController = TextEditingController();
-  final dispenserController = TextEditingController();
-  final bottleController = TextEditingController();
-  final stickerController = TextEditingController();
-  final boxController = TextEditingController();
-  final fillingController = TextEditingController();
-  final pastingController = TextEditingController();
+  CalcForm._({required this.blocks});
+
+  final List<FormBlock> blocks;
+
+  factory CalcForm() {
+    return CalcForm._(blocks: [
+      FormBlock(
+        title: 'Тара',
+        inputs: [
+          InputModel(label: 'Крышка'),
+          InputModel(label: 'Дозатор'),
+          InputModel(label: 'Флакон'),
+        ],
+      ),
+      FormBlock(
+        title: 'Упаковка',
+        inputs: [
+          InputModel(label: 'Этикетка'),
+          InputModel(label: 'Коробка'),
+        ],
+      ),
+      FormBlock(
+        title: 'Производство',
+        inputs: [
+          InputModel(label: 'Розлив'),
+          InputModel(label: 'Обклейка'),
+        ],
+      ),
+      FormBlock(
+        title: 'Логистика',
+        inputs: [
+          InputModel(label: 'Логистика от пр-ва'),
+          InputModel(label: 'Логистика до пр-ва'),
+        ],
+      ),
+    ]);
+  }
 
   Decimal sumValues() {
     var sum = Decimal.zero;
-    sum += _decimalFromString(capController.text);
-    sum += _decimalFromString(dispenserController.text);
-    sum += _decimalFromString(bottleController.text);
-    sum += _decimalFromString(stickerController.text);
-    sum += _decimalFromString(boxController.text);
-    sum += _decimalFromString(fillingController.text);
-    sum += _decimalFromString(pastingController.text);
+    for (var block in blocks) {
+      sum += block.sumValues();
+    }
     return sum;
   }
-
-  static Decimal _decimalFromString(String s) =>
-      Decimal.tryParse(s) ?? Decimal.zero;
 }
