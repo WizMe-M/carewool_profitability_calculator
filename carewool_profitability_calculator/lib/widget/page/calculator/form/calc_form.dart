@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 
 class CalcForm extends StatelessWidget {
   CalcForm({
-    Key? key,
+    super.key,
     required this.formKey,
     required this.formChangedEvent,
-  }) : super(key: key);
+  });
 
   final CalcFormViewModel viewmodel = CalcFormViewModel();
   final GlobalKey<FormState> formKey;

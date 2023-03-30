@@ -8,8 +8,7 @@ class RubleInput extends StatelessWidget {
       this.textInputAction,
       this.focusNode,
       this.autofocus = false,
-      Key? key})
-      : super(key: key);
+      super.key});
 
   final TextEditingController controller;
   final String labelText;

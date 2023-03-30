@@ -41,6 +41,7 @@ class _CalcAppBarState extends State<CalcAppBar> {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(currentTitle),
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
     );
   }
 }

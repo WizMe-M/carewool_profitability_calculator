@@ -9,7 +9,7 @@ import 'package:event/event.dart';
 import 'package:flutter/material.dart';
 
 class CalculatorPage extends StatelessWidget {
-  CalculatorPage({Key? key}) : super(key: key);
+  CalculatorPage({super.key});
 
   final _formKey = GlobalKey<FormState>();
   final _formChangedEvent = Event<Value<Decimal>>();

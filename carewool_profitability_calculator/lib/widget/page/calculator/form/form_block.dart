@@ -3,7 +3,7 @@ import 'package:carewool_profitability_calculator/widget/util/ruble_input_widget
 import 'package:flutter/material.dart';
 
 class FormBlock extends StatelessWidget {
-  const FormBlock({Key? key, required this.viewmodel}) : super(key: key);
+  const FormBlock({super.key, required this.viewmodel});
 
   final FormBlockViewModel viewmodel;
 

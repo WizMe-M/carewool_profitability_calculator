@@ -3,9 +3,11 @@ import 'package:event/event.dart';
 import 'package:flutter/material.dart';
 
 class ChangeNameWidget extends StatefulWidget {
-  const ChangeNameWidget(
-      {Key? key, required this.titleChangeEvent, required this.titleResetEvent})
-      : super(key: key);
+  const ChangeNameWidget({
+    super.key,
+    required this.titleChangeEvent,
+    required this.titleResetEvent,
+  });
 
   final Event<Value<String>> titleChangeEvent;
   final Event titleResetEvent;

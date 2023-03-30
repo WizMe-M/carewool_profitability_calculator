@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 
 class BottomTotalBar extends StatefulWidget {
   const BottomTotalBar({
-    Key? key,
+    super.key,
     required this.recountEvent,
     required this.formKey,
-  }) : super(key: key);
+  });
 
   final Event<Value<Decimal>> recountEvent;
   final GlobalKey<FormState> formKey;

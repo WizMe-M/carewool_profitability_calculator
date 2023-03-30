@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Space extends StatelessWidget {
-  const Space(this.value, {Key? key}) : super(key: key);
+  const Space(this.value, {super.key});
+
   final double value;
 
   @override
