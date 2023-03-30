@@ -26,23 +26,25 @@ class CalculatorPage extends StatelessWidget {
               titleResetEvent: titleResetEvent,
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 28,
-                ),
-                child: Column(
-                  children: [
-                    ChangeNameWidget(
-                      titleChangeEvent: titleChangeEvent,
-                      titleResetEvent: titleResetEvent,
-                    ),
-                    const Space(16),
-                    CalcForm(
-                      formKey: _formKey,
-                      formChangedEvent: _formChangedEvent,
-                    ),
-                  ],
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 28,
+                  ),
+                  child: Column(
+                    children: [
+                      ChangeNameWidget(
+                        titleChangeEvent: titleChangeEvent,
+                        titleResetEvent: titleResetEvent,
+                      ),
+                      const Space(16),
+                      CalcForm(
+                        formKey: _formKey,
+                        formChangedEvent: _formChangedEvent,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

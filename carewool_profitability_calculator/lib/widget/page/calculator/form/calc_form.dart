@@ -24,19 +24,15 @@ class CalcForm extends StatelessWidget {
         formChangedEvent.broadcast(Value(total));
       },
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      child: Expanded(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              children: [
-                ...viewmodel.blocks.map((e) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: FormBlock(viewmodel: e),
-                )),
-              ],
-            ),
-          ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 24),
+        child: Column(
+          children: [
+            ...viewmodel.blocks.map((e) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: FormBlock(viewmodel: e),
+            )),
+          ],
         ),
       ),
     );
