@@ -9,6 +9,7 @@ part 'product.g.dart';
 
 @freezed
 class Product with _$Product {
+  @JsonSerializable(explicitToJson: true)
   factory Product({
     required String name,
     @JsonKey(name: 'creation_date') required DateTime creationDate,

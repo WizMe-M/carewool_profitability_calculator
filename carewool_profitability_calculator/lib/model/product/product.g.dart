@@ -18,5 +18,5 @@ Map<String, dynamic> _$$_ProductToJson(_$_Product instance) =>
     <String, dynamic>{
       'name': instance.name,
       'creation_date': instance.creationDate.toIso8601String(),
-      'parameters': instance.parameters,
+      'parameters': instance.parameters.map((e) => e.toJson()).toList(),
     };
