@@ -2,14 +2,12 @@ import 'package:carewool_profitability_calculator/viewmodel/form/product_calc_fo
 import 'package:carewool_profitability_calculator/widget/util/space.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
 
 class BottomTotalBar extends StatelessWidget {
-  final ProductCalcForm form;
+  final ProductCalcForm _form = GetIt.I.get<ProductCalcForm>();
 
-  const BottomTotalBar({
-    required this.form,
-    super.key,
-  });
+  BottomTotalBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +33,7 @@ class BottomTotalBar extends StatelessWidget {
                   Observer(
                     builder: (context) {
                       return Text(
-                        '${form.total}₽',
+                        '${_form.total}₽',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -51,7 +49,7 @@ class BottomTotalBar extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: ElevatedButton(
-                onPressed: () => form.reset(),
+                onPressed: () => _form.reset(),
                 child: const Text('Reset'),
               ),
             ),
