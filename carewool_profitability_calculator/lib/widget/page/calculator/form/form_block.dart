@@ -1,11 +1,11 @@
-import 'package:carewool_profitability_calculator/viewmodel/form_block_vm.dart';
-import 'package:carewool_profitability_calculator/widget/util/ruble_input_widget.dart';
+import 'package:carewool_profitability_calculator/viewmodel/form/form_block.dart';
+import 'package:carewool_profitability_calculator/widget/page/calculator/form/ruble_input.dart';
 import 'package:flutter/material.dart';
 
-class FormBlock extends StatelessWidget {
-  const FormBlock({super.key, required this.viewmodel});
+class FormBlockWidget extends StatelessWidget {
+  const FormBlockWidget({super.key, required this.viewmodel});
 
-  final FormBlockViewModel viewmodel;
+  final FormBlock viewmodel;
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +26,7 @@ class FormBlock extends StatelessWidget {
               ...viewmodel.inputs.map(
                 (e) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
-                  child: RubleInput(
-                    controller: e.controller,
-                    labelText: e.label,
-                    validator: e.validate,
-                  ),
+                  child: RubleInput(input: e),
                 ),
               )
             ],

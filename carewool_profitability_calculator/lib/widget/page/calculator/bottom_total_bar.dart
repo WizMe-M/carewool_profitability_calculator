@@ -1,35 +1,15 @@
+import 'package:carewool_profitability_calculator/viewmodel/form/product_calc_form.dart';
 import 'package:carewool_profitability_calculator/widget/util/space.dart';
-import 'package:decimal/decimal.dart';
-import 'package:event/event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
-class BottomTotalBar extends StatefulWidget {
+class BottomTotalBar extends StatelessWidget {
+  final ProductCalcForm form;
+
   const BottomTotalBar({
+    required this.form,
     super.key,
-    required this.recountEvent,
-    required this.formKey,
   });
-
-  final Event<Value<Decimal>> recountEvent;
-  final GlobalKey<FormState> formKey;
-
-  @override
-  State<BottomTotalBar> createState() => _BottomTotalBarState();
-}
-
-class _BottomTotalBarState extends State<BottomTotalBar> {
-  Decimal _total = Decimal.zero;
-
-  void recount(Value<Decimal>? args) {
-    setState(() => _total = args!.value);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    widget.recountEvent.unsubscribeAll();
-    widget.recountEvent.subscribe(recount);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,12 +32,16 @@ class _BottomTotalBarState extends State<BottomTotalBar> {
                     ),
                   ),
                   const Space(4),
-                  Text(
-                    '$_total₽',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Observer(
+                    builder: (context) {
+                      return Text(
+                        '${form.total}₽',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -67,7 +51,7 @@ class _BottomTotalBarState extends State<BottomTotalBar> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
               child: ElevatedButton(
-                onPressed: () => widget.formKey.currentState!.reset(),
+                onPressed: () => form.reset(),
                 child: const Text('Reset'),
               ),
             ),
