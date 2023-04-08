@@ -12,39 +12,40 @@ void main() {
 }
 
 void _registerDependencies() {
-  GetIt.instance.registerSingleton<ProductCalcForm>(
-    ProductCalcForm(
-      blocks: [
-        FormBlock(
-          title: 'Тара',
-          inputs: [
-            Input(label: 'Крышка'),
-            Input(label: 'Дозатор'),
-            Input(label: 'Флакон'),
-          ],
-        ),
-        FormBlock(
-          title: 'Упаковка',
-          inputs: [
-            Input(label: 'Этикетка'),
-            Input(label: 'Коробка'),
-          ],
-        ),
-        FormBlock(
-          title: 'Производство',
-          inputs: [
-            Input(label: 'Розлив'),
-            Input(label: 'Обклейка'),
-          ],
-        ),
-        FormBlock(
-          title: 'Логистика',
-          inputs: [
-            Input(label: 'Логистика от пр-ва'),
-            Input(label: 'Логистика до пр-ва'),
-          ],
-        ),
-      ],
-    )..init(),
-  );
+  GetIt.instance
+    .registerSingleton<ProductCalcForm>(
+      ProductCalcForm(
+        blocks: [
+          FormBlock(
+            title: 'Тара',
+            inputs: [
+              Input(label: 'Крышка'),
+              Input(label: 'Дозатор'),
+              Input(label: 'Флакон'),
+            ],
+          ),
+          FormBlock(
+            title: 'Упаковка',
+            inputs: [
+              Input(label: 'Этикетка'),
+              Input(label: 'Коробка'),
+            ],
+          ),
+          FormBlock(
+            title: 'Производство',
+            inputs: [
+              Input(label: 'Розлив'),
+              Input(label: 'Обклейка'),
+            ],
+          ),
+          FormBlock(
+            title: 'Логистика',
+            inputs: [
+              Input(label: 'Логистика от пр-ва'),
+              Input(label: 'Логистика до пр-ва'),
+            ],
+          ),
+        ],
+      )..init(),
+    );
 }

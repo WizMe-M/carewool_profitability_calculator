@@ -13,7 +13,13 @@ abstract class ProductCalcFormBase with Store {
   final GlobalKey<FormState> key = GlobalKey();
   final List<FormBlock> blocks;
 
-  late List<Input> _allInputs;
+  late List<Input> allInputs;
+
+  @observable
+  bool isApplied = false;
+
+  @observable
+  String productName = '';
 
   @observable
   double _totalSum = 0;
@@ -21,31 +27,51 @@ abstract class ProductCalcFormBase with Store {
   ProductCalcFormBase({required this.blocks});
 
   @computed
+  String get name => productName.trim();
+
+  @computed
   String get total => _totalSum.toStringAsFixed(2);
+
+  @computed
+  bool get canBeSaved => name.isNotEmpty && _totalSum > 0;
+
+  @computed
+  String get buttonText => isApplied ? 'Изменить' : 'Сохранить';
 
   @action
   void calculateTotal() {
     _totalSum = sum(blocks.map<double>((e) => e.calculateSum()));
   }
 
+  @action
+  void reset() {
+    key.currentState!.reset();
+    productName = '';
+    for (var input in allInputs) {
+      input.clear();
+    }
+  }
+
+  @action
+  void toggleButton() {
+    if (name.isEmpty) {
+      return;
+    }
+
+    isApplied = !isApplied;
+  }
+
   void init() {
-    _allInputs = blocks.fold(
+    allInputs = blocks.fold(
       [],
       (inputList, block) => inputList..addAll(block.inputs),
     );
 
-    for (var input in _allInputs) {
+    for (var input in allInputs) {
       input.setupReaction();
     }
 
-    Rx.merge(_allInputs.map((input) => input.stream))
+    Rx.merge(allInputs.map((input) => input.stream))
         .listen((_) => calculateTotal());
-  }
-
-  void reset() {
-    key.currentState!.reset();
-    for (var input in _allInputs) {
-      input.clear();
-    }
   }
 }

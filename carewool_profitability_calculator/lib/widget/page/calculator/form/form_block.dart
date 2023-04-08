@@ -3,9 +3,9 @@ import 'package:carewool_profitability_calculator/widget/page/calculator/form/ru
 import 'package:flutter/material.dart';
 
 class FormBlockWidget extends StatelessWidget {
-  const FormBlockWidget({super.key, required this.viewmodel});
+  const FormBlockWidget({super.key, required this.block});
 
-  final FormBlock viewmodel;
+  final FormBlock block;
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +18,12 @@ class FormBlockWidget extends StatelessWidget {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            label: Text(viewmodel.title)),
+            label: Text(block.title)),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Column(
             children: [
-              ...viewmodel.inputs.map(
+              ...block.inputs.map(
                 (e) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   child: RubleInput(input: e),

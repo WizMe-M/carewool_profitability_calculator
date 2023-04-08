@@ -1,46 +1,38 @@
-import 'package:event/event.dart';
+import 'package:carewool_profitability_calculator/viewmodel/form/product_calc_form.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class CalcAppBar extends AppBar {
-  CalcAppBar({
-    required this.titleChangeEvent,
-    required this.titleResetEvent,
-    super.key,
-  });
-
-  final Event<Value<String>> titleChangeEvent;
-  final Event titleResetEvent;
+  CalcAppBar({super.key});
 
   @override
   State<CalcAppBar> createState() => _CalcAppBarState();
 }
 
 class _CalcAppBarState extends State<CalcAppBar> {
-  static const String defaultTitle = 'Калькулятор себестоимости';
-
-  String? title;
-
-  String get currentTitle => title ?? defaultTitle;
-
-  void onTitleSet(String value) => setState(() => title = value);
-
-  void onTitleReset() => setState(() => title = null);
-
-  @override
-  void initState() {
-    super.initState();
-
-    widget.titleResetEvent.unsubscribeAll();
-    widget.titleChangeEvent.unsubscribeAll();
-
-    widget.titleResetEvent.subscribe((_) => onTitleReset());
-    widget.titleChangeEvent.subscribe((args) => onTitleSet(args!.value));
-  }
+  final ProductCalcForm _form = GetIt.I.get<ProductCalcForm>();
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(currentTitle),
+      title: const Text(
+        'Калькулятор себестоимости',
+        style: TextStyle(fontSize: 18),
+      ),
+      actions: [
+        PopupMenuButton(
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              onTap: _form.reset,
+              height: 30,
+              child: const ListTile(
+                title: Text('Reset form'),
+                leading: Icon(Icons.clear),
+              ),
+            ),
+          ],
+        )
+      ],
       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
     );
   }

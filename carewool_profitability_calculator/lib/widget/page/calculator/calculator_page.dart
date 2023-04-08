@@ -1,25 +1,16 @@
 import 'package:carewool_profitability_calculator/widget/nav/side_bar.dart';
 import 'package:carewool_profitability_calculator/widget/page/calculator/bottom_total_bar.dart';
 import 'package:carewool_profitability_calculator/widget/page/calculator/form/calc_form.dart';
-import 'package:carewool_profitability_calculator/widget/page/calculator/change_name_widget.dart';
 import 'package:carewool_profitability_calculator/widget/page/calculator/top_title_bar.dart';
-import 'package:carewool_profitability_calculator/widget/util/space.dart';
-import 'package:event/event.dart';
 import 'package:flutter/material.dart';
 
 class CalculatorPage extends StatelessWidget {
-  final titleChangeEvent = Event<Value<String>>();
-  final titleResetEvent = Event();
-
-  CalculatorPage({super.key});
+  const CalculatorPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CalcAppBar(
-        titleChangeEvent: titleChangeEvent,
-        titleResetEvent: titleResetEvent,
-      ),
+      appBar: CalcAppBar(),
       drawer: const SideBar(),
       body: SafeArea(
         child: Column(
@@ -31,16 +22,7 @@ class CalculatorPage extends StatelessWidget {
                     vertical: 12,
                     horizontal: 28,
                   ),
-                  child: Column(
-                    children: [
-                      ChangeNameWidget(
-                        titleChangeEvent: titleChangeEvent,
-                        titleResetEvent: titleResetEvent,
-                      ),
-                      const Space(16),
-                      CalcFormWidget(),
-                    ],
-                  ),
+                  child: CalcFormWidget(),
                 ),
               ),
             ),

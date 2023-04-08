@@ -1,3 +1,5 @@
+import 'package:carewool_profitability_calculator/entity/parameter/parameter.dart';
+import 'package:carewool_profitability_calculator/entity/product/product.dart';
 import 'package:carewool_profitability_calculator/viewmodel/form/product_calc_form.dart';
 import 'package:carewool_profitability_calculator/widget/util/space.dart';
 import 'package:flutter/material.dart';
@@ -11,51 +13,82 @@ class BottomTotalBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 64,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 32),
-            child: SizedBox(
-              width: 140,
-              child: Row(
-                children: [
-                  const Text(
-                    'Итого:',
-                    style: TextStyle(
-                      fontSize: 18,
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey,
+            spreadRadius: 3,
+            blurRadius: 4,
+          ),
+        ],
+      ),
+      child: SizedBox(
+        width: double.infinity,
+        height: 64,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 32),
+              child: SizedBox(
+                width: 140,
+                child: Row(
+                  children: [
+                    const Text(
+                      'Итого:',
+                      style: TextStyle(
+                        fontSize: 18,
+                      ),
                     ),
-                  ),
-                  const Space(4),
-                  Observer(
-                    builder: (context) {
-                      return Text(
+                    const Space(4),
+                    Observer(
+                      builder: (context) => Text(
                         '${_form.total}₽',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                      );
-                    },
-                  ),
-                ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: ElevatedButton(
-                onPressed: () => _form.reset(),
-                child: const Text('Reset'),
+            const Spacer(),
+            SizedBox(
+              width: 180,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28),
+                child: ElevatedButton(
+                  onPressed: saveProduct,
+                  child: const Text('Save'),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  void saveProduct() {
+    if (!_form.canBeSaved){
+      return;
+    }
+
+    var product = Product(
+      name: _form.name,
+      creationDate: DateTime.now(),
+      parameters: [
+        ..._form.allInputs
+            .where((input) => input.value > 0)
+            .map((e) => Parameter(name: e.label, cost: e.value)),
+      ],
+    );
+
+    var json = product.toJson();
+    debugPrint(json.toString());
   }
 }
