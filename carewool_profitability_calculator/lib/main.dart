@@ -1,6 +1,8 @@
+import 'package:carewool_profitability_calculator/database/application_database.dart';
 import 'package:carewool_profitability_calculator/viewmodel/form/form_block.dart';
 import 'package:carewool_profitability_calculator/viewmodel/form/input.dart';
 import 'package:carewool_profitability_calculator/viewmodel/form/product_calc_form.dart';
+import 'package:carewool_profitability_calculator/viewmodel/repo/product_repo.dart';
 import 'package:carewool_profitability_calculator/widget/app.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -11,10 +13,15 @@ void main() {
   runApp(const App());
 }
 
-void _registerDependencies() {
+void _registerDependencies() async {
   GetIt.instance
-    .registerSingleton<ProductCalcForm>(
-      ProductCalcForm(
+    ..registerSingletonAsync<ApplicationDatabase>(
+        () async => ApplicationDatabase().init())
+    ..registerSingletonWithDependencies<ProductRepoStore>(() {
+      return ProductRepoStore()..init();
+    }, dependsOn: [ApplicationDatabase])
+    ..registerSingleton<ProductFormStore>(
+      ProductFormStore(
         blocks: [
           FormBlock(
             title: 'Тара',

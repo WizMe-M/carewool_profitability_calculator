@@ -8,36 +8,36 @@ part of 'product_calc_form.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$ProductCalcForm on ProductCalcFormBase, Store {
+mixin _$ProductFormStore on ProductFormStoreBase, Store {
   Computed<String>? _$nameComputed;
 
   @override
   String get name => (_$nameComputed ??=
-          Computed<String>(() => super.name, name: 'ProductCalcFormBase.name'))
+          Computed<String>(() => super.name, name: 'ProductFormStoreBase.name'))
       .value;
   Computed<String>? _$totalComputed;
 
   @override
   String get total => (_$totalComputed ??= Computed<String>(() => super.total,
-          name: 'ProductCalcFormBase.total'))
+          name: 'ProductFormStoreBase.total'))
       .value;
   Computed<bool>? _$canBeSavedComputed;
 
   @override
   bool get canBeSaved =>
       (_$canBeSavedComputed ??= Computed<bool>(() => super.canBeSaved,
-              name: 'ProductCalcFormBase.canBeSaved'))
+              name: 'ProductFormStoreBase.canBeSaved'))
           .value;
   Computed<String>? _$buttonTextComputed;
 
   @override
   String get buttonText =>
       (_$buttonTextComputed ??= Computed<String>(() => super.buttonText,
-              name: 'ProductCalcFormBase.buttonText'))
+              name: 'ProductFormStoreBase.buttonText'))
           .value;
 
   late final _$isAppliedAtom =
-      Atom(name: 'ProductCalcFormBase.isApplied', context: context);
+      Atom(name: 'ProductFormStoreBase.isApplied', context: context);
 
   @override
   bool get isApplied {
@@ -53,7 +53,7 @@ mixin _$ProductCalcForm on ProductCalcFormBase, Store {
   }
 
   late final _$productNameAtom =
-      Atom(name: 'ProductCalcFormBase.productName', context: context);
+      Atom(name: 'ProductFormStoreBase.productName', context: context);
 
   @override
   String get productName {
@@ -69,7 +69,7 @@ mixin _$ProductCalcForm on ProductCalcFormBase, Store {
   }
 
   late final _$_totalSumAtom =
-      Atom(name: 'ProductCalcFormBase._totalSum', context: context);
+      Atom(name: 'ProductFormStoreBase._totalSum', context: context);
 
   @override
   double get _totalSum {
@@ -84,39 +84,39 @@ mixin _$ProductCalcForm on ProductCalcFormBase, Store {
     });
   }
 
-  late final _$ProductCalcFormBaseActionController =
-      ActionController(name: 'ProductCalcFormBase', context: context);
+  late final _$ProductFormStoreBaseActionController =
+      ActionController(name: 'ProductFormStoreBase', context: context);
 
   @override
   void calculateTotal() {
-    final _$actionInfo = _$ProductCalcFormBaseActionController.startAction(
-        name: 'ProductCalcFormBase.calculateTotal');
+    final _$actionInfo = _$ProductFormStoreBaseActionController.startAction(
+        name: 'ProductFormStoreBase.calculateTotal');
     try {
       return super.calculateTotal();
     } finally {
-      _$ProductCalcFormBaseActionController.endAction(_$actionInfo);
+      _$ProductFormStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void reset() {
-    final _$actionInfo = _$ProductCalcFormBaseActionController.startAction(
-        name: 'ProductCalcFormBase.reset');
+    final _$actionInfo = _$ProductFormStoreBaseActionController.startAction(
+        name: 'ProductFormStoreBase.reset');
     try {
       return super.reset();
     } finally {
-      _$ProductCalcFormBaseActionController.endAction(_$actionInfo);
+      _$ProductFormStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void toggleButton() {
-    final _$actionInfo = _$ProductCalcFormBaseActionController.startAction(
-        name: 'ProductCalcFormBase.toggleButton');
+    final _$actionInfo = _$ProductFormStoreBaseActionController.startAction(
+        name: 'ProductFormStoreBase.toggleButton');
     try {
       return super.toggleButton();
     } finally {
-      _$ProductCalcFormBaseActionController.endAction(_$actionInfo);
+      _$ProductFormStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 

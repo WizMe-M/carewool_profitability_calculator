@@ -1,13 +1,15 @@
 import 'package:carewool_profitability_calculator/entity/parameter/parameter.dart';
 import 'package:carewool_profitability_calculator/entity/product/product.dart';
 import 'package:carewool_profitability_calculator/viewmodel/form/product_calc_form.dart';
+import 'package:carewool_profitability_calculator/viewmodel/repo/product_repo.dart';
 import 'package:carewool_profitability_calculator/widget/util/space.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class BottomTotalBar extends StatelessWidget {
-  final ProductCalcForm _form = GetIt.I.get<ProductCalcForm>();
+  final ProductFormStore _form = GetIt.I.get<ProductFormStore>();
+  final ProductRepoStore _repo = GetIt.I.get<ProductRepoStore>();
 
   BottomTotalBar({super.key});
 
@@ -74,7 +76,7 @@ class BottomTotalBar extends StatelessWidget {
   }
 
   void saveProduct() {
-    if (!_form.canBeSaved){
+    if (!_form.canBeSaved) {
       return;
     }
 
@@ -88,7 +90,6 @@ class BottomTotalBar extends StatelessWidget {
       ],
     );
 
-    var json = product.toJson();
-    debugPrint(json.toString());
+    _repo.save(product);
   }
 }

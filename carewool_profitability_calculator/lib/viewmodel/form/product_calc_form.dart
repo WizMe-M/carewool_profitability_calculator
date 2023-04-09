@@ -7,9 +7,9 @@ import 'package:dfunc/dfunc.dart';
 
 part 'product_calc_form.g.dart';
 
-class ProductCalcForm = ProductCalcFormBase with _$ProductCalcForm;
+class ProductFormStore = ProductFormStoreBase with _$ProductFormStore;
 
-abstract class ProductCalcFormBase with Store {
+abstract class ProductFormStoreBase with Store {
   final GlobalKey<FormState> key = GlobalKey();
   final List<FormBlock> blocks;
 
@@ -24,7 +24,7 @@ abstract class ProductCalcFormBase with Store {
   @observable
   double _totalSum = 0;
 
-  ProductCalcFormBase({required this.blocks});
+  ProductFormStoreBase({required this.blocks});
 
   @computed
   String get name => productName.trim();
@@ -40,7 +40,7 @@ abstract class ProductCalcFormBase with Store {
 
   @action
   void calculateTotal() {
-    _totalSum = sum(blocks.map<double>((e) => e.calculateSum()));
+    _totalSum = sum(allInputs.map<double>((e) => e.value));
   }
 
   @action

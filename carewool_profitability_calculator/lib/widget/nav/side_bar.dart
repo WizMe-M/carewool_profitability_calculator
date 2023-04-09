@@ -1,24 +1,23 @@
+import 'package:carewool_profitability_calculator/viewmodel/repo/product_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
-class SideBar extends StatefulWidget {
-  const SideBar({super.key});
+class SideBar extends StatelessWidget {
+  SideBar({super.key});
 
-  @override
-  State<SideBar> createState() => _SideBarState();
-}
+  final ProductRepoStore _repo = GetIt.I.get<ProductRepoStore>();
 
-class _SideBarState extends State<SideBar> {
   @override
   Widget build(BuildContext context) {
-    return const Drawer(
-      child: Column(
-        children: [
-          Text('Option 1'),
-          Text('Option 2'),
-          Text('Option 3'),
-          Text('Option 4'),
-          Text('Option 5'),
-        ],
+    var list = _repo.products.toList(growable: false);
+    return Drawer(
+      child: SafeArea(
+        child: ListView.builder(
+          itemCount: list.length,
+          itemBuilder: (context, index) => ListTile(
+            title: Text(list[index].name),
+          ),
+        ),
       ),
     );
   }

@@ -10,7 +10,7 @@ class CalcAppBar extends AppBar {
 }
 
 class _CalcAppBarState extends State<CalcAppBar> {
-  final ProductCalcForm _form = GetIt.I.get<ProductCalcForm>();
+  final ProductFormStore _form = GetIt.I.get<ProductFormStore>();
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class CalcFormWidget extends StatelessWidget {
-  final ProductCalcForm _form = GetIt.I.get<ProductCalcForm>();
+  final ProductFormStore _form = GetIt.I.get<ProductFormStore>();
 
   CalcFormWidget({super.key});
 

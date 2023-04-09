@@ -11,7 +11,7 @@ class CalculatorPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CalcAppBar(),
-      drawer: const SideBar(),
+      drawer: SideBar(),
       body: SafeArea(
         child: Column(
           children: [
