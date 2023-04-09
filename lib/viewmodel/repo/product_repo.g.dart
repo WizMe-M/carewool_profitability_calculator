@@ -17,51 +17,52 @@ mixin _$ProductRepoStore on ProductRepoStoreBase, Store {
               name: 'ProductRepoStoreBase.products'))
       .value;
 
-  late final _$_productsSnapshotAtom =
-      Atom(name: 'ProductRepoStoreBase._productsSnapshot', context: context);
+  late final _$productsSnapshotAtom =
+      Atom(name: 'ProductRepoStoreBase.productsSnapshot', context: context);
 
   @override
-  ObservableList<RecordSnapshot<Object?, Object?>> get _productsSnapshot {
-    _$_productsSnapshotAtom.reportRead();
-    return super._productsSnapshot;
+  ObservableList<RecordSnapshot<int, Map<String, dynamic>>>
+      get productsSnapshot {
+    _$productsSnapshotAtom.reportRead();
+    return super.productsSnapshot;
   }
 
   @override
-  set _productsSnapshot(
-      ObservableList<RecordSnapshot<Object?, Object?>> value) {
-    _$_productsSnapshotAtom.reportWrite(value, super._productsSnapshot, () {
-      super._productsSnapshot = value;
+  set productsSnapshot(
+      ObservableList<RecordSnapshot<int, Map<String, dynamic>>> value) {
+    _$productsSnapshotAtom.reportWrite(value, super.productsSnapshot, () {
+      super.productsSnapshot = value;
     });
   }
 
-  late final _$ProductRepoStoreBaseActionController =
-      ActionController(name: 'ProductRepoStoreBase', context: context);
+  late final _$initAsyncAction =
+      AsyncAction('ProductRepoStoreBase.init', context: context);
 
   @override
-  void init() {
-    final _$actionInfo = _$ProductRepoStoreBaseActionController.startAction(
-        name: 'ProductRepoStoreBase.init');
-    try {
-      return super.init();
-    } finally {
-      _$ProductRepoStoreBaseActionController.endAction(_$actionInfo);
-    }
+  Future<void> init() {
+    return _$initAsyncAction.run(() => super.init());
   }
 
+  late final _$saveAsyncAction =
+      AsyncAction('ProductRepoStoreBase.save', context: context);
+
   @override
-  void save(Product product) {
-    final _$actionInfo = _$ProductRepoStoreBaseActionController.startAction(
-        name: 'ProductRepoStoreBase.save');
-    try {
-      return super.save(product);
-    } finally {
-      _$ProductRepoStoreBaseActionController.endAction(_$actionInfo);
-    }
+  Future<void> save(Product product) {
+    return _$saveAsyncAction.run(() => super.save(product));
+  }
+
+  late final _$removeAsyncAction =
+      AsyncAction('ProductRepoStoreBase.remove', context: context);
+
+  @override
+  Future<void> remove(int id) {
+    return _$removeAsyncAction.run(() => super.remove(id));
   }
 
   @override
   String toString() {
     return '''
+productsSnapshot: ${productsSnapshot},
 products: ${products}
     ''';
   }

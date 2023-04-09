@@ -12,24 +12,41 @@ abstract class ProductRepoStoreBase with Store {
   final ApplicationDatabase _db = GetIt.I.get<ApplicationDatabase>();
 
   @observable
-  ObservableList<RecordSnapshot> _productsSnapshot = ObservableList();
+  ObservableList<RecordSnapshot<int, Map<String, dynamic>>> productsSnapshot =
+      ObservableList();
 
   @computed
   ObservableList<Product> get products =>
-      ObservableList.of(_productsSnapshot.map(
-        (snapshot) => Product.fromJson(snapshot.value as Map<String, dynamic>),
-      ));
+      ObservableList.of(productsSnapshot.map(
+        (snapshot) => Product.fromJson(snapshot.value),
+      ))
+        ..sort((a, b) => a.creationDate.compareTo(b.creationDate));
 
   @action
-  void init() {
+  Future<void> init() async {
+    var data = await _db.products.find(_db.client);
+    productsSnapshot = ObservableList.of(data);
+
     _db.products.addOnChangesListener(_db.client, (transaction, changes) async {
-      var list = await _db.products.query().getSnapshots(_db.client);
-      _productsSnapshot = ObservableList.of(list);
+      var change = changes.first;
+      if (change.isAdd) {
+        var data = change.newSnapshot!;
+        productsSnapshot.add(data);
+      }
+      if (change.isDelete) {
+        var key = change.oldSnapshot!.key;
+        productsSnapshot.removeWhere((element) => element.key == key);
+      }
     });
   }
 
   @action
-  void save(Product product) {
-    _db.products.add(_db.client, product.toJson());
+  Future<void> save(Product product) async {
+    await _db.products.add(_db.client, product.toJson());
+  }
+
+  @action
+  Future<void> remove(int id) async {
+    await _db.products.record(id).delete(_db.client);
   }
 }

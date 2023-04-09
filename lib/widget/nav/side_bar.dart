@@ -1,6 +1,8 @@
 import 'package:carewool_profitability_calculator/viewmodel/repo/product_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 
 class SideBar extends StatelessWidget {
   SideBar({super.key});
@@ -9,14 +11,36 @@ class SideBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var list = _repo.products.toList(growable: false);
     return Drawer(
       child: SafeArea(
-        child: ListView.builder(
-          itemCount: list.length,
-          itemBuilder: (context, index) => ListTile(
-            title: Text(list[index].name),
-          ),
+        child: Observer(
+          builder: (context) {
+            var products = _repo.products.toList(growable: false);
+            var snapshots = _repo.productsSnapshot.toList(growable: false);
+            return products.isNotEmpty
+                ? ListView.builder(
+                    itemCount: products.length,
+                    itemBuilder: (context, index) {
+                      var item = products[index];
+                      var dateValue = DateFormat('dd.MM.yyyy HH:mm:ss')
+                          .format(item.creationDate.toLocal());
+                      return ListTile(
+                        title: Text('${item.name} (${item.total}₽)'),
+                        subtitle: Text(dateValue),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () async =>
+                              await _repo.remove(snapshots[index].key),
+                        ),
+                      );
+                    },
+                  )
+                : const ListTile(
+                    title: Text('Нет сохраненных продуктов'),
+                    subtitle: Text('Сохраните хотя бы один расчет, '
+                        'чтобы просмотреть историю'),
+                  );
+          },
         ),
       ),
     );

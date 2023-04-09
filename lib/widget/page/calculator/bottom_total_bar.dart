@@ -3,6 +3,7 @@ import 'package:carewool_profitability_calculator/entity/product/product.dart';
 import 'package:carewool_profitability_calculator/viewmodel/form/product_calc_form.dart';
 import 'package:carewool_profitability_calculator/viewmodel/repo/product_repo.dart';
 import 'package:carewool_profitability_calculator/widget/util/space.dart';
+import 'package:dfunc/dfunc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -75,21 +76,23 @@ class BottomTotalBar extends StatelessWidget {
     );
   }
 
-  void saveProduct() {
+  Future<void> saveProduct() async {
     if (!_form.canBeSaved) {
       return;
     }
 
+    var total = sum(_form.allInputs.map<double>((e) => e.value));
     var product = Product(
       name: _form.name,
-      creationDate: DateTime.now(),
+      creationDate: DateTime.now().toUtc(),
       parameters: [
         ..._form.allInputs
             .where((input) => input.value > 0)
             .map((e) => Parameter(name: e.label, cost: e.value)),
       ],
+      total: total,
     );
 
-    _repo.save(product);
+    await _repo.save(product);
   }
 }

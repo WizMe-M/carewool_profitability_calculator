@@ -12,6 +12,7 @@ _$_Product _$$_ProductFromJson(Map<String, dynamic> json) => _$_Product(
       parameters: (json['parameters'] as List<dynamic>)
           .map((e) => Parameter.fromJson(e as Map<String, dynamic>))
           .toList(),
+      total: (json['total'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$$_ProductToJson(_$_Product instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$$_ProductToJson(_$_Product instance) =>
       'name': instance.name,
       'creation_date': instance.creationDate.toIso8601String(),
       'parameters': instance.parameters.map((e) => e.toJson()).toList(),
+      'total': instance.total,
     };

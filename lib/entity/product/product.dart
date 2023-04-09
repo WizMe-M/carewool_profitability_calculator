@@ -14,6 +14,7 @@ class Product with _$Product {
     required String name,
     @JsonKey(name: 'creation_date') required DateTime creationDate,
     required List<Parameter> parameters,
+    required double total,
   }) = _Product;
 
   factory Product.fromJson(Map<String, dynamic> json) =>

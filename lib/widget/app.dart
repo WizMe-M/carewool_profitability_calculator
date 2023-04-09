@@ -18,7 +18,17 @@ class App extends StatelessWidget {
         future: GetIt.I.allReady(),
         builder: (context, snapshot) => snapshot.hasData
             ? const CalculatorPage()
-            : const CircularProgressIndicator(),
+            : const Scaffold(
+                body: SafeArea(
+                  child: Center(
+                    child: SizedBox(
+                      width: 200,
+                      height: 200,
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                ),
+              ),
       ),
     );
   }

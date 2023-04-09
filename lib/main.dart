@@ -7,18 +7,20 @@ import 'package:carewool_profitability_calculator/widget/app.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  _registerDependencies();
+  await _registerDependencies();
   runApp(const App());
 }
 
-void _registerDependencies() async {
+Future<void> _registerDependencies() async {
   GetIt.instance
     ..registerSingletonAsync<ApplicationDatabase>(
         () async => ApplicationDatabase().init())
-    ..registerSingletonWithDependencies<ProductRepoStore>(() {
-      return ProductRepoStore()..init();
+    ..registerSingletonAsync<ProductRepoStore>(() async {
+      var repo = ProductRepoStore();
+      await repo.init();
+      return repo;
     }, dependsOn: [ApplicationDatabase])
     ..registerSingleton<ProductFormStore>(
       ProductFormStore(
