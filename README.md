@@ -4,4 +4,4 @@ Course and diploma project
 
 ## Current version
 
-`v0.1`
+`0.2.0`
