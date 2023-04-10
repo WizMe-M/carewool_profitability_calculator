@@ -105,6 +105,7 @@ class BottomTotalBar extends StatelessWidget {
     );
 
     await _repo.save(product);
+    FocusManager.instance.primaryFocus?.unfocus();
     _form.reset();
   }
 }
