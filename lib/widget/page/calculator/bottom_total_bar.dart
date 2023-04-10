@@ -2,7 +2,7 @@ import 'package:carewool_profitability_calculator/entity/parameter/parameter.dar
 import 'package:carewool_profitability_calculator/entity/product/product.dart';
 import 'package:carewool_profitability_calculator/viewmodel/form/product_calc_form.dart';
 import 'package:carewool_profitability_calculator/viewmodel/repo/product_repo.dart';
-import 'package:carewool_profitability_calculator/widget/util/space.dart';
+import 'package:carewool_profitability_calculator/util/space.dart';
 import 'package:dfunc/dfunc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -65,7 +65,7 @@ class BottomTotalBar extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 28),
                 child: ElevatedButton(
-                  onPressed: saveProduct,
+                  onPressed: () => saveProduct(context),
                   child: const Text('Save'),
                 ),
               ),
@@ -76,8 +76,19 @@ class BottomTotalBar extends StatelessWidget {
     );
   }
 
-  Future<void> saveProduct() async {
+  Future<void> saveProduct(BuildContext context) async {
     if (!_form.canBeSaved) {
+      final String content =
+          '${!_form.nameFilled ? 'Название товара не заполнено.\n' : ''}'
+          '${!_form.costFilled ? 'Поля стоимости не заполнены.\n' : ''}'
+          '${!_form.formStateIsValid ? 'Некоторые поля формы заполнены некорректно.' : ''}';
+
+      var dialog = AlertDialog(
+        title: const Text('Ошибка'),
+        content: Text(content),
+      );
+
+      await showDialog(context: context, builder: (context) => dialog);
       return;
     }
 
@@ -94,5 +105,6 @@ class BottomTotalBar extends StatelessWidget {
     );
 
     await _repo.save(product);
+    _form.reset();
   }
 }

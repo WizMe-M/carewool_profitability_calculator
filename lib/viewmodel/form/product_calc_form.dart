@@ -26,6 +26,8 @@ abstract class ProductFormStoreBase with Store {
 
   ProductFormStoreBase({required this.blocks});
 
+  bool get formStateIsValid => allInputs.every((input) => input.error == null);
+
   @computed
   String get name => productName.trim();
 
@@ -33,7 +35,13 @@ abstract class ProductFormStoreBase with Store {
   String get total => _totalSum.toStringAsFixed(2);
 
   @computed
-  bool get canBeSaved => name.isNotEmpty && _totalSum > 0;
+  bool get nameFilled => name.isNotEmpty;
+
+  @computed
+  bool get costFilled => _totalSum > 0;
+
+  @computed
+  bool get canBeSaved => nameFilled && costFilled && formStateIsValid;
 
   @computed
   String get buttonText => isApplied ? 'Изменить' : 'Сохранить';

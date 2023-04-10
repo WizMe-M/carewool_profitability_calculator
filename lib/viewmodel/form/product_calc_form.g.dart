@@ -21,6 +21,20 @@ mixin _$ProductFormStore on ProductFormStoreBase, Store {
   String get total => (_$totalComputed ??= Computed<String>(() => super.total,
           name: 'ProductFormStoreBase.total'))
       .value;
+  Computed<bool>? _$nameFilledComputed;
+
+  @override
+  bool get nameFilled =>
+      (_$nameFilledComputed ??= Computed<bool>(() => super.nameFilled,
+              name: 'ProductFormStoreBase.nameFilled'))
+          .value;
+  Computed<bool>? _$costFilledComputed;
+
+  @override
+  bool get costFilled =>
+      (_$costFilledComputed ??= Computed<bool>(() => super.costFilled,
+              name: 'ProductFormStoreBase.costFilled'))
+          .value;
   Computed<bool>? _$canBeSavedComputed;
 
   @override
@@ -127,6 +141,8 @@ isApplied: ${isApplied},
 productName: ${productName},
 name: ${name},
 total: ${total},
+nameFilled: ${nameFilled},
+costFilled: ${costFilled},
 canBeSaved: ${canBeSaved},
 buttonText: ${buttonText}
     ''';

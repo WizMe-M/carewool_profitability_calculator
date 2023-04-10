@@ -36,7 +36,10 @@ class SideBar extends StatelessWidget {
                     },
                   )
                 : const ListTile(
-                    title: Text('Нет сохраненных продуктов'),
+                    title: Text(
+                      'Нет сохраненных продуктов',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
                     subtitle: Text('Сохраните хотя бы один расчет, '
                         'чтобы просмотреть историю'),
                   );
