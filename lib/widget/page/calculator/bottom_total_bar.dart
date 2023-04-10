@@ -104,8 +104,14 @@ class BottomTotalBar extends StatelessWidget {
       total: total,
     );
 
-    await _repo.save(product);
     FocusManager.instance.primaryFocus?.unfocus();
     _form.reset();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Расчеты сохранены'),
+        duration: Duration(milliseconds: 1100),
+      ),
+    );
+    await _repo.save(product);
   }
 }
