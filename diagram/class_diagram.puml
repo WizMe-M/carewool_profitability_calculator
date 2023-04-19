@@ -1,0 +1,172 @@
+@startuml
+set namespaceSeparator ::
+
+class "ApplicationDatabase" {
+  {static} +String dbFileName
+  +StoreRef<int, Map<String, dynamic>> products
+  +Database client
+  +Future<ApplicationDatabase> init()
+}
+
+class "Parameter" {
+  +String name
+  +double cost
+  +Parameter fromJson(Map<String, dynamic> json)
+  +Map<String, dynamic> toJson()
+}
+
+class "Product" {
+  +String name
+  +DateTime creationDate
+  +List<Parameter> parameters
+  +double total
+  +Product fromJson(Map<String, dynamic> json)
+  +Map<String, dynamic> toJson()
+}
+
+enum "Position" {
+  first
+  middle
+  last
+  single
+}
+
+class "Space" {
+  +double value
+  +Widget build(BuildContext context)
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "Space"
+
+class "FormBlock" {
+  +String title
+  +List<Input> inputs
+}
+
+class "Input" {
+}
+
+"InputBase" <|-- "Input"
+
+abstract class "InputBase" {
+  -StreamController<dynamic> _streamController
+  -List<ReactionDisposer> _disposers
+  +String label
+  +String text
+  +String? error
+  +Stream<dynamic> stream
+  +double value
+  +bool isValid
+  +void setupReaction()
+  +void dispose()
+  +void clear()
+  +void validate(String s)
+}
+
+"mobx::src::api::store.dart::Store" <|-- "InputBase"
+
+class "ProductFormStore" {
+}
+
+"ProductFormStoreBase" <|-- "ProductFormStore"
+
+abstract class "ProductFormStoreBase" {
+  -double _totalSum
+  +GlobalKey<FormState> key
+  +List<FormBlock> blocks
+  +List<Input> allInputs
+  +bool isApplied
+  +String productName
+  +bool formStateIsValid
+  +String name
+  +String total
+  +bool nameFilled
+  +bool costFilled
+  +bool canBeSaved
+  +String buttonText
+  +void calculateTotal()
+  +void reset()
+  +void toggleButton()
+  +void init()
+}
+
+"mobx::src::api::store.dart::Store" <|-- "ProductFormStoreBase"
+
+class "ProductRepoStore" {
+}
+
+"ProductRepoStoreBase" <|-- "ProductRepoStore"
+
+abstract class "ProductRepoStoreBase" {
+  -ApplicationDatabase _db
+  +ObservableList<RecordSnapshot<int, Map<String, dynamic>>> productsSnapshot
+  +ObservableList<Product> products
+  +Future<void> init()
+  +Future<void> save(Product product)
+  +Future<void> remove(int id)
+}
+
+"mobx::src::api::store.dart::Store" <|-- "ProductRepoStoreBase"
+
+abstract class "flutter::src::widgets::framework.dart::StatelessWidget" {
+  +Widget build(BuildContext context)
+}
+
+class "App" {
+  +Widget build(BuildContext context)
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "App"
+
+class "SideBar" {
+  -ProductRepoStore _repo
+  +Widget build(BuildContext context)
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "SideBar"
+
+class "BottomTotalBar" {
+  -ProductFormStore _form
+  -ProductRepoStore _repo
+  +Widget build(BuildContext context)
+  +Future<void> saveProduct(BuildContext context)
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "BottomTotalBar"
+
+class "CalculatorPage" {
+  +Widget build(BuildContext context)
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "CalculatorPage"
+
+class "CalcFormWidget" {
+  -ProductFormStore _form
+  +Widget build(BuildContext context)
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "CalcFormWidget"
+
+class "FormBlockWidget" {
+  +FormBlock block
+  +Widget build(BuildContext context)
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "FormBlockWidget"
+
+class "RubleInput" {
+  +Position position
+  +Input input
+  +Widget build(BuildContext context)
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "RubleInput"
+
+class "CalcAppBar" {
+  +State<CalcAppBar> createState()
+}
+
+"flutter::src::material::app_bar.dart::AppBar" <|-- "CalcAppBar"
+
+
+@enduml
