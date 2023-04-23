@@ -4,24 +4,22 @@ import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:sembast/sembast.dart';
 
-part 'product_repo.g.dart';
+part 'product_repository.g.dart';
 
-class ProductRepoStore = ProductRepoStoreBase with _$ProductRepoStore;
+class ProductRepository = ProductRepositoryBase with _$ProductRepository;
 
-abstract class ProductRepoStoreBase with Store {
+abstract class ProductRepositoryBase with Store {
   final ApplicationDatabase _db = GetIt.I.get<ApplicationDatabase>();
 
+  /// Список со всеми сохраненными расчетами
   @observable
   ObservableList<RecordSnapshot<int, Map<String, dynamic>>> productsSnapshot =
       ObservableList();
 
-  @computed
-  ObservableList<Product> get products =>
-      ObservableList.of(productsSnapshot.map(
-        (snapshot) => Product.fromJson(snapshot.value),
-      ))
-        ..sort((a, b) => a.creationDate.compareTo(b.creationDate));
-
+  /// Инициализировать репозиторий
+  ///
+  /// Получает сохраненные ранее расчеты и
+  /// подписывается на изменения в базе данных
   @action
   Future<void> init() async {
     var data = await _db.products.find(_db.client);
@@ -40,11 +38,13 @@ abstract class ProductRepoStoreBase with Store {
     });
   }
 
+  /// Сохранить продукцию в базе данных
   @action
   Future<void> save(Product product) async {
     await _db.products.add(_db.client, product.toJson());
   }
 
+  /// Удалить продукцию в базе данных по ID
   @action
   Future<void> remove(int id) async {
     await _db.products.record(id).delete(_db.client);

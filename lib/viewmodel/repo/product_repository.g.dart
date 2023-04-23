@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'product_repo.dart';
+part of 'product_repository.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,17 +8,9 @@ part of 'product_repo.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$ProductRepoStore on ProductRepoStoreBase, Store {
-  Computed<ObservableList<Product>>? _$productsComputed;
-
-  @override
-  ObservableList<Product> get products => (_$productsComputed ??=
-          Computed<ObservableList<Product>>(() => super.products,
-              name: 'ProductRepoStoreBase.products'))
-      .value;
-
+mixin _$ProductRepository on ProductRepositoryBase, Store {
   late final _$productsSnapshotAtom =
-      Atom(name: 'ProductRepoStoreBase.productsSnapshot', context: context);
+      Atom(name: 'ProductRepositoryBase.productsSnapshot', context: context);
 
   @override
   ObservableList<RecordSnapshot<int, Map<String, dynamic>>>
@@ -36,7 +28,7 @@ mixin _$ProductRepoStore on ProductRepoStoreBase, Store {
   }
 
   late final _$initAsyncAction =
-      AsyncAction('ProductRepoStoreBase.init', context: context);
+      AsyncAction('ProductRepositoryBase.init', context: context);
 
   @override
   Future<void> init() {
@@ -44,7 +36,7 @@ mixin _$ProductRepoStore on ProductRepoStoreBase, Store {
   }
 
   late final _$saveAsyncAction =
-      AsyncAction('ProductRepoStoreBase.save', context: context);
+      AsyncAction('ProductRepositoryBase.save', context: context);
 
   @override
   Future<void> save(Product product) {
@@ -52,7 +44,7 @@ mixin _$ProductRepoStore on ProductRepoStoreBase, Store {
   }
 
   late final _$removeAsyncAction =
-      AsyncAction('ProductRepoStoreBase.remove', context: context);
+      AsyncAction('ProductRepositoryBase.remove', context: context);
 
   @override
   Future<void> remove(int id) {
@@ -62,8 +54,7 @@ mixin _$ProductRepoStore on ProductRepoStoreBase, Store {
   @override
   String toString() {
     return '''
-productsSnapshot: ${productsSnapshot},
-products: ${products}
+productsSnapshot: ${productsSnapshot}
     ''';
   }
 }

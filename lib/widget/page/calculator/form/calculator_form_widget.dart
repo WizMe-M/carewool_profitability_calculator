@@ -1,13 +1,13 @@
-import 'package:carewool_profitability_calculator/viewmodel/form/product_calc_form.dart';
-import 'package:carewool_profitability_calculator/widget/page/calculator/form/form_block.dart';
+import 'package:carewool_profitability_calculator/viewmodel/form/calculator_form.dart';
+import 'package:carewool_profitability_calculator/widget/page/calculator/form/form_block_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
-class CalcFormWidget extends StatelessWidget {
-  final ProductFormStore _form = GetIt.I.get<ProductFormStore>();
+class CalculatorFormWidget extends StatelessWidget {
+  final CalculatorForm _form = GetIt.I.get<CalculatorForm>();
 
-  CalcFormWidget({super.key});
+  CalculatorFormWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,6 @@ class CalcFormWidget extends StatelessWidget {
               child: Observer(
                 builder: (context) => TextFormField(
                   onChanged: (value) => _form.productName = value,
-                  readOnly: _form.isApplied,
                   decoration: const InputDecoration(
                     labelText: 'Товар',
                     hintText: 'Введите название',

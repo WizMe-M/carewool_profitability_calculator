@@ -1,5 +1,5 @@
 import 'package:carewool_profitability_calculator/viewmodel/form/form_block.dart';
-import 'package:carewool_profitability_calculator/widget/page/calculator/form/ruble_input.dart';
+import 'package:carewool_profitability_calculator/widget/page/calculator/form/input_widget.dart';
 import 'package:carewool_profitability_calculator/util/position.dart';
 import 'package:flutter/material.dart';
 
@@ -29,10 +29,10 @@ class FormBlockWidget extends StatelessWidget {
             children: [
               ...block.inputs.map(
                 (input) {
+                  final Position inputPosition;
                   final isFirst = block.inputs.first == input;
                   final isLast = block.inputs.last == input;
                   final isSingleItem = block.inputs.length == 1;
-                  final Position inputPosition;
 
                   if (isSingleItem) {
                     inputPosition = Position.single;
@@ -46,7 +46,7 @@ class FormBlockWidget extends StatelessWidget {
 
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: RubleInput(input: input, position: inputPosition),
+                    child: InputWidget(input: input, position: inputPosition),
                   );
                 },
               )

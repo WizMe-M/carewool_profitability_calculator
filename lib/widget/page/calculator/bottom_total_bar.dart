@@ -1,7 +1,8 @@
 import 'package:carewool_profitability_calculator/entity/parameter/parameter.dart';
 import 'package:carewool_profitability_calculator/entity/product/product.dart';
-import 'package:carewool_profitability_calculator/viewmodel/form/product_calc_form.dart';
-import 'package:carewool_profitability_calculator/viewmodel/repo/product_repo.dart';
+import 'package:carewool_profitability_calculator/util/converter/converter_base.dart';
+import 'package:carewool_profitability_calculator/viewmodel/form/calculator_form.dart';
+import 'package:carewool_profitability_calculator/viewmodel/repo/product_repository.dart';
 import 'package:carewool_profitability_calculator/util/space.dart';
 import 'package:dfunc/dfunc.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +10,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 class BottomTotalBar extends StatelessWidget {
-  final ProductFormStore _form = GetIt.I.get<ProductFormStore>();
-  final ProductRepoStore _repo = GetIt.I.get<ProductRepoStore>();
+  final CalculatorForm _form = GetIt.I.get<CalculatorForm>();
+  final ProductRepository _repo = GetIt.I.get<ProductRepository>();
 
   BottomTotalBar({super.key});
 
@@ -48,7 +49,7 @@ class BottomTotalBar extends StatelessWidget {
                     const Space(4),
                     Observer(
                       builder: (context) => Text(
-                        '${_form.total}₽',
+                        '${_form.costFormatted}₽',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -80,8 +81,8 @@ class BottomTotalBar extends StatelessWidget {
     if (!_form.canBeSaved) {
       final String content =
           '${!_form.nameFilled ? 'Название товара не заполнено.\n' : ''}'
-          '${!_form.costFilled ? 'Поля стоимости не заполнены.\n' : ''}'
-          '${!_form.formStateIsValid ? 'Некоторые поля формы заполнены некорректно.' : ''}';
+          '${!_form.isCostPositive ? 'Поля стоимости не заполнены.\n' : ''}'
+          '${!_form.areInputsValid ? 'Некоторые поля формы заполнены некорректно.' : ''}';
 
       var dialog = AlertDialog(
         title: const Text('Ошибка'),
@@ -92,17 +93,8 @@ class BottomTotalBar extends StatelessWidget {
       return;
     }
 
-    var total = sum(_form.allInputs.map<double>((e) => e.value));
-    var product = Product(
-      name: _form.name,
-      creationDate: DateTime.now().toUtc(),
-      parameters: [
-        ..._form.allInputs
-            .where((input) => input.value > 0)
-            .map((e) => Parameter(name: e.label, cost: e.value)),
-      ],
-      total: total,
-    );
+    var converter = GetIt.I.get<ConverterBase<Product, CalculatorForm>>();
+    var product = converter.toA(_form);
 
     FocusManager.instance.primaryFocus?.unfocus();
     _form.reset();

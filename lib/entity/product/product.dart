@@ -12,7 +12,7 @@ class Product with _$Product {
   @JsonSerializable(explicitToJson: true)
   factory Product({
     required String name,
-    @JsonKey(name: 'creation_date') required DateTime creationDate,
+    @JsonKey(name: 'saved_date') required DateTime savedDate,
     required List<Parameter> parameters,
     required double total,
   }) = _Product;

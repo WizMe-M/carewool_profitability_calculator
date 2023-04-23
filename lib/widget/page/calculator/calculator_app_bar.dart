@@ -1,16 +1,16 @@
-import 'package:carewool_profitability_calculator/viewmodel/form/product_calc_form.dart';
+import 'package:carewool_profitability_calculator/viewmodel/form/calculator_form.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
-class CalcAppBar extends AppBar {
-  CalcAppBar({super.key});
+class CalculatorAppBar extends AppBar {
+  CalculatorAppBar({super.key});
 
   @override
-  State<CalcAppBar> createState() => _CalcAppBarState();
+  State<CalculatorAppBar> createState() => _CalculatorAppBarState();
 }
 
-class _CalcAppBarState extends State<CalcAppBar> {
-  final ProductFormStore _form = GetIt.I.get<ProductFormStore>();
+class _CalculatorAppBarState extends State<CalculatorAppBar> {
+  final CalculatorForm _form = GetIt.I.get<CalculatorForm>();
 
   @override
   Widget build(BuildContext context) {
