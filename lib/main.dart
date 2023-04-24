@@ -1,14 +1,15 @@
-import 'package:carewool_profitability_calculator/database/application_database.dart';
-import 'package:carewool_profitability_calculator/entity/product/product.dart';
-import 'package:carewool_profitability_calculator/util/converter/converter_base.dart';
-import 'package:carewool_profitability_calculator/util/converter/product_form_converter.dart';
-import 'package:carewool_profitability_calculator/viewmodel/form/form_block.dart';
-import 'package:carewool_profitability_calculator/viewmodel/form/input.dart';
-import 'package:carewool_profitability_calculator/viewmodel/form/calculator_form.dart';
-import 'package:carewool_profitability_calculator/viewmodel/repo/product_repository.dart';
-import 'package:carewool_profitability_calculator/widget/app.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+
+import 'database/application_database.dart';
+import 'entity/product/product.dart';
+import 'util/converter/converter_base.dart';
+import 'util/converter/product_form_converter.dart';
+import 'viewmodel/form/form_block.dart';
+import 'viewmodel/form/input.dart';
+import 'viewmodel/form/calculator_form.dart';
+import 'viewmodel/repo/product_repository.dart';
+import 'widget/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,9 +1,10 @@
-import 'package:carewool_profitability_calculator/entity/product/product.dart';
-import 'package:carewool_profitability_calculator/viewmodel/repo/product_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+
+import '../../entity/product/product.dart';
+import '../../viewmodel/repo/product_repository.dart';
 
 class CalculationHistorySideBar extends StatelessWidget {
   CalculationHistorySideBar({super.key});

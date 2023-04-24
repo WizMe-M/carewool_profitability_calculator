@@ -1,8 +1,9 @@
-import 'package:carewool_profitability_calculator/entity/parameter/parameter.dart';
-import 'package:carewool_profitability_calculator/entity/product/product.dart';
-import 'package:carewool_profitability_calculator/util/converter/converter_base.dart';
-import 'package:carewool_profitability_calculator/viewmodel/form/calculator_form.dart';
 import 'package:dfunc/dfunc.dart';
+
+import '../../entity/parameter/parameter.dart';
+import '../../entity/product/product.dart';
+import '../../viewmodel/form/calculator_form.dart';
+import 'converter_base.dart';
 
 class ProductFormConverter implements ConverterBase<Product, CalculatorForm> {
   @override

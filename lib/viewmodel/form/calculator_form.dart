@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:carewool_profitability_calculator/viewmodel/form/form_block.dart';
-import 'package:carewool_profitability_calculator/viewmodel/form/input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mobx/mobx.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:dfunc/dfunc.dart';
+
+import 'form_block.dart';
+import 'input.dart';
 
 part 'calculator_form.g.dart';
 

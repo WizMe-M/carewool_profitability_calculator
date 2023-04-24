@@ -1,11 +1,12 @@
-import 'package:carewool_profitability_calculator/entity/product/product.dart';
-import 'package:carewool_profitability_calculator/util/converter/converter_base.dart';
-import 'package:carewool_profitability_calculator/viewmodel/form/calculator_form.dart';
-import 'package:carewool_profitability_calculator/viewmodel/repo/product_repository.dart';
-import 'package:carewool_profitability_calculator/util/space.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+
+import '../../../entity/product/product.dart';
+import '../../../util/converter/converter_base.dart';
+import '../../../viewmodel/form/calculator_form.dart';
+import '../../../viewmodel/repo/product_repository.dart';
+import '../../../util/space.dart';
 
 class BottomTotalBar extends StatelessWidget {
   final CalculatorForm _form = GetIt.I.get<CalculatorForm>();

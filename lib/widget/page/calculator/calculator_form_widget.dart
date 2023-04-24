@@ -1,7 +1,8 @@
-import 'package:carewool_profitability_calculator/viewmodel/form/calculator_form.dart';
-import 'package:carewool_profitability_calculator/widget/page/calculator/form/form_block_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+
+import '../../../viewmodel/form/calculator_form.dart';
+import 'form_block_widget.dart';
 
 class CalculatorFormWidget extends StatelessWidget {
   final CalculatorForm form;

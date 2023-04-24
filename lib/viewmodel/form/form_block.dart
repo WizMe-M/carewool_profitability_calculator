@@ -1,4 +1,4 @@
-import 'package:carewool_profitability_calculator/viewmodel/form/input.dart';
+import 'input.dart';
 
 /// Логический блок формы
 class FormBlock {

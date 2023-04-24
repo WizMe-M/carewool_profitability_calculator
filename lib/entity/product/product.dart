@@ -1,7 +1,8 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'package:carewool_profitability_calculator/entity/parameter/parameter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../parameter/parameter.dart';
 
 part 'product.freezed.dart';
 

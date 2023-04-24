@@ -1,7 +1,8 @@
-import 'package:carewool_profitability_calculator/viewmodel/form/form_block.dart';
-import 'package:carewool_profitability_calculator/widget/page/calculator/form/input_widget.dart';
-import 'package:carewool_profitability_calculator/util/position.dart';
 import 'package:flutter/material.dart';
+
+import '../../../viewmodel/form/form_block.dart';
+import '../../../util/position.dart';
+import 'input_widget.dart';
 
 class FormBlockWidget extends StatelessWidget {
   final FormBlock block;

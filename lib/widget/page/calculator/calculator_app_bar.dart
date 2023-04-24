@@ -1,6 +1,7 @@
-import 'package:carewool_profitability_calculator/viewmodel/form/calculator_form.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+
+import '../../../viewmodel/form/calculator_form.dart';
 
 class CalculatorAppBar extends AppBar {
   CalculatorAppBar({super.key});

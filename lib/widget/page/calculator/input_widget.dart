@@ -1,7 +1,8 @@
-import 'package:carewool_profitability_calculator/viewmodel/form/input.dart';
-import 'package:carewool_profitability_calculator/util/position.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+
+import '../../../viewmodel/form/input.dart';
+import '../../../util/position.dart';
 
 class InputWidget extends StatelessWidget {
   final Position position;
