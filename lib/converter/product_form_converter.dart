@@ -1,29 +1,45 @@
 import 'package:dfunc/dfunc.dart';
 
+import '../entity/block/block.dart';
+import '../viewmodel/calculator/form_block.dart';
+import '../viewmodel/calculator/input/input.dart';
+import '../viewmodel/calculator/form/calculator_form.dart';
 import '../../entity/parameter/parameter.dart';
 import '../../entity/product/product.dart';
-import '../viewmodel/calculator/form/calculator_form.dart';
 import 'converter_base.dart';
 
 class ProductFormConverter implements ConverterBase<Product, CalculatorForm> {
   @override
   CalculatorForm toB(Product product) {
-    throw UnimplementedError();
+    var blocks = product.blocks.map((block) {
+      return FormBlock(
+        title: block.name,
+        inputs: block.parameters
+            .map((parameter) => Input.filled(
+                  label: parameter.name,
+                  text: parameter.cost != 0 ? parameter.cost.toString() : '',
+                ))
+            .toList(),
+      );
+    }).toList();
+    var form = CalculatorForm(productName: product.name, blocks: blocks);
+    return form;
   }
 
   @override
   Product toA(CalculatorForm form) {
-    var utcNow = DateTime.now().toUtc();
-    var total = sum(form.allInputs.map<double>((e) => e.value));
-    var parameters = form.allInputs
-        .where((input) => input.value > 0)
-        .map((e) => Parameter(name: e.label, cost: e.value));
-
     var product = Product(
       name: form.name,
-      savedDate: utcNow,
-      total: total,
-      parameters: parameters.toList(growable: false),
+      savedDate: DateTime.now().toUtc(),
+      total: sum(form.allInputs.map<double>((e) => e.value)),
+      blocks: form.blocks.map((block) {
+        return Block(
+          name: block.title,
+          parameters: block.inputs.map((input) {
+            return Parameter(name: input.label, cost: input.value);
+          }).toList(),
+        );
+      }).toList(),
     );
     return product;
   }

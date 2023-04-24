@@ -23,125 +23,21 @@ mixin _$Product {
   String get name => throw _privateConstructorUsedError;
   @JsonKey(name: 'saved_date')
   DateTime get savedDate => throw _privateConstructorUsedError;
-  List<Parameter> get parameters => throw _privateConstructorUsedError;
+  List<Block> get blocks => throw _privateConstructorUsedError;
   double get total => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ProductCopyWith<Product> get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ProductCopyWith<$Res> {
-  factory $ProductCopyWith(Product value, $Res Function(Product) then) =
-      _$ProductCopyWithImpl<$Res, Product>;
-  @useResult
-  $Res call(
-      {String name,
-      @JsonKey(name: 'saved_date') DateTime savedDate,
-      List<Parameter> parameters,
-      double total});
-}
-
-/// @nodoc
-class _$ProductCopyWithImpl<$Res, $Val extends Product>
-    implements $ProductCopyWith<$Res> {
-  _$ProductCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? savedDate = null,
-    Object? parameters = null,
-    Object? total = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      savedDate: null == savedDate
-          ? _value.savedDate
-          : savedDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      parameters: null == parameters
-          ? _value.parameters
-          : parameters // ignore: cast_nullable_to_non_nullable
-              as List<Parameter>,
-      total: null == total
-          ? _value.total
-          : total // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$_ProductCopyWith<$Res> implements $ProductCopyWith<$Res> {
-  factory _$$_ProductCopyWith(
-          _$_Product value, $Res Function(_$_Product) then) =
-      __$$_ProductCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {String name,
-      @JsonKey(name: 'saved_date') DateTime savedDate,
-      List<Parameter> parameters,
-      double total});
-}
-
-/// @nodoc
-class __$$_ProductCopyWithImpl<$Res>
-    extends _$ProductCopyWithImpl<$Res, _$_Product>
-    implements _$$_ProductCopyWith<$Res> {
-  __$$_ProductCopyWithImpl(_$_Product _value, $Res Function(_$_Product) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? savedDate = null,
-    Object? parameters = null,
-    Object? total = null,
-  }) {
-    return _then(_$_Product(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      savedDate: null == savedDate
-          ? _value.savedDate
-          : savedDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      parameters: null == parameters
-          ? _value._parameters
-          : parameters // ignore: cast_nullable_to_non_nullable
-              as List<Parameter>,
-      total: null == total
-          ? _value.total
-          : total // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
-  }
-}
-
-/// @nodoc
-
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable()
 class _$_Product implements _Product {
   _$_Product(
       {required this.name,
       @JsonKey(name: 'saved_date') required this.savedDate,
-      required final List<Parameter> parameters,
+      required final List<Block> blocks,
       required this.total})
-      : _parameters = parameters;
+      : _blocks = blocks;
 
   factory _$_Product.fromJson(Map<String, dynamic> json) =>
       _$$_ProductFromJson(json);
@@ -151,12 +47,12 @@ class _$_Product implements _Product {
   @override
   @JsonKey(name: 'saved_date')
   final DateTime savedDate;
-  final List<Parameter> _parameters;
+  final List<Block> _blocks;
   @override
-  List<Parameter> get parameters {
-    if (_parameters is EqualUnmodifiableListView) return _parameters;
+  List<Block> get blocks {
+    if (_blocks is EqualUnmodifiableListView) return _blocks;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_parameters);
+    return EqualUnmodifiableListView(_blocks);
   }
 
   @override
@@ -164,32 +60,8 @@ class _$_Product implements _Product {
 
   @override
   String toString() {
-    return 'Product(name: $name, savedDate: $savedDate, parameters: $parameters, total: $total)';
+    return 'Product(name: $name, savedDate: $savedDate, blocks: $blocks, total: $total)';
   }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_Product &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.savedDate, savedDate) ||
-                other.savedDate == savedDate) &&
-            const DeepCollectionEquality()
-                .equals(other._parameters, _parameters) &&
-            (identical(other.total, total) || other.total == total));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, savedDate,
-      const DeepCollectionEquality().hash(_parameters), total);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_ProductCopyWith<_$_Product> get copyWith =>
-      __$$_ProductCopyWithImpl<_$_Product>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
@@ -203,7 +75,7 @@ abstract class _Product implements Product {
   factory _Product(
       {required final String name,
       @JsonKey(name: 'saved_date') required final DateTime savedDate,
-      required final List<Parameter> parameters,
+      required final List<Block> blocks,
       required final double total}) = _$_Product;
 
   factory _Product.fromJson(Map<String, dynamic> json) = _$_Product.fromJson;
@@ -214,11 +86,7 @@ abstract class _Product implements Product {
   @JsonKey(name: 'saved_date')
   DateTime get savedDate;
   @override
-  List<Parameter> get parameters;
+  List<Block> get blocks;
   @override
   double get total;
-  @override
-  @JsonKey(ignore: true)
-  _$$_ProductCopyWith<_$_Product> get copyWith =>
-      throw _privateConstructorUsedError;
 }

@@ -1,6 +1,5 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 import '../../viewmodel/calculator/form/calculator_form.dart';
 import '../side_bar.dart';
@@ -10,14 +9,14 @@ import '../calculator/calculator_app_bar.dart';
 
 @RoutePage()
 class CalculatorPage extends StatelessWidget {
-  final CalculatorForm _form = GetIt.I.get<CalculatorForm>();
+  final CalculatorForm form;
 
-  CalculatorPage({super.key});
+  const CalculatorPage({required this.form, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CalculatorAppBar(form: _form),
+      appBar: CalculatorAppBar(form: form),
       drawer: SideBar(),
       body: SafeArea(
         child: Column(
@@ -29,11 +28,11 @@ class CalculatorPage extends StatelessWidget {
                     vertical: 12,
                     horizontal: 28,
                   ),
-                  child: CalculatorFormWidget(form: _form),
+                  child: CalculatorFormWidget(form: form),
                 ),
               ),
             ),
-            BottomTotalBar(form: _form),
+            BottomTotalBar(form: form),
           ],
         ),
       ),

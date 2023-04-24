@@ -16,11 +16,13 @@ abstract class _$AppRouter extends RootStackRouter {
   @override
   final Map<String, PageFactory> pagesMap = {
     CalculatorRoute.name: (routeData) {
-      final args = routeData.argsAs<CalculatorRouteArgs>(
-          orElse: () => const CalculatorRouteArgs());
+      final args = routeData.argsAs<CalculatorRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: CalculatorPage(key: args.key),
+        child: CalculatorPage(
+          form: args.form,
+          key: args.key,
+        ),
       );
     },
     DefaultRoute.name: (routeData) {
@@ -36,11 +38,15 @@ abstract class _$AppRouter extends RootStackRouter {
 /// [CalculatorPage]
 class CalculatorRoute extends PageRouteInfo<CalculatorRouteArgs> {
   CalculatorRoute({
+    required CalculatorForm form,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           CalculatorRoute.name,
-          args: CalculatorRouteArgs(key: key),
+          args: CalculatorRouteArgs(
+            form: form,
+            key: key,
+          ),
           initialChildren: children,
         );
 
@@ -51,13 +57,18 @@ class CalculatorRoute extends PageRouteInfo<CalculatorRouteArgs> {
 }
 
 class CalculatorRouteArgs {
-  const CalculatorRouteArgs({this.key});
+  const CalculatorRouteArgs({
+    required this.form,
+    this.key,
+  });
+
+  final CalculatorForm form;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'CalculatorRouteArgs{key: $key}';
+    return 'CalculatorRouteArgs{form: $form, key: $key}';
   }
 }
 

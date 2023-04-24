@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../viewmodel/calculator/form/calculator_form.dart';
 import 'calculator_page.dart';
 import '../loading_screen.dart';
 
@@ -17,7 +18,9 @@ class DefaultPage extends StatelessWidget {
       builder: (_, snapshot) {
         if (snapshot.hasData) {
           FlutterNativeSplash.remove();
-          return CalculatorPage();
+          return CalculatorPage(
+            form: CalculatorForm.defaultTemplate()..init(),
+          );
         } else {
           return const LoadingScreen();
         }

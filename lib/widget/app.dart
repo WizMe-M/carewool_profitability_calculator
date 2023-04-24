@@ -1,5 +1,6 @@
-import 'package:carewool_profitability_calculator/navigation/app_router.dart';
 import 'package:flutter/material.dart';
+
+import '../navigation/app_router.dart';
 
 class App extends StatelessWidget {
   final AppRouter _router = AppRouter();

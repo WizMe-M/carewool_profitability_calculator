@@ -34,9 +34,45 @@ abstract class CalculatorFormBase with Store {
 
   /// Название продукции
   @observable
-  String productName = '';
+  String productName;
 
-  CalculatorFormBase({required this.blocks});
+  CalculatorFormBase({required this.productName, required this.blocks});
+
+  CalculatorFormBase.defaultTemplate()
+      : this(
+          productName: '',
+          blocks: [
+            FormBlock(
+              title: 'Тара',
+              inputs: [
+                Input(label: 'Крышка'),
+                Input(label: 'Дозатор'),
+                Input(label: 'Флакон'),
+              ],
+            ),
+            FormBlock(
+              title: 'Упаковка',
+              inputs: [
+                Input(label: 'Этикетка'),
+                Input(label: 'Коробка'),
+              ],
+            ),
+            FormBlock(
+              title: 'Производство',
+              inputs: [
+                Input(label: 'Розлив'),
+                Input(label: 'Обклейка'),
+              ],
+            ),
+            FormBlock(
+              title: 'Логистика',
+              inputs: [
+                Input(label: 'Логистика от пр-ва'),
+                Input(label: 'Логистика до пр-ва'),
+              ],
+            ),
+          ],
+        );
 
   /// Проверяет, валидны ли значения во всех полях
   bool get areInputsValid => allInputs.every((input) => input.error == null);

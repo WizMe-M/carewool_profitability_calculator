@@ -28,6 +28,8 @@ abstract class InputBase with Store {
 
   InputBase({required this.label});
 
+  InputBase.filled({required this.label, required this.text});
+
   /// Поток изменений текста в поле ввода
   Stream get stream => _streamController.stream;
 
