@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 
 import 'database/application_database.dart';
@@ -12,7 +13,8 @@ import 'database/repo/product_repository.dart';
 import 'widget/app.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  var binding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: binding);
   await _registerDependencies();
   runApp(App());
 }

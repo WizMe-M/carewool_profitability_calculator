@@ -23,10 +23,10 @@ abstract class _$AppRouter extends RootStackRouter {
         child: CalculatorPage(key: args.key),
       );
     },
-    LoadingRoute.name: (routeData) {
+    DefaultRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const LoadingScreen(),
+        child: const DefaultPage(),
       );
     },
   };
@@ -62,15 +62,15 @@ class CalculatorRouteArgs {
 }
 
 /// generated route for
-/// [LoadingScreen]
-class LoadingRoute extends PageRouteInfo<void> {
-  const LoadingRoute({List<PageRouteInfo>? children})
+/// [DefaultPage]
+class DefaultRoute extends PageRouteInfo<void> {
+  const DefaultRoute({List<PageRouteInfo>? children})
       : super(
-          LoadingRoute.name,
+          DefaultRoute.name,
           initialChildren: children,
         );
 
-  static const String name = 'LoadingRoute';
+  static const String name = 'DefaultRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }
