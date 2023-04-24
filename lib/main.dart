@@ -3,12 +3,12 @@ import 'package:get_it/get_it.dart';
 
 import 'database/application_database.dart';
 import 'entity/product/product.dart';
-import 'util/converter/converter_base.dart';
-import 'util/converter/product_form_converter.dart';
-import 'viewmodel/form/form_block.dart';
-import 'viewmodel/form/input.dart';
-import 'viewmodel/form/calculator_form.dart';
-import 'viewmodel/repo/product_repository.dart';
+import 'converter/converter_base.dart';
+import 'converter/product_form_converter.dart';
+import 'viewmodel/calculator/form_block.dart';
+import 'viewmodel/calculator/input/input.dart';
+import 'viewmodel/calculator/form/calculator_form.dart';
+import 'database/repo/product_repository.dart';
 import 'widget/app.dart';
 
 void main() async {

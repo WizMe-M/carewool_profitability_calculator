@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-import '../../../viewmodel/form/input.dart';
-import '../../../util/position.dart';
+import '../../viewmodel/calculator/input/input.dart';
+import '../../util/position.dart';
 
 class InputWidget extends StatelessWidget {
   final Position position;

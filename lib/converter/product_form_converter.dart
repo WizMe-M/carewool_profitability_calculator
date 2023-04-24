@@ -2,7 +2,7 @@ import 'package:dfunc/dfunc.dart';
 
 import '../../entity/parameter/parameter.dart';
 import '../../entity/product/product.dart';
-import '../../viewmodel/form/calculator_form.dart';
+import '../viewmodel/calculator/form/calculator_form.dart';
 import 'converter_base.dart';
 
 class ProductFormConverter implements ConverterBase<Product, CalculatorForm> {

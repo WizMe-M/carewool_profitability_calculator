@@ -5,8 +5,8 @@ import 'package:mobx/mobx.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:dfunc/dfunc.dart';
 
-import 'form_block.dart';
-import 'input.dart';
+import '../form_block.dart';
+import '../input/input.dart';
 
 part 'calculator_form.g.dart';
 

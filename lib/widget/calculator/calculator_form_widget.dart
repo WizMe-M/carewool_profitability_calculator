@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-import '../../../viewmodel/form/calculator_form.dart';
+import '../../viewmodel/calculator/form/calculator_form.dart';
 import 'form_block_widget.dart';
 
 class CalculatorFormWidget extends StatelessWidget {

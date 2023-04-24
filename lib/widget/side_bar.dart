@@ -3,11 +3,11 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
-import '../../entity/product/product.dart';
-import '../../viewmodel/repo/product_repository.dart';
+import '../entity/product/product.dart';
+import '../database/repo/product_repository.dart';
 
-class CalculationHistorySideBar extends StatelessWidget {
-  CalculationHistorySideBar({super.key});
+class SideBar extends StatelessWidget {
+  SideBar({super.key});
 
   final ProductRepository _repo = GetIt.I.get<ProductRepository>();
 

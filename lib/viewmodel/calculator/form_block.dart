@@ -1,4 +1,4 @@
-import 'input.dart';
+import 'input/input.dart';
 
 /// Логический блок формы
 class FormBlock {

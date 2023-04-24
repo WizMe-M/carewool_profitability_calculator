@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../entity/product/product.dart';
-import '../../../util/converter/converter_base.dart';
-import '../../../viewmodel/form/calculator_form.dart';
-import '../../../viewmodel/repo/product_repository.dart';
-import '../../../util/space.dart';
+import '../../entity/product/product.dart';
+import '../../converter/converter_base.dart';
+import '../../viewmodel/calculator/form/calculator_form.dart';
+import '../../database/repo/product_repository.dart';
+import '../../util/space.dart';
 
 class BottomTotalBar extends StatelessWidget {
   final CalculatorForm form;
