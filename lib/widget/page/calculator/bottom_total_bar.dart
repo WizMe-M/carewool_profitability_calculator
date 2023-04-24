@@ -9,10 +9,9 @@ import '../../../viewmodel/repo/product_repository.dart';
 import '../../../util/space.dart';
 
 class BottomTotalBar extends StatelessWidget {
-  final CalculatorForm _form = GetIt.I.get<CalculatorForm>();
-  final ProductRepository _repo = GetIt.I.get<ProductRepository>();
+  final CalculatorForm form;
 
-  BottomTotalBar({super.key});
+  const BottomTotalBar({required this.form, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +47,7 @@ class BottomTotalBar extends StatelessWidget {
                     const Space(4),
                     Observer(
                       builder: (context) => Text(
-                        '${_form.costFormatted}₽',
+                        '${form.costFormatted}₽',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -77,11 +76,11 @@ class BottomTotalBar extends StatelessWidget {
   }
 
   Future<void> saveProduct(BuildContext context) async {
-    if (!_form.canBeSaved) {
+    if (!form.canBeSaved) {
       final String content =
-          '${!_form.nameFilled ? 'Название товара не заполнено.\n' : ''}'
-          '${!_form.isCostPositive ? 'Поля стоимости не заполнены.\n' : ''}'
-          '${!_form.areInputsValid ? 'Некоторые поля формы заполнены некорректно.' : ''}';
+          '${!form.nameFilled ? 'Название товара не заполнено.\n' : ''}'
+          '${!form.isCostPositive ? 'Поля стоимости не заполнены.\n' : ''}'
+          '${!form.areInputsValid ? 'Некоторые поля формы заполнены некорректно.' : ''}';
 
       await showDialog(
         context: context,
@@ -94,11 +93,12 @@ class BottomTotalBar extends StatelessWidget {
     }
 
     var converter = GetIt.I.get<ConverterBase<Product, CalculatorForm>>();
-    var product = converter.toA(_form);
+    var product = converter.toA(form);
 
-    _repo.save(product).then((_) {
+    var repo = GetIt.I.get<ProductRepository>();
+    repo.save(product).then((_) {
       FocusManager.instance.primaryFocus?.unfocus();
-      _form.reset();
+      form.reset();
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

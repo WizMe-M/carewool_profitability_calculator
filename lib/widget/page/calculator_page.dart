@@ -15,7 +15,7 @@ class CalculatorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CalculatorAppBar(),
+      appBar: CalculatorAppBar(form: _form),
       drawer: CalculationHistorySideBar(),
       body: SafeArea(
         child: Column(
@@ -31,7 +31,7 @@ class CalculatorPage extends StatelessWidget {
                 ),
               ),
             ),
-            BottomTotalBar(),
+            BottomTotalBar(form: _form),
           ],
         ),
       ),
