@@ -14,7 +14,7 @@ import 'widget/app.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await _registerDependencies();
-  runApp(const App());
+  runApp(App());
 }
 
 Future<void> _registerDependencies() async {

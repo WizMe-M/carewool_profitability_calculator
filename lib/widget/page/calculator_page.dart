@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -7,6 +8,7 @@ import '../calculator/bottom_total_bar.dart';
 import '../calculator/calculator_form_widget.dart';
 import '../calculator/calculator_app_bar.dart';
 
+@RoutePage()
 class CalculatorPage extends StatelessWidget {
   final CalculatorForm _form = GetIt.I.get<CalculatorForm>();
 
