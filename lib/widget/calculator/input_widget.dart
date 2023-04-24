@@ -1,13 +1,14 @@
-import 'package:carewool_profitability_calculator/viewmodel/form/input.dart';
-import 'package:carewool_profitability_calculator/util/position.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-class RubleInput extends StatelessWidget {
+import '../../viewmodel/calculator/input/input.dart';
+import '../../util/position.dart';
+
+class InputWidget extends StatelessWidget {
   final Position position;
   final Input input;
 
-  const RubleInput({
+  const InputWidget({
     required this.position,
     required this.input,
     super.key,

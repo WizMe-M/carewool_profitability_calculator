@@ -8,7 +8,7 @@ part of 'product.dart';
 
 _$_Product _$$_ProductFromJson(Map<String, dynamic> json) => _$_Product(
       name: json['name'] as String,
-      creationDate: DateTime.parse(json['creation_date'] as String),
+      savedDate: DateTime.parse(json['saved_date'] as String),
       parameters: (json['parameters'] as List<dynamic>)
           .map((e) => Parameter.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -18,7 +18,7 @@ _$_Product _$$_ProductFromJson(Map<String, dynamic> json) => _$_Product(
 Map<String, dynamic> _$$_ProductToJson(_$_Product instance) =>
     <String, dynamic>{
       'name': instance.name,
-      'creation_date': instance.creationDate.toIso8601String(),
+      'saved_date': instance.savedDate.toIso8601String(),
       'parameters': instance.parameters.map((e) => e.toJson()).toList(),
       'total': instance.total,
     };

@@ -1,7 +1,8 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'package:carewool_profitability_calculator/entity/parameter/parameter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../parameter/parameter.dart';
 
 part 'product.freezed.dart';
 
@@ -12,7 +13,7 @@ class Product with _$Product {
   @JsonSerializable(explicitToJson: true)
   factory Product({
     required String name,
-    @JsonKey(name: 'creation_date') required DateTime creationDate,
+    @JsonKey(name: 'saved_date') required DateTime savedDate,
     required List<Parameter> parameters,
     required double total,
   }) = _Product;

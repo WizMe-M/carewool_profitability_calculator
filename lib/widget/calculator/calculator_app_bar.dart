@@ -1,17 +1,17 @@
-import 'package:carewool_profitability_calculator/viewmodel/form/product_calc_form.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
-class CalcAppBar extends AppBar {
-  CalcAppBar({super.key});
+import '../../viewmodel/calculator/form/calculator_form.dart';
+
+class CalculatorAppBar extends AppBar {
+  final CalculatorForm form;
+
+  CalculatorAppBar({required this.form, super.key});
 
   @override
-  State<CalcAppBar> createState() => _CalcAppBarState();
+  State<CalculatorAppBar> createState() => _CalculatorAppBarState();
 }
 
-class _CalcAppBarState extends State<CalcAppBar> {
-  final ProductFormStore _form = GetIt.I.get<ProductFormStore>();
-
+class _CalculatorAppBarState extends State<CalculatorAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -23,7 +23,7 @@ class _CalcAppBarState extends State<CalcAppBar> {
         PopupMenuButton(
           itemBuilder: (context) => [
             PopupMenuItem(
-              onTap: _form.reset,
+              onTap: widget.form.reset,
               height: 30,
               child: const ListTile(
                 title: Text('Reset form'),

@@ -21,8 +21,8 @@ Product _$ProductFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Product {
   String get name => throw _privateConstructorUsedError;
-  @JsonKey(name: 'creation_date')
-  DateTime get creationDate => throw _privateConstructorUsedError;
+  @JsonKey(name: 'saved_date')
+  DateTime get savedDate => throw _privateConstructorUsedError;
   List<Parameter> get parameters => throw _privateConstructorUsedError;
   double get total => throw _privateConstructorUsedError;
 
@@ -38,7 +38,7 @@ abstract class $ProductCopyWith<$Res> {
   @useResult
   $Res call(
       {String name,
-      @JsonKey(name: 'creation_date') DateTime creationDate,
+      @JsonKey(name: 'saved_date') DateTime savedDate,
       List<Parameter> parameters,
       double total});
 }
@@ -57,7 +57,7 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
   @override
   $Res call({
     Object? name = null,
-    Object? creationDate = null,
+    Object? savedDate = null,
     Object? parameters = null,
     Object? total = null,
   }) {
@@ -66,9 +66,9 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      creationDate: null == creationDate
-          ? _value.creationDate
-          : creationDate // ignore: cast_nullable_to_non_nullable
+      savedDate: null == savedDate
+          ? _value.savedDate
+          : savedDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
       parameters: null == parameters
           ? _value.parameters
@@ -91,7 +91,7 @@ abstract class _$$_ProductCopyWith<$Res> implements $ProductCopyWith<$Res> {
   @useResult
   $Res call(
       {String name,
-      @JsonKey(name: 'creation_date') DateTime creationDate,
+      @JsonKey(name: 'saved_date') DateTime savedDate,
       List<Parameter> parameters,
       double total});
 }
@@ -107,7 +107,7 @@ class __$$_ProductCopyWithImpl<$Res>
   @override
   $Res call({
     Object? name = null,
-    Object? creationDate = null,
+    Object? savedDate = null,
     Object? parameters = null,
     Object? total = null,
   }) {
@@ -116,9 +116,9 @@ class __$$_ProductCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      creationDate: null == creationDate
-          ? _value.creationDate
-          : creationDate // ignore: cast_nullable_to_non_nullable
+      savedDate: null == savedDate
+          ? _value.savedDate
+          : savedDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
       parameters: null == parameters
           ? _value._parameters
@@ -138,7 +138,7 @@ class __$$_ProductCopyWithImpl<$Res>
 class _$_Product implements _Product {
   _$_Product(
       {required this.name,
-      @JsonKey(name: 'creation_date') required this.creationDate,
+      @JsonKey(name: 'saved_date') required this.savedDate,
       required final List<Parameter> parameters,
       required this.total})
       : _parameters = parameters;
@@ -149,8 +149,8 @@ class _$_Product implements _Product {
   @override
   final String name;
   @override
-  @JsonKey(name: 'creation_date')
-  final DateTime creationDate;
+  @JsonKey(name: 'saved_date')
+  final DateTime savedDate;
   final List<Parameter> _parameters;
   @override
   List<Parameter> get parameters {
@@ -164,7 +164,7 @@ class _$_Product implements _Product {
 
   @override
   String toString() {
-    return 'Product(name: $name, creationDate: $creationDate, parameters: $parameters, total: $total)';
+    return 'Product(name: $name, savedDate: $savedDate, parameters: $parameters, total: $total)';
   }
 
   @override
@@ -173,8 +173,8 @@ class _$_Product implements _Product {
         (other.runtimeType == runtimeType &&
             other is _$_Product &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.creationDate, creationDate) ||
-                other.creationDate == creationDate) &&
+            (identical(other.savedDate, savedDate) ||
+                other.savedDate == savedDate) &&
             const DeepCollectionEquality()
                 .equals(other._parameters, _parameters) &&
             (identical(other.total, total) || other.total == total));
@@ -182,7 +182,7 @@ class _$_Product implements _Product {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, name, creationDate,
+  int get hashCode => Object.hash(runtimeType, name, savedDate,
       const DeepCollectionEquality().hash(_parameters), total);
 
   @JsonKey(ignore: true)
@@ -202,7 +202,7 @@ class _$_Product implements _Product {
 abstract class _Product implements Product {
   factory _Product(
       {required final String name,
-      @JsonKey(name: 'creation_date') required final DateTime creationDate,
+      @JsonKey(name: 'saved_date') required final DateTime savedDate,
       required final List<Parameter> parameters,
       required final double total}) = _$_Product;
 
@@ -211,8 +211,8 @@ abstract class _Product implements Product {
   @override
   String get name;
   @override
-  @JsonKey(name: 'creation_date')
-  DateTime get creationDate;
+  @JsonKey(name: 'saved_date')
+  DateTime get savedDate;
   @override
   List<Parameter> get parameters;
   @override

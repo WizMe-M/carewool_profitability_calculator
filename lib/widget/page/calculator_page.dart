@@ -1,16 +1,21 @@
-import 'package:carewool_profitability_calculator/widget/nav/side_bar.dart';
-import 'package:carewool_profitability_calculator/widget/page/calculator/bottom_total_bar.dart';
-import 'package:carewool_profitability_calculator/widget/page/calculator/form/calc_form.dart';
-import 'package:carewool_profitability_calculator/widget/page/calculator/top_title_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+
+import '../../viewmodel/calculator/form/calculator_form.dart';
+import '../side_bar.dart';
+import '../calculator/bottom_total_bar.dart';
+import '../calculator/calculator_form_widget.dart';
+import '../calculator/calculator_app_bar.dart';
 
 class CalculatorPage extends StatelessWidget {
-  const CalculatorPage({super.key});
+  final CalculatorForm _form = GetIt.I.get<CalculatorForm>();
+
+  CalculatorPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CalcAppBar(),
+      appBar: CalculatorAppBar(form: _form),
       drawer: SideBar(),
       body: SafeArea(
         child: Column(
@@ -22,11 +27,11 @@ class CalculatorPage extends StatelessWidget {
                     vertical: 12,
                     horizontal: 28,
                   ),
-                  child: CalcFormWidget(),
+                  child: CalculatorFormWidget(form: _form),
                 ),
               ),
             ),
-            BottomTotalBar(),
+            BottomTotalBar(form: _form),
           ],
         ),
       ),

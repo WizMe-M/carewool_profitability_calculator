@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
-import 'page/calculator/calculator_page.dart';
+import 'page/calculator_page.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -9,6 +9,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Profitability Calculator',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
@@ -17,7 +18,7 @@ class App extends StatelessWidget {
       home: FutureBuilder(
         future: GetIt.I.allReady(),
         builder: (context, snapshot) => snapshot.hasData
-            ? const CalculatorPage()
+            ? CalculatorPage()
             : const Scaffold(
                 body: SafeArea(
                   child: Center(

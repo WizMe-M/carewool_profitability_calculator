@@ -1,11 +1,15 @@
-import 'package:carewool_profitability_calculator/database/application_database.dart';
-import 'package:carewool_profitability_calculator/viewmodel/form/form_block.dart';
-import 'package:carewool_profitability_calculator/viewmodel/form/input.dart';
-import 'package:carewool_profitability_calculator/viewmodel/form/product_calc_form.dart';
-import 'package:carewool_profitability_calculator/viewmodel/repo/product_repo.dart';
-import 'package:carewool_profitability_calculator/widget/app.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+
+import 'database/application_database.dart';
+import 'entity/product/product.dart';
+import 'converter/converter_base.dart';
+import 'converter/product_form_converter.dart';
+import 'viewmodel/calculator/form_block.dart';
+import 'viewmodel/calculator/input/input.dart';
+import 'viewmodel/calculator/form/calculator_form.dart';
+import 'database/repo/product_repository.dart';
+import 'widget/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,16 +18,20 @@ void main() async {
 }
 
 Future<void> _registerDependencies() async {
+  await Future.delayed(const Duration(seconds: 5));
+
   GetIt.instance
+    ..registerFactory<ConverterBase<Product, CalculatorForm>>(
+        () => ProductFormConverter())
     ..registerSingletonAsync<ApplicationDatabase>(
         () async => ApplicationDatabase().init())
-    ..registerSingletonAsync<ProductRepoStore>(() async {
-      var repo = ProductRepoStore();
+    ..registerSingletonAsync<ProductRepository>(() async {
+      var repo = ProductRepository();
       await repo.init();
       return repo;
     }, dependsOn: [ApplicationDatabase])
-    ..registerSingleton<ProductFormStore>(
-      ProductFormStore(
+    ..registerSingleton<CalculatorForm>(
+      CalculatorForm(
         blocks: [
           FormBlock(
             title: 'Тара',

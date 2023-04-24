@@ -1,18 +1,18 @@
-import 'package:carewool_profitability_calculator/viewmodel/form/product_calc_form.dart';
-import 'package:carewool_profitability_calculator/widget/page/calculator/form/form_block.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:get_it/get_it.dart';
 
-class CalcFormWidget extends StatelessWidget {
-  final ProductFormStore _form = GetIt.I.get<ProductFormStore>();
+import '../../viewmodel/calculator/form/calculator_form.dart';
+import 'form_block_widget.dart';
 
-  CalcFormWidget({super.key});
+class CalculatorFormWidget extends StatelessWidget {
+  final CalculatorForm form;
+
+  const CalculatorFormWidget({required this.form, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: _form.key,
+      key: form.key,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24),
@@ -22,8 +22,7 @@ class CalcFormWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Observer(
                 builder: (context) => TextFormField(
-                  onChanged: (value) => _form.productName = value,
-                  readOnly: _form.isApplied,
+                  onChanged: (value) => form.productName = value,
                   decoration: const InputDecoration(
                     labelText: 'Товар',
                     hintText: 'Введите название',
@@ -34,7 +33,7 @@ class CalcFormWidget extends StatelessWidget {
                 ),
               ),
             ),
-            ..._form.blocks.map(
+            ...form.blocks.map(
               (block) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: FormBlockWidget(block: block),
