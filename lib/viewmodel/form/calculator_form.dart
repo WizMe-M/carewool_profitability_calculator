@@ -14,7 +14,7 @@ class CalculatorForm = CalculatorFormBase with _$CalculatorForm;
 
 abstract class CalculatorFormBase with Store {
   /// Подписка на поток данных об изменениях в полях формы
-  StreamSubscription? _calculationFormStream;
+  StreamSubscription? _calculationFormStreamSub;
 
   /// Ключ от формы
   ///
@@ -71,8 +71,11 @@ abstract class CalculatorFormBase with Store {
     for (var input in allInputs) {
       input.setupReaction();
     }
+    debugPrint('INFO | all inputs initialized');
 
-    _initStream();
+    _calculationFormStreamSub = Rx.merge(allInputs.map((input) => input.stream))
+        .listen((_) => calculateTotalCost());
+    debugPrint('INFO | stream initialized');
   }
 
   /// Пересчитать итоговую себестоимость продукции
@@ -86,19 +89,12 @@ abstract class CalculatorFormBase with Store {
   @action
   void reset() {
     debugPrint('INFO | form reset called');
-    _calculationFormStream!.cancel();
+    _calculationFormStreamSub!.pause();
     key.currentState!.reset();
     productName = '';
     for (var input in allInputs) {
       input.clear();
     }
-    _initStream();
-  }
-
-  /// Инициализировать поток изменений ввода в полях
-  void _initStream() {
-    debugPrint('INFO | stream initialized');
-    _calculationFormStream = Rx.merge(allInputs.map((input) => input.stream))
-        .listen((_) => calculateTotalCost());
+    _calculationFormStreamSub!.resume();
   }
 }

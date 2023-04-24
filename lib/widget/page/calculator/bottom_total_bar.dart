@@ -1,10 +1,8 @@
-import 'package:carewool_profitability_calculator/entity/parameter/parameter.dart';
 import 'package:carewool_profitability_calculator/entity/product/product.dart';
 import 'package:carewool_profitability_calculator/util/converter/converter_base.dart';
 import 'package:carewool_profitability_calculator/viewmodel/form/calculator_form.dart';
 import 'package:carewool_profitability_calculator/viewmodel/repo/product_repository.dart';
 import 'package:carewool_profitability_calculator/util/space.dart';
-import 'package:dfunc/dfunc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -84,26 +82,36 @@ class BottomTotalBar extends StatelessWidget {
           '${!_form.isCostPositive ? 'Поля стоимости не заполнены.\n' : ''}'
           '${!_form.areInputsValid ? 'Некоторые поля формы заполнены некорректно.' : ''}';
 
-      var dialog = AlertDialog(
-        title: const Text('Ошибка'),
-        content: Text(content),
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Ошибка'),
+          content: Text(content),
+        ),
       );
-
-      await showDialog(context: context, builder: (context) => dialog);
       return;
     }
 
     var converter = GetIt.I.get<ConverterBase<Product, CalculatorForm>>();
     var product = converter.toA(_form);
 
-    FocusManager.instance.primaryFocus?.unfocus();
-    _form.reset();
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Расчеты сохранены'),
-        duration: Duration(milliseconds: 1100),
-      ),
-    );
-    await _repo.save(product);
+    _repo.save(product).then((_) {
+      FocusManager.instance.primaryFocus?.unfocus();
+      _form.reset();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Расчеты сохранены'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    }).onError((_, __) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Не удалось сохранить расчет'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    });
   }
 }

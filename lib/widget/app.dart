@@ -18,7 +18,7 @@ class App extends StatelessWidget {
       home: FutureBuilder(
         future: GetIt.I.allReady(),
         builder: (context, snapshot) => snapshot.hasData
-            ? const CalculatorPage()
+            ? CalculatorPage()
             : const Scaffold(
                 body: SafeArea(
                   child: Center(
