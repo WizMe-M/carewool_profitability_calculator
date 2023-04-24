@@ -1,88 +1,56 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:mobx/mobx.dart';
-
-part 'input.g.dart';
 
 /// Числовое поле ввода
-class Input = InputBase with _$Input;
-
-abstract class InputBase with Store {
+class Input {
   /// Контроллер потока изменений текста в поле ввода
   final StreamController _streamController = StreamController();
 
   /// Наименование (метка) поля ввода
   final String label;
 
-  /// Список реакций
-  late List<ReactionDisposer> _disposers;
-
   /// Текущий введенный текст
-  @observable
-  String text = '';
+  final TextEditingController controller = TextEditingController();
 
-  /// Сообщение об ошибке валидации
-  @observable
-  String? error;
-
-  InputBase({required this.label});
-
-  InputBase.filled({required this.label, required this.text});
+  Input({required this.label});
 
   /// Поток изменений текста в поле ввода
   Stream get stream => _streamController.stream;
 
+  String get text => controller.text;
+
   /// Числовое представление текста
-  @computed
   double get value => isValid ? double.tryParse(text) ?? 0 : 0;
 
   /// Проверяет, корректно ли значение в поле
-  @computed
-  bool get isValid => error == null;
+  bool get isValid => validate(text) == null;
 
-  /// Инициализировать реакции
-  void setupReaction() {
-    _disposers = [
-      reaction((_) => text, validate),
-      reaction((_) => text, _streamController.add),
-    ];
+  /// Subscribes stream to [TextEditingController] listener
+  void init() {
+    controller.addListener(() => _streamController.add(null));
   }
-
-  void dispose() {
-    for (var d in _disposers) {
-      d();
-    }
-  }
-
-  /// Очистить поле от текста
-  @action
-  void clear() => text = '';
 
   /// Проверяет строку на корректность
   ///
   /// Валидными строками являются пустые строки ('' или ' '),
   /// целые и дробные числа больше нуля ('2', '9.', '3.14')
-  @action
-  void validate(String s) {
-    if (s.isEmpty) {
-      error = null;
-      return;
-    }
+  String? validate(String? s) {
+    if (s == null || s.isEmpty) return null;
 
     var num = double.tryParse(s);
     if (num == null) {
       debugPrint('WARN | input is not a number: "$s"');
-      error = 'Введите число';
-      return;
+      return 'Введите число';
     }
 
     if (num <= 0) {
       debugPrint('WARN | input is less or equal zero: "$num"');
-      error = 'Число должно быть больше нуля';
-      return;
+      return 'Число должно быть больше нуля';
     }
 
-    error = null;
+    return null;
   }
+
+  void dispose() => controller.dispose();
 }

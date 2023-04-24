@@ -2,7 +2,7 @@ import 'package:dfunc/dfunc.dart';
 
 import '../entity/block/block.dart';
 import '../viewmodel/calculator/form_block.dart';
-import '../viewmodel/calculator/input/input.dart';
+import '../viewmodel/calculator/input.dart';
 import '../viewmodel/calculator/form/calculator_form.dart';
 import '../../entity/parameter/parameter.dart';
 import '../../entity/product/product.dart';
@@ -14,12 +14,10 @@ class ProductFormConverter implements ConverterBase<Product, CalculatorForm> {
     var blocks = product.blocks.map((block) {
       return FormBlock(
         title: block.name,
-        inputs: block.parameters
-            .map((parameter) => Input.filled(
-                  label: parameter.name,
-                  text: parameter.cost != 0 ? parameter.cost.toString() : '',
-                ))
-            .toList(),
+        inputs: block.parameters.map((parameter) {
+          var text = parameter.cost != 0 ? parameter.cost.toString() : '';
+          return Input(label: parameter.name)..controller.text = text;
+        }).toList(),
       );
     }).toList();
     var form = CalculatorForm(productName: product.name, blocks: blocks);

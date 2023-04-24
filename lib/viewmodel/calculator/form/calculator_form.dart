@@ -6,7 +6,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:dfunc/dfunc.dart';
 
 import '../form_block.dart';
-import '../input/input.dart';
+import '../input.dart';
 
 part 'calculator_form.g.dart';
 
@@ -75,7 +75,7 @@ abstract class CalculatorFormBase with Store {
         );
 
   /// Проверяет, валидны ли значения во всех полях
-  bool get areInputsValid => allInputs.every((input) => input.error == null);
+  bool get areInputsValid => allInputs.every((input) => input.isValid);
 
   @computed
   String get name => productName.trim();
@@ -106,7 +106,7 @@ abstract class CalculatorFormBase with Store {
     });
 
     for (var input in allInputs) {
-      input.setupReaction();
+      input.init();
     }
     debugPrint('INFO | all inputs initialized');
 
@@ -128,10 +128,6 @@ abstract class CalculatorFormBase with Store {
     debugPrint('INFO | form reset called');
     _calculationFormStreamSub!.pause();
     key.currentState!.reset();
-    productName = '';
-    for (var input in allInputs) {
-      input.clear();
-    }
     _calculationFormStreamSub!.resume();
   }
 }

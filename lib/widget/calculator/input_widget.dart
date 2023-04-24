@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 
-import '../../viewmodel/calculator/input/input.dart';
+import '../../viewmodel/calculator/input.dart';
 import '../../util/position.dart';
 
 class InputWidget extends StatelessWidget {
@@ -16,24 +15,22 @@ class InputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (_) => TextFormField(
-        onChanged: (value) => input.text = value,
-        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-          labelText: input.label,
-          hintText: 'Введите стоимость',
-          suffixIcon: const Icon(Icons.currency_ruble),
-          errorText: input.error,
+    return TextFormField(
+      controller: input.controller,
+      validator: input.validate,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
         ),
-        autofocus: position == Position.first || position == Position.single,
-        textInputAction: position == Position.last
-            ? TextInputAction.done
-            : TextInputAction.next,
+        labelText: input.label,
+        hintText: 'Введите стоимость',
+        suffixIcon: const Icon(Icons.currency_ruble),
       ),
+      autofocus: position == Position.first || position == Position.single,
+      textInputAction: position == Position.last
+          ? TextInputAction.done
+          : TextInputAction.next,
     );
   }
 }
