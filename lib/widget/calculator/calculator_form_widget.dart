@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../viewmodel/calculator/form/calculator_form.dart';
 import 'form_block_widget.dart';
@@ -20,15 +19,13 @@ class CalculatorFormWidget extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Observer(
-                builder: (context) => TextFormField(
-                  onChanged: (value) => form.productName = value,
-                  decoration: const InputDecoration(
-                    labelText: 'Товар',
-                    hintText: 'Введите название',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                    ),
+              child: TextFormField(
+                controller: form.nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Товар',
+                  hintText: 'Введите название',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
                 ),
               ),

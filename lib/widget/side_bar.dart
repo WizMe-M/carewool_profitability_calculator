@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -5,6 +6,8 @@ import 'package:intl/intl.dart';
 
 import '../entity/product/product.dart';
 import '../database/repo/product_repository.dart';
+import '../navigation/app_router.dart';
+import '../viewmodel/calculator/form/calculator_form.dart';
 
 class SideBar extends StatelessWidget {
   SideBar({super.key});
@@ -39,6 +42,7 @@ class SideBar extends StatelessWidget {
                       onPressed: () async =>
                           await _repo.remove(snapshots[index].key),
                     ),
+                    onTap: () => onCostTap(context, item),
                   );
                 },
               );
@@ -56,5 +60,10 @@ class SideBar extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void onCostTap(BuildContext context, Product product) {
+    var form = CalculatorForm.fromProduct(product: product)..init();
+    context.router.replace(CalculatorRoute(form: form));
   }
 }

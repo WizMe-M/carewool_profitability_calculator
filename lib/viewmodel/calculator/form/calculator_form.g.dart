@@ -9,12 +9,6 @@ part of 'calculator_form.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$CalculatorForm on CalculatorFormBase, Store {
-  Computed<String>? _$nameComputed;
-
-  @override
-  String get name => (_$nameComputed ??=
-          Computed<String>(() => super.name, name: 'CalculatorFormBase.name'))
-      .value;
   Computed<String>? _$costFormattedComputed;
 
   @override
@@ -60,31 +54,15 @@ mixin _$CalculatorForm on CalculatorFormBase, Store {
     });
   }
 
-  late final _$productNameAtom =
-      Atom(name: 'CalculatorFormBase.productName', context: context);
-
-  @override
-  String get productName {
-    _$productNameAtom.reportRead();
-    return super.productName;
-  }
-
-  @override
-  set productName(String value) {
-    _$productNameAtom.reportWrite(value, super.productName, () {
-      super.productName = value;
-    });
-  }
-
   late final _$CalculatorFormBaseActionController =
       ActionController(name: 'CalculatorFormBase', context: context);
 
   @override
-  void calculateTotalCost() {
+  void _calculateTotalCost() {
     final _$actionInfo = _$CalculatorFormBaseActionController.startAction(
-        name: 'CalculatorFormBase.calculateTotalCost');
+        name: 'CalculatorFormBase._calculateTotalCost');
     try {
-      return super.calculateTotalCost();
+      return super._calculateTotalCost();
     } finally {
       _$CalculatorFormBaseActionController.endAction(_$actionInfo);
     }
@@ -104,8 +82,6 @@ mixin _$CalculatorForm on CalculatorFormBase, Store {
   @override
   String toString() {
     return '''
-productName: ${productName},
-name: ${name},
 costFormatted: ${costFormatted},
 nameFilled: ${nameFilled},
 isCostPositive: ${isCostPositive},

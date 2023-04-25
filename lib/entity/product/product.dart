@@ -1,6 +1,9 @@
+import 'package:carewool_profitability_calculator/viewmodel/calculator/form/calculator_form.dart';
+import 'package:dfunc/dfunc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../block/block.dart';
+import '../parameter/parameter.dart';
 
 part 'product.freezed.dart';
 
@@ -14,6 +17,23 @@ class Product with _$Product {
     required List<Block> blocks,
     required double total,
   }) = _Product;
+
+  factory Product.fromForm({required CalculatorForm form}) {
+    var product = Product(
+      name: form.name,
+      savedDate: DateTime.now().toUtc(),
+      total: sum(form.allInputs.map<double>((e) => e.value)),
+      blocks: form.blocks.map((block) {
+        return Block(
+          name: block.title,
+          parameters: block.inputs.map((input) {
+            return Parameter(name: input.label, cost: input.value);
+          }).toList(),
+        );
+      }).toList(),
+    );
+    return product;
+  }
 
   factory Product.fromJson(Map<String, dynamic> json) =>
       _$ProductFromJson(json);

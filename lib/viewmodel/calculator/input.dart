@@ -11,9 +11,12 @@ class Input {
   final String label;
 
   /// Текущий введенный текст
-  final TextEditingController controller = TextEditingController();
+  final TextEditingController controller;
 
-  Input({required this.label});
+  Input({required this.label}) : controller = TextEditingController();
+
+  Input.withText({required this.label, required String text})
+      : controller = TextEditingController(text: text);
 
   /// Поток изменений текста в поле ввода
   Stream get stream => _streamController.stream;
@@ -51,6 +54,9 @@ class Input {
 
     return null;
   }
+
+  /// Clear inputted text
+  void clear() => controller.clear();
 
   void dispose() => controller.dispose();
 }

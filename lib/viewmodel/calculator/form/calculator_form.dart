@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:dfunc/dfunc.dart';
 
 import '../form_block.dart';
 import '../input.dart';
+import '../../../entity/product/product.dart';
 
 part 'calculator_form.g.dart';
 
@@ -32,53 +34,76 @@ abstract class CalculatorFormBase with Store {
   @observable
   double _totalCost = 0;
 
-  /// Название продукции
-  @observable
-  String productName;
+  /// [TextEditingController] of product name
+  final TextEditingController nameController;
 
-  CalculatorFormBase({required this.productName, required this.blocks});
+  CalculatorFormBase._({required this.blocks, String productName = ''})
+      : nameController = TextEditingController(text: productName);
 
   CalculatorFormBase.defaultTemplate()
-      : this(
-          productName: '',
-          blocks: [
-            FormBlock(
-              title: 'Тара',
-              inputs: [
-                Input(label: 'Крышка'),
-                Input(label: 'Дозатор'),
-                Input(label: 'Флакон'),
-              ],
-            ),
-            FormBlock(
-              title: 'Упаковка',
-              inputs: [
-                Input(label: 'Этикетка'),
-                Input(label: 'Коробка'),
-              ],
-            ),
-            FormBlock(
-              title: 'Производство',
-              inputs: [
-                Input(label: 'Розлив'),
-                Input(label: 'Обклейка'),
-              ],
-            ),
-            FormBlock(
-              title: 'Логистика',
-              inputs: [
-                Input(label: 'Логистика от пр-ва'),
-                Input(label: 'Логистика до пр-ва'),
-              ],
-            ),
-          ],
+      : this._(blocks: [
+    FormBlock(
+      title: 'Тара',
+      inputs: [
+        Input(label: 'Крышка'),
+        Input(label: 'Дозатор'),
+        Input(label: 'Флакон'),
+      ],
+    ),
+    FormBlock(
+      title: 'Упаковка',
+      inputs: [
+        Input(label: 'Этикетка'),
+        Input(label: 'Коробка'),
+      ],
+    ),
+    FormBlock(
+      title: 'Производство',
+      inputs: [
+        Input(label: 'Розлив'),
+        Input(label: 'Обклейка'),
+      ],
+    ),
+    FormBlock(
+      title: 'Логистика',
+      inputs: [
+        Input(label: 'Логистика от пр-ва'),
+        Input(label: 'Логистика до пр-ва'),
+      ],
+    ),
+  ]);
+
+  CalculatorFormBase.fromProduct({required Product product})
+      : this._(
+    productName: product.name,
+    blocks: product.blocks.map(
+          (block) {
+        return FormBlock(
+          title: block.name,
+          inputs: block.parameters.map(
+                (parameter) {
+              if (parameter.cost != 0) {
+                var formatter = NumberFormat()
+                  ..minimumFractionDigits = 0;
+                var formatted = formatter.format(parameter.cost);
+
+                return Input.withText(
+                  label: parameter.name,
+                  text: formatted,
+                );
+              }
+              return Input(label: parameter.name);
+            },
+          ).toList(),
         );
+      },
+    ).toList(),
+  );
+
+  String get name => nameController.text.trim();
 
   /// Проверяет, валидны ли значения во всех полях
   bool get areInputsValid => allInputs.every((input) => input.isValid);
-
-  @computed
-  String get name => productName.trim();
 
   /// Итоговая себестоимость в строковом представлении (0.00)
   @computed
@@ -111,13 +136,15 @@ abstract class CalculatorFormBase with Store {
     debugPrint('INFO | all inputs initialized');
 
     _calculationFormStreamSub = Rx.merge(allInputs.map((input) => input.stream))
-        .listen((_) => calculateTotalCost());
+        .listen((_) => _calculateTotalCost());
     debugPrint('INFO | stream initialized');
+
+    _calculateTotalCost();
   }
 
   /// Пересчитать итоговую себестоимость продукции
   @action
-  void calculateTotalCost() {
+  void _calculateTotalCost() {
     _totalCost = sum(allInputs.map<double>((e) => e.value));
     debugPrint('INFO | sum recalculate: $_totalCost');
   }
@@ -127,7 +154,11 @@ abstract class CalculatorFormBase with Store {
   void reset() {
     debugPrint('INFO | form reset called');
     _calculationFormStreamSub!.pause();
-    key.currentState!.reset();
+    // key.currentState!.reset();
+    nameController.clear();
+    for (var element in allInputs) {
+      element.clear();
+    }
     _calculationFormStreamSub!.resume();
   }
 }
