@@ -3,7 +3,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../entity/product/product.dart';
-import '../../converter/converter_base.dart';
 import '../../viewmodel/calculator/form/calculator_form.dart';
 import '../../database/repo/product_repository.dart';
 import '../../util/space.dart';
@@ -92,8 +91,7 @@ class BottomTotalBar extends StatelessWidget {
       return;
     }
 
-    var converter = GetIt.I.get<ConverterBase<Product, CalculatorForm>>();
-    var product = converter.toA(form);
+    var product = Product.fromForm(form: form);
 
     var repo = GetIt.I.get<ProductRepository>();
     repo.save(product).then((_) {

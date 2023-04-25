@@ -1,36 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
-import 'page/calculator_page.dart';
+import '../navigation/app_router.dart';
 
 class App extends StatelessWidget {
-  const App({super.key});
+  final AppRouter _router = AppRouter();
+
+  App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Profitability Calculator',
+    return MaterialApp.router(
+      title: 'Калькулятор себестоимости',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
       ),
-      home: FutureBuilder(
-        future: GetIt.I.allReady(),
-        builder: (context, snapshot) => snapshot.hasData
-            ? CalculatorPage()
-            : const Scaffold(
-                body: SafeArea(
-                  child: Center(
-                    child: SizedBox(
-                      width: 200,
-                      height: 200,
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
-                ),
-              ),
-      ),
+      routerConfig: _router.config(),
     );
   }
 }

@@ -24,83 +24,6 @@ mixin _$Parameter {
   double get cost => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $ParameterCopyWith<Parameter> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $ParameterCopyWith<$Res> {
-  factory $ParameterCopyWith(Parameter value, $Res Function(Parameter) then) =
-      _$ParameterCopyWithImpl<$Res, Parameter>;
-  @useResult
-  $Res call({String name, double cost});
-}
-
-/// @nodoc
-class _$ParameterCopyWithImpl<$Res, $Val extends Parameter>
-    implements $ParameterCopyWith<$Res> {
-  _$ParameterCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? cost = null,
-  }) {
-    return _then(_value.copyWith(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      cost: null == cost
-          ? _value.cost
-          : cost // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$_ParameterCopyWith<$Res> implements $ParameterCopyWith<$Res> {
-  factory _$$_ParameterCopyWith(
-          _$_Parameter value, $Res Function(_$_Parameter) then) =
-      __$$_ParameterCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({String name, double cost});
-}
-
-/// @nodoc
-class __$$_ParameterCopyWithImpl<$Res>
-    extends _$ParameterCopyWithImpl<$Res, _$_Parameter>
-    implements _$$_ParameterCopyWith<$Res> {
-  __$$_ParameterCopyWithImpl(
-      _$_Parameter _value, $Res Function(_$_Parameter) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? name = null,
-    Object? cost = null,
-  }) {
-    return _then(_$_Parameter(
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      cost: null == cost
-          ? _value.cost
-          : cost // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
-  }
 }
 
 /// @nodoc
@@ -122,25 +45,6 @@ class _$_Parameter implements _Parameter {
   }
 
   @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$_Parameter &&
-            (identical(other.name, name) || other.name == name) &&
-            (identical(other.cost, cost) || other.cost == cost));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, name, cost);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$_ParameterCopyWith<_$_Parameter> get copyWith =>
-      __$$_ParameterCopyWithImpl<_$_Parameter>(this, _$identity);
-
-  @override
   Map<String, dynamic> toJson() {
     return _$$_ParameterToJson(
       this,
@@ -159,8 +63,4 @@ abstract class _Parameter implements Parameter {
   String get name;
   @override
   double get cost;
-  @override
-  @JsonKey(ignore: true)
-  _$$_ParameterCopyWith<_$_Parameter> get copyWith =>
-      throw _privateConstructorUsedError;
 }
