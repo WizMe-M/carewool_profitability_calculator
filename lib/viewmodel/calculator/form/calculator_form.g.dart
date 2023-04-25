@@ -16,27 +16,6 @@ mixin _$CalculatorForm on CalculatorFormBase, Store {
       (_$costFormattedComputed ??= Computed<String>(() => super.costFormatted,
               name: 'CalculatorFormBase.costFormatted'))
           .value;
-  Computed<bool>? _$nameFilledComputed;
-
-  @override
-  bool get nameFilled =>
-      (_$nameFilledComputed ??= Computed<bool>(() => super.nameFilled,
-              name: 'CalculatorFormBase.nameFilled'))
-          .value;
-  Computed<bool>? _$isCostPositiveComputed;
-
-  @override
-  bool get isCostPositive =>
-      (_$isCostPositiveComputed ??= Computed<bool>(() => super.isCostPositive,
-              name: 'CalculatorFormBase.isCostPositive'))
-          .value;
-  Computed<bool>? _$canBeSavedComputed;
-
-  @override
-  bool get canBeSaved =>
-      (_$canBeSavedComputed ??= Computed<bool>(() => super.canBeSaved,
-              name: 'CalculatorFormBase.canBeSaved'))
-          .value;
 
   late final _$_totalCostAtom =
       Atom(name: 'CalculatorFormBase._totalCost', context: context);
@@ -82,10 +61,7 @@ mixin _$CalculatorForm on CalculatorFormBase, Store {
   @override
   String toString() {
     return '''
-costFormatted: ${costFormatted},
-nameFilled: ${nameFilled},
-isCostPositive: ${isCostPositive},
-canBeSaved: ${canBeSaved}
+costFormatted: ${costFormatted}
     ''';
   }
 }

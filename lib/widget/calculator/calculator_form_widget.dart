@@ -11,7 +11,6 @@ class CalculatorFormWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: form.key,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 24),
