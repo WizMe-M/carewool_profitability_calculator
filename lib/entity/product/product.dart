@@ -1,9 +1,9 @@
-import 'package:carewool_profitability_calculator/viewmodel/calculator/form/calculator_form.dart';
 import 'package:dfunc/dfunc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../block/block.dart';
 import '../parameter/parameter.dart';
+import '../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
 
 part 'product.freezed.dart';
 
@@ -18,7 +18,7 @@ class Product with _$Product {
     required double total,
   }) = _Product;
 
-  factory Product.fromForm({required CalculatorForm form}) {
+  factory Product.fromForm({required CostCalculatorForm form}) {
     var product = Product(
       name: form.name,
       savedDate: DateTime.now().toUtc(),

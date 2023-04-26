@@ -15,61 +15,23 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
-    CalculatorRoute.name: (routeData) {
-      final args = routeData.argsAs<CalculatorRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CalculatorPage(
-          form: args.form,
-          key: args.key,
-        ),
-      );
-    },
     DefaultRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const DefaultPage(),
       );
     },
+    CostCalculatorRoute.name: (routeData) {
+      final args = routeData.argsAs<CostCalculatorRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CostCalculatorPage(
+          form: args.form,
+          key: args.key,
+        ),
+      );
+    },
   };
-}
-
-/// generated route for
-/// [CalculatorPage]
-class CalculatorRoute extends PageRouteInfo<CalculatorRouteArgs> {
-  CalculatorRoute({
-    required CalculatorForm form,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CalculatorRoute.name,
-          args: CalculatorRouteArgs(
-            form: form,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CalculatorRoute';
-
-  static const PageInfo<CalculatorRouteArgs> page =
-      PageInfo<CalculatorRouteArgs>(name);
-}
-
-class CalculatorRouteArgs {
-  const CalculatorRouteArgs({
-    required this.form,
-    this.key,
-  });
-
-  final CalculatorForm form;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'CalculatorRouteArgs{form: $form, key: $key}';
-  }
 }
 
 /// generated route for
@@ -84,4 +46,42 @@ class DefaultRoute extends PageRouteInfo<void> {
   static const String name = 'DefaultRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [CostCalculatorPage]
+class CostCalculatorRoute extends PageRouteInfo<CostCalculatorRouteArgs> {
+  CostCalculatorRoute({
+    required CostCalculatorForm form,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CostCalculatorRoute.name,
+          args: CostCalculatorRouteArgs(
+            form: form,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CostCalculatorRoute';
+
+  static const PageInfo<CostCalculatorRouteArgs> page =
+      PageInfo<CostCalculatorRouteArgs>(name);
+}
+
+class CostCalculatorRouteArgs {
+  const CostCalculatorRouteArgs({
+    required this.form,
+    this.key,
+  });
+
+  final CostCalculatorForm form;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'CostCalculatorRouteArgs{form: $form, key: $key}';
+  }
 }

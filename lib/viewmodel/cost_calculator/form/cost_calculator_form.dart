@@ -10,12 +10,12 @@ import '../form_block.dart';
 import '../input.dart';
 import '../../../entity/product/product.dart';
 
-part 'calculator_form.g.dart';
+part 'cost_calculator_form.g.dart';
 
 /// Form of calculating product's cost
-class CalculatorForm = CalculatorFormBase with _$CalculatorForm;
+class CostCalculatorForm = CostCalculatorFormBase with _$CostCalculatorForm;
 
-abstract class CalculatorFormBase with Store {
+abstract class CostCalculatorFormBase with Store {
   /// Product cost format
   ///
   /// Lets to format product cost value in next ways:
@@ -45,10 +45,10 @@ abstract class CalculatorFormBase with Store {
   /// [TextEditingController] of product name
   final TextEditingController nameController;
 
-  CalculatorFormBase._({required this.blocks, String productName = ''})
+  CostCalculatorFormBase._({required this.blocks, String productName = ''})
       : nameController = TextEditingController(text: productName);
 
-  CalculatorFormBase.defaultTemplate()
+  CostCalculatorFormBase.defaultTemplate()
       : this._(blocks: [
           FormBlock(
             title: 'Тара',
@@ -81,7 +81,7 @@ abstract class CalculatorFormBase with Store {
           ),
         ]);
 
-  CalculatorFormBase.fromProduct({required Product product})
+  CostCalculatorFormBase.fromProduct({required Product product})
       : this._(
           productName: product.name,
           blocks: product.blocks.map(

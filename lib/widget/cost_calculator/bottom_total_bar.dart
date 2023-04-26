@@ -3,12 +3,12 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../entity/product/product.dart';
-import '../../viewmodel/calculator/form/calculator_form.dart';
+import '../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
 import '../../database/repo/product_repository.dart';
 import '../../util/space.dart';
 
 class BottomTotalBar extends StatelessWidget {
-  final CalculatorForm form;
+  final CostCalculatorForm form;
 
   const BottomTotalBar({required this.form, super.key});
 

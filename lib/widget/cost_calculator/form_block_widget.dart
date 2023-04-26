@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../viewmodel/calculator/form_block.dart';
+import '../../viewmodel/cost_calculator/form_block.dart';
 import '../../util/position.dart';
 import 'input_widget.dart';
 

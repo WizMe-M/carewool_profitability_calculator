@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../viewmodel/calculator/form/calculator_form.dart';
+import '../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
 
 class CalculatorAppBar extends AppBar {
-  final CalculatorForm form;
+  final CostCalculatorForm form;
 
   CalculatorAppBar({required this.form, super.key});
 

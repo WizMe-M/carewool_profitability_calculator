@@ -1,17 +1,17 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 
-import '../../viewmodel/calculator/form/calculator_form.dart';
 import '../side_bar.dart';
-import '../calculator/bottom_total_bar.dart';
-import '../calculator/calculator_form_widget.dart';
-import '../calculator/calculator_app_bar.dart';
+import '../cost_calculator/bottom_total_bar.dart';
+import '../cost_calculator/calculator_form_widget.dart';
+import '../cost_calculator/calculator_app_bar.dart';
+import '../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
 
 @RoutePage()
-class CalculatorPage extends StatelessWidget {
-  final CalculatorForm form;
+class CostCalculatorPage extends StatelessWidget {
+  final CostCalculatorForm form;
 
-  const CalculatorPage({required this.form, super.key});
+  const CostCalculatorPage({required this.form, super.key});
 
   @override
   Widget build(BuildContext context) {

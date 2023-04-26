@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'calculator_form.dart';
+part of 'cost_calculator_form.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,17 +8,17 @@ part of 'calculator_form.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$CalculatorForm on CalculatorFormBase, Store {
+mixin _$CostCalculatorForm on CostCalculatorFormBase, Store {
   Computed<String>? _$costFormattedComputed;
 
   @override
   String get costFormatted =>
       (_$costFormattedComputed ??= Computed<String>(() => super.costFormatted,
-              name: 'CalculatorFormBase.costFormatted'))
+              name: 'CostCalculatorFormBase.costFormatted'))
           .value;
 
   late final _$_totalCostAtom =
-      Atom(name: 'CalculatorFormBase._totalCost', context: context);
+      Atom(name: 'CostCalculatorFormBase._totalCost', context: context);
 
   @override
   double get _totalCost {
@@ -33,28 +33,28 @@ mixin _$CalculatorForm on CalculatorFormBase, Store {
     });
   }
 
-  late final _$CalculatorFormBaseActionController =
-      ActionController(name: 'CalculatorFormBase', context: context);
+  late final _$CostCalculatorFormBaseActionController =
+      ActionController(name: 'CostCalculatorFormBase', context: context);
 
   @override
   void _calculateTotalCost() {
-    final _$actionInfo = _$CalculatorFormBaseActionController.startAction(
-        name: 'CalculatorFormBase._calculateTotalCost');
+    final _$actionInfo = _$CostCalculatorFormBaseActionController.startAction(
+        name: 'CostCalculatorFormBase._calculateTotalCost');
     try {
       return super._calculateTotalCost();
     } finally {
-      _$CalculatorFormBaseActionController.endAction(_$actionInfo);
+      _$CostCalculatorFormBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
   void reset() {
-    final _$actionInfo = _$CalculatorFormBaseActionController.startAction(
-        name: 'CalculatorFormBase.reset');
+    final _$actionInfo = _$CostCalculatorFormBaseActionController.startAction(
+        name: 'CostCalculatorFormBase.reset');
     try {
       return super.reset();
     } finally {
-      _$CalculatorFormBaseActionController.endAction(_$actionInfo);
+      _$CostCalculatorFormBaseActionController.endAction(_$actionInfo);
     }
   }
 

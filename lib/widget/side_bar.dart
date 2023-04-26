@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import '../entity/product/product.dart';
 import '../database/repo/product_repository.dart';
 import '../navigation/app_router.dart';
-import '../viewmodel/calculator/form/calculator_form.dart';
+import '../viewmodel/cost_calculator/form/cost_calculator_form.dart';
 
 class SideBar extends StatelessWidget {
   SideBar({super.key});
@@ -63,7 +63,7 @@ class SideBar extends StatelessWidget {
   }
 
   void onCostTap(BuildContext context, Product product) {
-    var form = CalculatorForm.fromProduct(product: product)..init();
-    context.router.replace(CalculatorRoute(form: form));
+    var form = CostCalculatorForm.fromProduct(product: product)..init();
+    context.router.replace(CostCalculatorRoute(form: form));
   }
 }

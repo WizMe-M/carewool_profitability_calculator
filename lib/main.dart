@@ -3,7 +3,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 
 import 'database/application_database.dart';
-import 'viewmodel/calculator/form/calculator_form.dart';
+import 'viewmodel/cost_calculator/form/cost_calculator_form.dart';
 import 'database/repo/product_repository.dart';
 import 'widget/app.dart';
 
@@ -25,7 +25,7 @@ Future<void> _registerDependencies() async {
       await repo.init();
       return repo;
     }, dependsOn: [ApplicationDatabase])
-    ..registerFactory<CalculatorForm>(
-      () => CalculatorForm.defaultTemplate()..init(),
+    ..registerFactory<CostCalculatorForm>(
+      () => CostCalculatorForm.defaultTemplate()..init(),
     );
 }
