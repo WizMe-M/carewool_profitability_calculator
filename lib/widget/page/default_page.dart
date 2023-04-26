@@ -5,7 +5,6 @@ import 'package:get_it/get_it.dart';
 
 import '../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
 import 'cost_calculator_page.dart';
-import '../loading_screen.dart';
 
 @RoutePage()
 class DefaultPage extends StatelessWidget {
@@ -22,7 +21,7 @@ class DefaultPage extends StatelessWidget {
             form: CostCalculatorForm.defaultTemplate()..init(),
           );
         } else {
-          return const LoadingScreen();
+          return const Placeholder();
         }
       },
     );

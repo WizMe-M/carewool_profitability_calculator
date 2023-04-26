@@ -15,8 +15,6 @@ void main() async {
 }
 
 Future<void> _registerDependencies() async {
-  await Future.delayed(const Duration(seconds: 5));
-
   GetIt.instance
     ..registerSingletonAsync<ApplicationDatabase>(
         () async => ApplicationDatabase().init())
