@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
+import 'package:logger/logger.dart';
 
 import 'database/application_database.dart';
 import 'viewmodel/cost_calculator/form/cost_calculator_form.dart';
@@ -15,7 +16,10 @@ void main() async {
 }
 
 Future<void> _registerDependencies() async {
+  var logger = Logger(printer: PrettyPrinter(printEmojis: false));
+
   GetIt.instance
+    ..registerSingleton<Logger>(logger)
     ..registerSingletonAsync<ApplicationDatabase>(
         () async => ApplicationDatabase().init())
     ..registerSingletonAsync<ProductRepository>(() async {
@@ -26,4 +30,6 @@ Future<void> _registerDependencies() async {
     ..registerFactory<CostCalculatorForm>(
       () => CostCalculatorForm.defaultTemplate()..init(),
     );
+
+  logger.i('All dependencies registered');
 }

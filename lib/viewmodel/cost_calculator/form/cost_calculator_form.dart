@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'package:mobx/mobx.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:dfunc/dfunc.dart';
@@ -16,6 +18,8 @@ part 'cost_calculator_form.g.dart';
 class CostCalculatorForm = CostCalculatorFormBase with _$CostCalculatorForm;
 
 abstract class CostCalculatorFormBase with Store {
+  final Logger logger = GetIt.I.get<Logger>();
+
   /// Product cost format
   ///
   /// Lets to format product cost value in next ways:
@@ -131,7 +135,7 @@ abstract class CostCalculatorFormBase with Store {
   /// Folds all form inputs, initializes them, subscribes to their streams
   /// and calculates initial product's cost
   void init() {
-    debugPrint('INFO | form initialize');
+    logger.i('Form initalize started');
     allInputs = blocks.fold([], (inputList, block) {
       return inputList..addAll(block.inputs);
     });
@@ -139,11 +143,11 @@ abstract class CostCalculatorFormBase with Store {
     for (var input in allInputs) {
       input.init();
     }
-    debugPrint('INFO | all inputs initialized');
+    logger.i('Form inputs were initialized');
 
     _changesStreamSub = Rx.merge(allInputs.map((input) => input.stream))
         .listen((_) => _calculateTotalCost());
-    debugPrint('INFO | stream initialized');
+    logger.i('Stream of changes were initialized');
 
     _calculateTotalCost();
   }
@@ -152,18 +156,17 @@ abstract class CostCalculatorFormBase with Store {
   @action
   void _calculateTotalCost() {
     _totalCost = sum(allInputs.map<double>((e) => e.value));
-    debugPrint('INFO | sum recalculate: $_totalCost');
-  }
+    logger.i('Sum was recalculated: $_totalCost');  }
 
   /// Clears all of form inputs' values
   @action
   void reset() {
-    debugPrint('INFO | form reset called');
     _changesStreamSub!.pause();
     nameController.clear();
     for (var element in allInputs) {
       element.clear();
     }
     _changesStreamSub!.resume();
+    logger.i('Form was resetted');
   }
 }

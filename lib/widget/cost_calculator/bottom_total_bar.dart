@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:logger/logger.dart';
 
 import '../../entity/product/product.dart';
 import '../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
@@ -8,9 +9,11 @@ import '../../database/repo/product_repository.dart';
 import '../../util/space.dart';
 
 class BottomTotalBar extends StatelessWidget {
+  final Logger logger = GetIt.I.get<Logger>();
+
   final CostCalculatorForm form;
 
-  const BottomTotalBar({required this.form, super.key});
+  BottomTotalBar({required this.form, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -95,8 +98,10 @@ class BottomTotalBar extends StatelessWidget {
 
     var repo = GetIt.I.get<ProductRepository>();
     repo.save(product).then((_) {
+      logger.i('Product was saved');
       FocusManager.instance.primaryFocus?.unfocus();
       form.reset();
+      logger.i('Form was resetted');
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -104,7 +109,12 @@ class BottomTotalBar extends StatelessWidget {
           duration: Duration(seconds: 1),
         ),
       );
-    }).onError((_, __) {
+    }).onError((error, stackTrace) {
+      logger.e(
+        'Caught error while was saving cost calculation',
+        error,
+        stackTrace,
+      );
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Не удалось сохранить расчет'),

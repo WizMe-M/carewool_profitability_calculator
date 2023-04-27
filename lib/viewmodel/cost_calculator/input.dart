@@ -1,9 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:logger/logger.dart';
 
 /// Числовое поле ввода
 class Input {
+  final Logger logger = GetIt.I.get<Logger>();
+
   /// Контроллер потока изменений текста в поле ввода
   final StreamController _streamController = StreamController();
 
@@ -43,12 +47,12 @@ class Input {
 
     var num = double.tryParse(s);
     if (num == null) {
-      debugPrint('WARN | input is not a number: "$s"');
+      logger.w('Input is not a number: "$s"');
       return 'Введите число';
     }
 
     if (num <= 0) {
-      debugPrint('WARN | input is less or equal zero: "$num"');
+      logger.w('Input is less or equal zero: "$num"');
       return 'Число должно быть больше нуля';
     }
 
