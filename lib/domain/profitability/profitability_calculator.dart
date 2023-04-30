@@ -1,21 +1,18 @@
 import 'dart:math';
 
+import 'package:carewool_profitability_calculator/domain/entity/category_item/category_item.dart';
+import 'package:carewool_profitability_calculator/domain/entity/storage_tariff/storage_tariff.dart';
+
+import 'product_size.dart';
+import 'simple_taxation_system.dart';
+
 class ProfitabilityCalculator {
-  double calcLogistics() {
-    // TODO: parse excel "Коэффициент" sheet
-    var storageTariffs = [
-      {'min_tariff': 50, 'tariff_per_liter': 5},
-    ];
-
-    // TODO: pick selected storage from dropdowns
-    var storage = storageTariffs.first;
-    var tariff = storage['min_tariff'] as double;
-    var tariffPerLiter = storage['tariff_per_liter'] as double;
-
-    var size = ProductSize(2.5, 12, 2.5); // TODO: set sizes from inputs
-
-    var logisticsForVolume =
-        tariff + max<double>(0, (size.volume - 5)) * tariffPerLiter;
+  // TODO: parse excel "Коэффициент" sheet
+  // TODO: pick selected storage from dropdowns
+  // TODO: set sizes from inputs
+  double calcLogistics(StorageTariff tariff, ProductSize size) {
+    var logisticsForVolume = tariff.baseLogistic +
+        max<double>(0, (size.volume - 5)) * tariff.additionalLogistic;
 
     var deliveryLogistics = size.isExtraLargeProduct
         ? max<double>(logisticsForVolume, 1000)
@@ -25,18 +22,11 @@ class ProfitabilityCalculator {
     return logistics;
   }
 
-  double calcSaleCommission() {
-    // TODO: parse excel "Логистика, комиссия" sheet
-    var categories = [
-      {'name': 'Косметическое средство', 'fbo': 17},
-    ];
-
-    // TODO: pick selected item from category and subcategory dropdowns
-    var category = categories.first;
-    var fboCommissionSize = category['fbo'] as double;
-
+  // TODO: parse excel "Логистика, комиссия" sheet
+  // TODO: pick selected item from category and subcategory dropdowns
+  double calcSaleCommission(CategoryItem item) {
     var cost = 100; // TODO: set cost from product total 'cost price'
-    var commission = cost * fboCommissionSize / 100;
+    var commission = cost * item.fbo / 100;
     return commission;
   }
 
@@ -44,47 +34,35 @@ class ProfitabilityCalculator {
       cost * (100 - discount) / 100;
 
   double calcTotalPayment() {
-    var cost = calcCostWithDiscount(100, 20);
+    var tariff = StorageTariff(
+      storageName: 'Базовые тарифы',
+      baseLogistic: 50,
+      additionalLogistic: 5,
+      baseStoring: 0.1,
+      additionalStoring: 0.01,
+      baseAcceptance: 15,
+      additionalAcceptance: 1.5,
+    );
+    var size = ProductSize(10, 4, 4);
     var paidAcceptance = 25;
-    var commission = calcSaleCommission();
-    var logistics = calcLogistics();
+
+    var cost = calcCostWithDiscount(100, 20);
+    var commission = calcSaleCommission(
+      CategoryItem(name: 'Косметические средства', fbo: 17, fbs: 17.9),
+    );
+    var logistics = calcLogistics(tariff, size);
     return cost - commission - logistics - paidAcceptance;
   }
 
   // TODO: pick selected tax from STS taxes dropdown
-  double calcTax(SimpleTaxSystem tax) {
+  double calcTax(SimpleTaxationSystem tax) {
     var cost = calcCostWithDiscount(100, 20);
     switch (tax) {
-      case SimpleTaxSystem.perIncome:
+      case SimpleTaxationSystem.perIncome:
         return cost * tax.taxSize;
-      case SimpleTaxSystem.perProfit:
+      case SimpleTaxationSystem.perProfit:
         var payment = calcTotalPayment();
-        return max<double>(0, payment - cost);
+        return max<double>(0, payment - cost) * tax.taxSize;
     }
-  }
-}
-
-enum SimpleTaxSystem {
-  perIncome(6),
-  perProfit(15);
-
-  final double taxSize;
-
-  const SimpleTaxSystem(this.taxSize);
-}
-
-class ProductSize {
-  final double width;
-  final double height;
-  final double length;
-
-  ProductSize(this.width, this.height, this.length);
-
-  double get volume => (width * height * length) / 1000;
-
-  bool get isExtraLargeProduct {
-    var maxMoreThan120 = length > 120 || height > 120 || width > 120;
-    var sumSizeMoreThan200 = length + height + width > 200;
-    return maxMoreThan120 || sumSizeMoreThan200;
   }
 }
