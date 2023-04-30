@@ -13,7 +13,7 @@ part 'product.g.dart';
 class Product with _$Product {
   factory Product({
     required String name,
-    @JsonKey(name: 'saved_date') required DateTime savedDate,
+    required DateTime savedDate,
     required List<Block> blocks,
     required double total,
   }) = _Product;
