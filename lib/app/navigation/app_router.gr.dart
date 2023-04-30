@@ -15,12 +15,6 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
-    DefaultRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const DefaultPage(),
-      );
-    },
     CostCalculatorRoute.name: (routeData) {
       final args = routeData.argsAs<CostCalculatorRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -31,21 +25,19 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    DefaultRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const DefaultPage(),
+      );
+    },
+    ProfitabilityRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ProfitabilityPage(),
+      );
+    },
   };
-}
-
-/// generated route for
-/// [DefaultPage]
-class DefaultRoute extends PageRouteInfo<void> {
-  const DefaultRoute({List<PageRouteInfo>? children})
-      : super(
-          DefaultRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'DefaultRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -84,4 +76,32 @@ class CostCalculatorRouteArgs {
   String toString() {
     return 'CostCalculatorRouteArgs{form: $form, key: $key}';
   }
+}
+
+/// generated route for
+/// [DefaultPage]
+class DefaultRoute extends PageRouteInfo<void> {
+  const DefaultRoute({List<PageRouteInfo>? children})
+      : super(
+          DefaultRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'DefaultRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ProfitabilityPage]
+class ProfitabilityRoute extends PageRouteInfo<void> {
+  const ProfitabilityRoute({List<PageRouteInfo>? children})
+      : super(
+          ProfitabilityRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfitabilityRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }

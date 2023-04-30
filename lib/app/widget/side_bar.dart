@@ -4,8 +4,8 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
-import '../entity/product/product.dart';
-import '../database/repo/product_repository.dart';
+import '../../domain/entity/product/product.dart';
+import '../../domain/database/repo/product_repository.dart';
 import '../navigation/app_router.dart';
 import '../viewmodel/cost_calculator/form/cost_calculator_form.dart';
 

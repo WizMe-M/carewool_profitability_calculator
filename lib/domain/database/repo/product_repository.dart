@@ -2,7 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:sembast/sembast.dart';
 
-import '../../database/application_database.dart';
+import '../application_database.dart';
 import '../../entity/product/product.dart';
 
 part 'product_repository.g.dart';

@@ -1,4 +1,4 @@
-import 'package:carewool_profitability_calculator/widget/app.dart';
+import 'package:carewool_profitability_calculator/app/widget/app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -3,10 +3,10 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
-import 'database/application_database.dart';
-import 'viewmodel/cost_calculator/form/cost_calculator_form.dart';
-import 'database/repo/product_repository.dart';
-import 'widget/app.dart';
+import 'domain/database/application_database.dart';
+import 'domain/database/repo/product_repository.dart';
+import 'app/viewmodel/cost_calculator/form/cost_calculator_form.dart';
+import 'app/widget/app.dart';
 
 void main() async {
   var binding = WidgetsFlutterBinding.ensureInitialized();
