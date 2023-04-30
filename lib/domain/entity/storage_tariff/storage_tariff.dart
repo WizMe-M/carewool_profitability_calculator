@@ -10,10 +10,10 @@ class StorageTariff with _$StorageTariff {
     required String storageName,
     required double baseLogistic,
     required double additionalLogistic,
-    required double baseStoring,
-    required double additionalStoring,
-    required double baseAcceptance,
-    required double additionalAcceptance,
+    required double? baseStoring,
+    required double? additionalStoring,
+    required double? baseAcceptance,
+    required double? additionalAcceptance,
   }) = _StorageTariff;
 
   factory StorageTariff.fromJson(Map<String, dynamic> json) =>

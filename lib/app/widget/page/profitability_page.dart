@@ -1,11 +1,15 @@
 import 'package:auto_route/annotations.dart';
-import 'package:carewool_profitability_calculator/app/widget/side_bar.dart';
-import 'package:carewool_profitability_calculator/domain/entity/product/product.dart';
+import 'package:carewool_profitability_calculator/domain/entity/category/category.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
+
+import '../../../domain/entity/storage_tariff/storage_tariff.dart';
+import '../../../domain/parser/excel_parser.dart';
+import '../side_bar.dart';
+import '../../../domain/entity/product/product.dart';
 
 @RoutePage()
 class ProfitabilityPage extends StatelessWidget {
@@ -47,11 +51,23 @@ class ProfitabilityPage extends StatelessWidget {
       type: FileType.custom,
       allowedExtensions: ['xlsx', 'xls'],
       initialDirectory: downloads.path,
-      withReadStream: true,
+      withData: true,
     );
     if (result != null) {
       var file = result.files.single;
       logger.i('Picked file. Path: "${file.path}"');
+
+      var storageParser = GetIt.I.get<ExcelParser<List<StorageTariff>>>();
+      var tariffs = storageParser.parse(file.bytes!);
+      if (tariffs.isEmpty) {
+        logger.e('Parsed tariffs data is empty!');
+      }
+
+      var categoryParser = GetIt.I.get<ExcelParser<List<Category>>>();
+      var categories = categoryParser.parse(file.bytes!);
+      if (categories.isEmpty) {
+        logger.e('Parsed categories data is empty!');
+      }
     } else {
       logger.w('File was not picked');
     }

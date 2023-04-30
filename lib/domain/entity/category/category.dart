@@ -6,7 +6,7 @@ part 'category.g.dart';
 
 part 'category.freezed.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class Category with _$Category {
   factory Category({
     required String name,

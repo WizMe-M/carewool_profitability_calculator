@@ -29,21 +29,15 @@ mixin _$Category {
 /// @nodoc
 @JsonSerializable()
 class _$_Category implements _Category {
-  _$_Category({required this.name, required final List<CategoryItem> items})
-      : _items = items;
+  _$_Category({required this.name, required this.items});
 
   factory _$_Category.fromJson(Map<String, dynamic> json) =>
       _$$_CategoryFromJson(json);
 
   @override
   final String name;
-  final List<CategoryItem> _items;
   @override
-  List<CategoryItem> get items {
-    if (_items is EqualUnmodifiableListView) return _items;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_items);
-  }
+  final List<CategoryItem> items;
 
   @override
   String toString() {

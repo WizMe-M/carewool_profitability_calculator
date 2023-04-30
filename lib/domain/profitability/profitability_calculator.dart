@@ -1,10 +1,9 @@
 import 'dart:math';
 
-import 'package:carewool_profitability_calculator/domain/entity/category_item/category_item.dart';
-import 'package:carewool_profitability_calculator/domain/entity/storage_tariff/storage_tariff.dart';
-
 import 'product_size.dart';
 import 'simple_taxation_system.dart';
+import '../entity/category_item/category_item.dart';
+import '../entity/storage_tariff/storage_tariff.dart';
 
 class ProfitabilityCalculator {
   // TODO: parse excel "Коэффициент" sheet

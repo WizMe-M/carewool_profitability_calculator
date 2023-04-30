@@ -3,10 +3,15 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
-import 'domain/database/application_database.dart';
-import 'domain/database/repo/product_repository.dart';
 import 'app/viewmodel/cost_calculator/form/cost_calculator_form.dart';
 import 'app/widget/app.dart';
+import 'domain/database/application_database.dart';
+import 'domain/database/repo/product_repository.dart';
+import 'domain/entity/category/category.dart';
+import 'domain/entity/storage_tariff/storage_tariff.dart';
+import 'domain/parser/category_parser.dart';
+import 'domain/parser/excel_parser.dart';
+import 'domain/parser/storage_parser.dart';
 
 void main() async {
   var binding = WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +34,9 @@ Future<void> _registerDependencies() async {
     }, dependsOn: [ApplicationDatabase])
     ..registerFactory<CostCalculatorForm>(
       () => CostCalculatorForm.defaultTemplate()..init(),
-    );
+    )
+    ..registerSingleton<ExcelParser<List<StorageTariff>>>(StorageParser())
+    ..registerSingleton<ExcelParser<List<Category>>>(CategoryParser());
 
   logger.i('All dependencies registered');
 }

@@ -23,10 +23,10 @@ mixin _$StorageTariff {
   String get storageName => throw _privateConstructorUsedError;
   double get baseLogistic => throw _privateConstructorUsedError;
   double get additionalLogistic => throw _privateConstructorUsedError;
-  double get baseStoring => throw _privateConstructorUsedError;
-  double get additionalStoring => throw _privateConstructorUsedError;
-  double get baseAcceptance => throw _privateConstructorUsedError;
-  double get additionalAcceptance => throw _privateConstructorUsedError;
+  double? get baseStoring => throw _privateConstructorUsedError;
+  double? get additionalStoring => throw _privateConstructorUsedError;
+  double? get baseAcceptance => throw _privateConstructorUsedError;
+  double? get additionalAcceptance => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 }
@@ -53,13 +53,13 @@ class _$_StorageTariff implements _StorageTariff {
   @override
   final double additionalLogistic;
   @override
-  final double baseStoring;
+  final double? baseStoring;
   @override
-  final double additionalStoring;
+  final double? additionalStoring;
   @override
-  final double baseAcceptance;
+  final double? baseAcceptance;
   @override
-  final double additionalAcceptance;
+  final double? additionalAcceptance;
 
   @override
   String toString() {
@@ -79,10 +79,10 @@ abstract class _StorageTariff implements StorageTariff {
       {required final String storageName,
       required final double baseLogistic,
       required final double additionalLogistic,
-      required final double baseStoring,
-      required final double additionalStoring,
-      required final double baseAcceptance,
-      required final double additionalAcceptance}) = _$_StorageTariff;
+      required final double? baseStoring,
+      required final double? additionalStoring,
+      required final double? baseAcceptance,
+      required final double? additionalAcceptance}) = _$_StorageTariff;
 
   factory _StorageTariff.fromJson(Map<String, dynamic> json) =
       _$_StorageTariff.fromJson;
@@ -94,11 +94,11 @@ abstract class _StorageTariff implements StorageTariff {
   @override
   double get additionalLogistic;
   @override
-  double get baseStoring;
+  double? get baseStoring;
   @override
-  double get additionalStoring;
+  double? get additionalStoring;
   @override
-  double get baseAcceptance;
+  double? get baseAcceptance;
   @override
-  double get additionalAcceptance;
+  double? get additionalAcceptance;
 }
