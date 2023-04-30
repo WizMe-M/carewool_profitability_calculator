@@ -32,9 +32,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     ProfitabilityRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfitabilityRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const ProfitabilityPage(),
+        child: ProfitabilityPage(
+          product: args.product,
+          key: args.key,
+        ),
       );
     },
   };
@@ -94,14 +98,38 @@ class DefaultRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [ProfitabilityPage]
-class ProfitabilityRoute extends PageRouteInfo<void> {
-  const ProfitabilityRoute({List<PageRouteInfo>? children})
-      : super(
+class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
+  ProfitabilityRoute({
+    required Product product,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
           ProfitabilityRoute.name,
+          args: ProfitabilityRouteArgs(
+            product: product,
+            key: key,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'ProfitabilityRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<ProfitabilityRouteArgs> page =
+      PageInfo<ProfitabilityRouteArgs>(name);
+}
+
+class ProfitabilityRouteArgs {
+  const ProfitabilityRouteArgs({
+    required this.product,
+    this.key,
+  });
+
+  final Product product;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfitabilityRouteArgs{product: $product, key: $key}';
+  }
 }

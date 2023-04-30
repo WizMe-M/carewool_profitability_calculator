@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -5,6 +6,7 @@ import 'package:logger/logger.dart';
 
 import '../../../domain/entity/product/product.dart';
 import '../../../domain/database/repo/product_repository.dart';
+import '../../navigation/app_router.dart';
 import '../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
 import '../../util/space.dart';
 
@@ -67,7 +69,7 @@ class BottomTotalBar extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 28),
                 child: ElevatedButton(
                   onPressed: () => saveProduct(context),
-                  child: const Text('Save'),
+                  child: const Text('Сохранить'),
                 ),
               ),
             ),
@@ -95,20 +97,36 @@ class BottomTotalBar extends StatelessWidget {
     }
 
     var product = Product.fromForm(form: form);
-
     var repo = GetIt.I.get<ProductRepository>();
+
     repo.save(product).then((_) {
       logger.i('Product was saved');
       FocusManager.instance.primaryFocus?.unfocus();
-      form.reset();
-      logger.i('Form was resetted');
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Расчеты сохранены'),
-          duration: Duration(seconds: 1),
-        ),
-      );
+      var messenger = ScaffoldMessenger.of(context);
+      messenger
+        ..removeCurrentMaterialBanner()
+        ..showMaterialBanner(
+          MaterialBanner(
+            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+            content: const Text('Расчеты сохранены'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  messenger.hideCurrentMaterialBanner();
+                  form.reset();
+                },
+                child: const Text('Очистить форму'),
+              ),
+              TextButton(
+                onPressed: () {
+                  messenger.hideCurrentMaterialBanner();
+                  context.router.push(ProfitabilityRoute(product: product));
+                },
+                child: const Text('Расчитать рентабельность'),
+              ),
+            ],
+          ),
+        );
     }).onError((error, stackTrace) {
       logger.e(
         'Caught error while was saving cost calculation',
