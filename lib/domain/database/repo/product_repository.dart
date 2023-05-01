@@ -1,9 +1,13 @@
+import 'dart:collection';
+
 import 'package:get_it/get_it.dart';
+import 'package:logger/logger.dart';
 import 'package:mobx/mobx.dart';
 import 'package:sembast/sembast.dart';
 
 import '../application_database.dart';
 import '../../entity/product/product.dart';
+import '../../error/json_to_entitiy_conversion_error.dart';
 
 part 'product_repository.g.dart';
 
@@ -11,9 +15,9 @@ class ProductRepository = ProductRepositoryBase with _$ProductRepository;
 
 abstract class ProductRepositoryBase with Store {
   final ApplicationDatabase _db = GetIt.I.get<ApplicationDatabase>();
+  final Logger _logger = GetIt.I.get();
 
   /// Список со всеми сохраненными расчетами
-  @observable
   ObservableList<RecordSnapshot<int, Map<String, dynamic>>> productsSnapshot =
       ObservableList();
 
@@ -39,6 +43,20 @@ abstract class ProductRepositoryBase with Store {
     });
   }
 
+  UnmodifiableMapView<int, Product> getProducts() {
+    Map<int, Product> map;
+    try {
+      map = {
+        for (var snapshot in productsSnapshot)
+          snapshot.key: Product.fromJson(snapshot.value),
+      };
+      _logger.i(map);
+    } on TypeError {
+      throw JsonToEntityConversionError();
+    }
+    return UnmodifiableMapView(map);
+  }
+
   /// Сохранить продукцию в базе данных
   @action
   Future<void> save(Product product) async {
@@ -49,5 +67,11 @@ abstract class ProductRepositoryBase with Store {
   @action
   Future<void> remove(int id) async {
     await _db.products.record(id).delete(_db.client);
+  }
+
+  @action
+  Future<void> deleteAll() async {
+    await _db.products.delete(_db.client);
+    productsSnapshot.clear();
   }
 }

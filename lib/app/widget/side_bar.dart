@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 
 import '../../domain/entity/product/product.dart';
 import '../../domain/database/repo/product_repository.dart';
@@ -13,6 +14,7 @@ class SideBar extends StatelessWidget {
   SideBar({super.key});
 
   final ProductRepository _repo = GetIt.I.get<ProductRepository>();
+  final Logger _logger = GetIt.I.get();
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +22,39 @@ class SideBar extends StatelessWidget {
       child: SafeArea(
         child: Observer(
           builder: (context) {
-            var snapshots = _repo.productsSnapshot.toList(growable: false);
-            var products = _repo.productsSnapshot
-                .map((snapshot) => Product.fromJson(snapshot.value))
-                .toList(growable: false)
-              ..sort((a, b) => a.savedDate.compareTo(b.savedDate));
+            Map<int, Product> products;
+            try {
+              products = _repo.getProducts();
+            } on Error catch (e, s) {
+              _logger.e(
+                  "Failed to get products for products' cost history", e, s);
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: SizedBox(
+                    height: 200,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text(
+                            "Error happened. It's recommended to clear saved cost calculations"),
+                        ElevatedButton(
+                          onPressed: () async => await _repo.deleteAll(),
+                          child: const Text('Clear all'),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
 
             if (products.isNotEmpty) {
               return ListView.builder(
                 itemCount: products.length,
                 itemBuilder: (context, index) {
-                  var item = products[index];
+                  var key = products.keys.elementAt(index);
+                  var item = products[key]!;
                   var savedDate = DateFormat('dd.MM.yyyy HH:mm:ss')
                       .format(item.savedDate.toLocal());
 
@@ -39,8 +63,7 @@ class SideBar extends StatelessWidget {
                     subtitle: Text(savedDate),
                     trailing: IconButton(
                       icon: const Icon(Icons.clear),
-                      onPressed: () async =>
-                          await _repo.remove(snapshots[index].key),
+                      onPressed: () => onRemoveTap(context, key),
                     ),
                     onTap: () => onCostTap(context, item),
                   );
@@ -63,7 +86,19 @@ class SideBar extends StatelessWidget {
   }
 
   void onCostTap(BuildContext context, Product product) {
+    clearScaffold(context);
     var form = CostCalculatorForm.fromProduct(product: product)..init();
     context.router.replace(CostCalculatorRoute(form: form));
+  }
+
+  Future<void> onRemoveTap(BuildContext context, int id) async {
+    clearScaffold(context);
+    await _repo.remove(id);
+  }
+
+  void clearScaffold(BuildContext context) {
+    ScaffoldMessenger.of(context)
+      ..removeCurrentMaterialBanner()
+      ..removeCurrentSnackBar();
   }
 }
