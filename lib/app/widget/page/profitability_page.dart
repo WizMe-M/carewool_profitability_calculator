@@ -1,4 +1,5 @@
 import 'package:auto_route/annotations.dart';
+import 'package:carewool_profitability_calculator/app/widget/page/profitability/logistic_form_widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -36,6 +37,7 @@ class ProfitabilityPage extends StatelessWidget {
                   child: const Text('Загрузить Excel-файл с '
                       'тарифами складов и комиссиями'),
                 ),
+                LogisticFormWidget(),
               ],
             ),
           ),

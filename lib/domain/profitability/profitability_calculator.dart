@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'product_size.dart';
 import 'simple_taxation_system.dart';
+import '../../app/viewmodel/profitability/logistic_form/size_form/size_form.dart';
 import '../entity/category_item/category_item.dart';
 import '../entity/storage_tariff/storage_tariff.dart';
 
@@ -9,7 +9,7 @@ class ProfitabilityCalculator {
   // TODO: parse excel "Коэффициент" sheet
   // TODO: pick selected storage from dropdowns
   // TODO: set sizes from inputs
-  double calcLogistics(StorageTariff tariff, ProductSize size) {
+  double calcLogistics(StorageTariff tariff, SizeForm size) {
     var logisticsForVolume = tariff.baseLogistic +
         max<double>(0, (size.volume - 5)) * tariff.additionalLogistic;
 
@@ -42,7 +42,7 @@ class ProfitabilityCalculator {
       baseAcceptance: 15,
       additionalAcceptance: 1.5,
     );
-    var size = ProductSize(10, 4, 4);
+    var size = SizeForm();
     var paidAcceptance = 25;
 
     var cost = calcCostWithDiscount(100, 20);
