@@ -23,32 +23,18 @@ class StorageParser implements ExcelParser<List<StorageTariff>> {
     var tariffs = <StorageTariff>[];
 
     for (var i = 5; i < sheet.maxRows; i++) {
-      var storageName = sheet
-          .cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: i))
-          .value as String;
-      var baseLogistic = sheet
-          .cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: i))
-          .value as double;
-      var additionalLogistic = sheet
-          .cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: i))
-          .value as double;
-      var baseStoring = sheet
-          .cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: i))
-          .value as double;
-      var additionalStoring = sheet
-          .cell(CellIndex.indexByColumnRow(columnIndex: 5, rowIndex: i))
-          .value as double;
-      var baseAcceptance = sheet
-          .cell(CellIndex.indexByColumnRow(columnIndex: 9, rowIndex: i))
-          .value as double;
-      var additionalAcceptance = sheet
-          .cell(CellIndex.indexByColumnRow(columnIndex: 10, rowIndex: i))
-          .value as double;
+      var storageName = sheet.valueOf<String>(0, i);
+      var baseLogistic = sheet.valueOf<double>(2, i);
+      var additionalLogistic = sheet.valueOf<double>(3, i);
+      var baseStoring = sheet.valueOf<double>(4, i);
+      var additionalStoring = sheet.valueOf<double>(5, i);
+      var baseAcceptance = sheet.valueOf<double>(9, i);
+      var additionalAcceptance = sheet.valueOf<double>(10, i);
 
       var tariff = StorageTariff(
-        storageName: storageName,
-        baseLogistic: baseLogistic,
-        additionalLogistic: additionalLogistic,
+        storageName: storageName!,
+        baseLogistic: baseLogistic!,
+        additionalLogistic: additionalLogistic!,
         baseStoring: baseStoring,
         additionalStoring: additionalStoring,
         baseAcceptance: baseAcceptance,
@@ -58,5 +44,26 @@ class StorageParser implements ExcelParser<List<StorageTariff>> {
       tariffs.add(tariff);
     }
     return tariffs;
+  }
+}
+
+extension on Sheet {
+  T? valueOf<T>(int column, int row) {
+    var index = CellIndex.indexByColumnRow(columnIndex: column, rowIndex: row);
+    var c = cell(index);
+    var value = c.value;
+    var logger = GetIt.I.get<Logger>()
+      ..i('Cell[$column, $row] = $value');
+
+    if (c.isFormula) {
+      logger.w('Cell contains formula!');
+    } else if (T == String) {
+      if (value is SharedString) return value.toString() as T;
+      return value as T;
+    } else if (value is T) {
+      return value;
+    }
+
+    return null;
   }
 }
