@@ -4,11 +4,11 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
-import '../../../domain/entity/product/product.dart';
-import '../../../domain/database/repo/product_repository.dart';
-import '../../navigation/app_router.dart';
-import '../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
-import '../../util/space.dart';
+import '../../../navigation/app_router.dart';
+import '../../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
+import '../../../util/space.dart';
+import '../../../../domain/entity/product/product.dart';
+import '../../../../domain/database/repo/product_repository.dart';
 
 class BottomTotalBar extends StatelessWidget {
   final Logger logger = GetIt.I.get<Logger>();

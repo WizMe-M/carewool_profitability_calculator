@@ -1,10 +1,10 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 
+import 'cost_calculator/bottom_total_bar.dart';
+import 'cost_calculator/calculator_form_widget.dart';
+import 'cost_calculator/calculator_app_bar.dart';
 import '../side_bar.dart';
-import '../cost_calculator/bottom_total_bar.dart';
-import '../cost_calculator/calculator_form_widget.dart';
-import '../cost_calculator/calculator_app_bar.dart';
 import '../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
 
 @RoutePage()

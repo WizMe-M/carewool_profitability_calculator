@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
 import 'form_block_widget.dart';
+import '../../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
 
 class CalculatorFormWidget extends StatelessWidget {
   final CostCalculatorForm form;

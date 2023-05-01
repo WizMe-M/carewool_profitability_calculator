@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../viewmodel/cost_calculator/input.dart';
-import '../../util/position.dart';
+import '../../../viewmodel/cost_calculator/input.dart';
+import '../../../util/position.dart';
 
 class InputWidget extends StatelessWidget {
   final Position position;
