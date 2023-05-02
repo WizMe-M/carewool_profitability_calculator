@@ -15,16 +15,6 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
-    CostCalculatorRoute.name: (routeData) {
-      final args = routeData.argsAs<CostCalculatorRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CostCalculatorPage(
-          form: args.form,
-          key: args.key,
-        ),
-      );
-    },
     DefaultRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -41,45 +31,27 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CostCalculatorRoute.name: (routeData) {
+      final args = routeData.argsAs<CostCalculatorRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CostCalculatorPage(
+          form: args.form,
+          key: args.key,
+        ),
+      );
+    },
+    EditCostPriceRoute.name: (routeData) {
+      final args = routeData.argsAs<EditCostPriceRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: EditCostPricePage(
+          form: args.form,
+          key: args.key,
+        ),
+      );
+    },
   };
-}
-
-/// generated route for
-/// [CostCalculatorPage]
-class CostCalculatorRoute extends PageRouteInfo<CostCalculatorRouteArgs> {
-  CostCalculatorRoute({
-    required CostCalculatorForm form,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CostCalculatorRoute.name,
-          args: CostCalculatorRouteArgs(
-            form: form,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'CostCalculatorRoute';
-
-  static const PageInfo<CostCalculatorRouteArgs> page =
-      PageInfo<CostCalculatorRouteArgs>(name);
-}
-
-class CostCalculatorRouteArgs {
-  const CostCalculatorRouteArgs({
-    required this.form,
-    this.key,
-  });
-
-  final CostCalculatorForm form;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'CostCalculatorRouteArgs{form: $form, key: $key}';
-  }
 }
 
 /// generated route for
@@ -131,5 +103,81 @@ class ProfitabilityRouteArgs {
   @override
   String toString() {
     return 'ProfitabilityRouteArgs{product: $product, key: $key}';
+  }
+}
+
+/// generated route for
+/// [CostCalculatorPage]
+class CostCalculatorRoute extends PageRouteInfo<CostCalculatorRouteArgs> {
+  CostCalculatorRoute({
+    required CostPriceForm form,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CostCalculatorRoute.name,
+          args: CostCalculatorRouteArgs(
+            form: form,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CostCalculatorRoute';
+
+  static const PageInfo<CostCalculatorRouteArgs> page =
+      PageInfo<CostCalculatorRouteArgs>(name);
+}
+
+class CostCalculatorRouteArgs {
+  const CostCalculatorRouteArgs({
+    required this.form,
+    this.key,
+  });
+
+  final CostPriceForm form;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'CostCalculatorRouteArgs{form: $form, key: $key}';
+  }
+}
+
+/// generated route for
+/// [EditCostPricePage]
+class EditCostPriceRoute extends PageRouteInfo<EditCostPriceRouteArgs> {
+  EditCostPriceRoute({
+    required CostPriceForm form,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          EditCostPriceRoute.name,
+          args: EditCostPriceRouteArgs(
+            form: form,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'EditCostPriceRoute';
+
+  static const PageInfo<EditCostPriceRouteArgs> page =
+      PageInfo<EditCostPriceRouteArgs>(name);
+}
+
+class EditCostPriceRouteArgs {
+  const EditCostPriceRouteArgs({
+    required this.form,
+    this.key,
+  });
+
+  final CostPriceForm form;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'EditCostPriceRouteArgs{form: $form, key: $key}';
   }
 }

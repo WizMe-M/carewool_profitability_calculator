@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../block/block.dart';
 import '../parameter/parameter.dart';
-import '../../../app/viewmodel/cost_calculator/form/cost_calculator_form.dart';
+import '../../../app/viewmodel/cost_price/form/cost_price_form.dart';
 
 part 'product.freezed.dart';
 
@@ -18,9 +18,9 @@ class Product with _$Product {
     required double total,
   }) = _Product;
 
-  factory Product.fromForm({required CostCalculatorForm form}) {
+  factory Product.fromForm({required CostPriceForm form}) {
     var product = Product(
-      name: form.name,
+      name: form.productName,
       savedDate: DateTime.now().toUtc(),
       total: sum(form.allInputs.map<double>((e) => e.value)),
       blocks: form.blocks.map((block) {

@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'input_widget.dart';
-import '../../../viewmodel/cost_calculator/form_block.dart';
+import '../../../viewmodel/cost_price/form_block.dart';
 import '../../../util/position.dart';
 
 class FormBlockWidget extends StatelessWidget {
   final FormBlock block;
 
-  const FormBlockWidget({
-    super.key,
-    required this.block,
-  });
+  const FormBlockWidget({required this.block, super.key});
 
   @override
   Widget build(BuildContext context) {

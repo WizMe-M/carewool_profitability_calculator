@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'form_block_widget.dart';
-import '../../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
+import '../../../viewmodel/cost_price/form/cost_price_form.dart';
 
-class CalculatorFormWidget extends StatelessWidget {
-  final CostCalculatorForm form;
+class CostPriceFormWidget extends StatelessWidget {
+  final CostPriceForm form;
 
-  const CalculatorFormWidget({required this.form, super.key});
+  const CostPriceFormWidget({required this.form, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class CalculatorFormWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: TextFormField(
-                controller: form.nameController,
+                controller: form.productNameController,
                 decoration: const InputDecoration(
                   labelText: 'Товар',
                   hintText: 'Введите название',

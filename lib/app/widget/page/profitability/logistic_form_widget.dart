@@ -1,13 +1,13 @@
-import 'package:carewool_profitability_calculator/domain/entity/storage_tariff/storage_tariff.dart';
 import 'package:flutter/material.dart';
 
 import 'size_form_widget.dart';
 import '../../../viewmodel/profitability/logistic_form/logistic_form.dart';
+import '../../../../domain/entity/storage_tariff/storage_tariff.dart';
 
 class LogisticFormWidget extends StatelessWidget {
-  LogisticFormWidget({super.key});
-
   final form = LogisticForm();
+
+  LogisticFormWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

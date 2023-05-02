@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
-import 'cost_calculator_page.dart';
+import '../../viewmodel/cost_price/form/cost_price_form.dart';
+import 'cost_price_page.dart';
 
 @RoutePage()
 class DefaultPage extends StatelessWidget {
-  const DefaultPage({Key? key}) : super(key: key);
+  const DefaultPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class DefaultPage extends StatelessWidget {
         if (snapshot.hasData) {
           FlutterNativeSplash.remove();
           return CostCalculatorPage(
-            form: CostCalculatorForm.defaultTemplate()..init(),
+            form: CostPriceForm.defaultTemplate()..init(),
           );
         } else {
           return const Placeholder();

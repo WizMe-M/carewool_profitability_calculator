@@ -12,23 +12,14 @@ import '../form_block.dart';
 import '../input.dart';
 import '../../../../domain/entity/product/product.dart';
 
-part 'cost_calculator_form.g.dart';
+part 'cost_price_form.g.dart';
 
 /// Form of calculating product's cost
-class CostCalculatorForm = CostCalculatorFormBase with _$CostCalculatorForm;
+class CostPriceForm = CostPriceFormBase with _$CostPriceForm;
 
-abstract class CostCalculatorFormBase with Store {
-  final Logger logger = GetIt.I.get<Logger>();
+abstract class CostPriceFormBase with Store {
+  final Logger _logger = GetIt.I.get<Logger>();
 
-  /// Product cost format
-  ///
-  /// Lets to format product cost value in next ways:
-  /// ```dart
-  /// _costFormatter.format(2); // 2.00
-  /// _costFormatter.format(4.12); // 4.12
-  /// _costFormatter.format(9.9090); // 9.909
-  /// _costFormatter.format(0.100001); // 0.10
-  /// ```
   final NumberFormat _costFormatter = NumberFormat()
     ..minimumFractionDigits = 2
     ..maximumFractionDigits = 4;
@@ -44,15 +35,15 @@ abstract class CostCalculatorFormBase with Store {
 
   /// Total product's cost
   @observable
-  double _totalCost = 0;
+  double _costPrice = 0;
 
   /// [TextEditingController] of product name
-  final TextEditingController nameController;
+  final TextEditingController productNameController;
 
-  CostCalculatorFormBase._({required this.blocks, String productName = ''})
-      : nameController = TextEditingController(text: productName);
+  CostPriceFormBase._({required this.blocks, String productName = ''})
+      : productNameController = TextEditingController(text: productName);
 
-  CostCalculatorFormBase.defaultTemplate()
+  CostPriceFormBase.defaultTemplate()
       : this._(blocks: [
           FormBlock(
             title: 'Тара',
@@ -85,7 +76,7 @@ abstract class CostCalculatorFormBase with Store {
           ),
         ]);
 
-  CostCalculatorFormBase.fromProduct({required Product product})
+  CostPriceFormBase.fromProduct({required Product product})
       : this._(
           productName: product.name,
           blocks: product.blocks.map(
@@ -113,21 +104,20 @@ abstract class CostCalculatorFormBase with Store {
 
   /// Total cost formatted to output
   ///
-  /// Uses [_costFormatter]
   @computed
-  String get costFormatted => _costFormatter.format(_totalCost);
+  String get formattedCostPrice => _costFormatter.format(_costPrice);
 
   /// Trimmed product name
-  String get name => nameController.text.trim();
+  String get productName => productNameController.text.trim();
 
   /// Whether all form inputs contains valid value
   bool get areInputsValid => allInputs.every((input) => input.isValid);
 
   /// Whether product name is inputted and is not spaces
-  bool get nameFilled => name.isNotEmpty;
+  bool get nameFilled => productName.isNotEmpty;
 
   /// Whether total product cost is more than zero
-  bool get isCostPositive => _totalCost > 0;
+  bool get isCostPositive => _costPrice > 0;
 
   /// Whether form calculation is valid to save
   bool get canBeSaved => nameFilled && isCostPositive && areInputsValid;
@@ -135,7 +125,7 @@ abstract class CostCalculatorFormBase with Store {
   /// Folds all form inputs, initializes them, subscribes to their streams
   /// and calculates initial product's cost
   void init() {
-    logger.i('Form initalize started');
+    _logger.i('Form initalize started');
     allInputs = blocks.fold([], (inputList, block) {
       return inputList..addAll(block.inputs);
     });
@@ -143,11 +133,11 @@ abstract class CostCalculatorFormBase with Store {
     for (var input in allInputs) {
       input.init();
     }
-    logger.i('Form inputs were initialized');
+    _logger.i('Form inputs were initialized');
 
     _changesStreamSub = Rx.merge(allInputs.map((input) => input.stream))
         .listen((_) => _calculateTotalCost());
-    logger.i('Stream of changes were initialized');
+    _logger.i('Stream of changes were initialized');
 
     _calculateTotalCost();
   }
@@ -155,18 +145,18 @@ abstract class CostCalculatorFormBase with Store {
   /// Recalculates product's cost from all inputs' values
   @action
   void _calculateTotalCost() {
-    _totalCost = sum(allInputs.map<double>((e) => e.value));
-    logger.i('Sum was recalculated: $_totalCost');  }
+    _costPrice = sum(allInputs.map<double>((e) => e.value));
+    _logger.i('Sum was recalculated: $_costPrice');  }
 
   /// Clears all of form inputs' values
   @action
   void reset() {
     _changesStreamSub!.pause();
-    nameController.clear();
+    productNameController.clear();
     for (var element in allInputs) {
       element.clear();
     }
     _changesStreamSub!.resume();
-    logger.i('Form was resetted');
+    _logger.i('Form was resetted');
   }
 }
