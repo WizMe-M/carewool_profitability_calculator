@@ -1,7 +1,7 @@
 import 'package:mobx/mobx.dart';
 
 import 'size_form/size_form.dart';
-import '../../../../domain/entity/storage_tariff/storage_tariff.dart';
+import '../../entity/storage_tariff/storage_tariff.dart';
 
 part 'logistic_form.g.dart';
 

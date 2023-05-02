@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../block/block.dart';
 import '../parameter/parameter.dart';
-import '../../../app/viewmodel/cost_price/form/cost_price_form.dart';
+import '../../cost_price/form/cost_price_form.dart';
 
 part 'product.freezed.dart';
 

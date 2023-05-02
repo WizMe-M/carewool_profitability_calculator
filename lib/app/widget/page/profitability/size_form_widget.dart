@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import 'size_input_widget.dart';
-import '../../../viewmodel/profitability/logistic_form/size_form/size_form.dart';
+import '../../../../domain/profitability/logistic_form/size_form/size_form.dart';
 
 class SizeFormWidget extends StatelessWidget {
   final SizeForm form;

@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'cost_price/bottom_total_bar.dart';
 import 'cost_price/cost_price_form_widget.dart';
 import '../side_bar.dart';
-import '../../viewmodel/cost_price/form/cost_price_form.dart';
+import '../../../domain/cost_price/form/cost_price_form.dart';
 
 @RoutePage()
 class EditCostPricePage extends StatelessWidget {

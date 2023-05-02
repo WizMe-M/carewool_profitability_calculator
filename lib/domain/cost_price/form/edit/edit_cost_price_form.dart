@@ -1,7 +1,7 @@
 import 'package:mobx/mobx.dart';
 
 import '../cost_price_form.dart';
-import '../../../../../domain/entity/product/product.dart';
+import '../../../entity/product/product.dart';
 
 part 'edit_cost_price_form.g.dart';
 

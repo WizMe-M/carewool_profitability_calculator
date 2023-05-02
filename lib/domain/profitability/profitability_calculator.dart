@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'simple_taxation_system.dart';
-import '../../app/viewmodel/profitability/logistic_form/size_form/size_form.dart';
+import 'logistic_form/size_form/size_form.dart';
 import '../entity/category_item/category_item.dart';
 import '../entity/storage_tariff/storage_tariff.dart';
 

@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
 import '../../../../navigation/app_router.dart';
-import '../../../../viewmodel/cost_price/form/cost_price_form.dart';
+import '../../../../../domain/cost_price/form/cost_price_form.dart';
 import '../../../../util/space.dart';
 import '../../../../../domain/entity/product/product.dart';
 import '../../../../../domain/database/repo/product_repository.dart';

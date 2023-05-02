@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'size_form_widget.dart';
-import '../../../viewmodel/profitability/logistic_form/logistic_form.dart';
+import '../../../../domain/profitability/logistic_form/logistic_form.dart';
 import '../../../../domain/entity/storage_tariff/storage_tariff.dart';
 
 class LogisticFormWidget extends StatelessWidget {

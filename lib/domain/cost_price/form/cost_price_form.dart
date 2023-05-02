@@ -10,7 +10,7 @@ import 'package:dfunc/dfunc.dart';
 
 import '../form_block.dart';
 import '../input.dart';
-import '../../../../domain/entity/product/product.dart';
+import '../../entity/product/product.dart';
 
 part 'cost_price_form.g.dart';
 

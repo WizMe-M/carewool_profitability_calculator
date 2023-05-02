@@ -8,7 +8,7 @@ import 'package:logger/logger.dart';
 import '../../domain/entity/product/product.dart';
 import '../../domain/database/repo/product_repository.dart';
 import '../navigation/app_router.dart';
-import '../viewmodel/cost_price/form/cost_price_form.dart';
+import '../../domain/cost_price/form/cost_price_form.dart';
 
 class SideBar extends StatelessWidget {
   final ProductRepository _repo = GetIt.I.get();

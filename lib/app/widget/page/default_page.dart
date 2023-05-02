@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../viewmodel/cost_price/form/cost_price_form.dart';
+import '../../../domain/cost_price/form/cost_price_form.dart';
 import 'cost_price_page.dart';
 
 @RoutePage()

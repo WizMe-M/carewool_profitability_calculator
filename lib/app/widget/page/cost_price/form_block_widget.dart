@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'input_widget.dart';
-import '../../../viewmodel/cost_price/form_block.dart';
+import '../../../../domain/cost_price/form_block.dart';
 import '../../../util/position.dart';
 
 class FormBlockWidget extends StatelessWidget {
