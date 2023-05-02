@@ -1,6 +1,8 @@
-import 'package:carewool_profitability_calculator/app/viewmodel/profitability/logistic_form/logistic_form.dart';
-import 'package:carewool_profitability_calculator/app/widget/page/profitability/size_form_widget.dart';
+import 'package:carewool_profitability_calculator/domain/entity/storage_tariff/storage_tariff.dart';
 import 'package:flutter/material.dart';
+
+import 'size_form_widget.dart';
+import '../../../viewmodel/profitability/logistic_form/logistic_form.dart';
 
 class LogisticFormWidget extends StatelessWidget {
   LogisticFormWidget({super.key});
@@ -11,6 +13,18 @@ class LogisticFormWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        DropdownButton<StorageTariff>(
+          items: [
+            for (var tariff in form.storageTariffs)
+              DropdownMenuItem<StorageTariff>(
+                value: tariff,
+                child: Text(tariff.storageName),
+              ),
+          ],
+          onChanged: (selectedItem) {
+            form.selectedTariff = selectedItem;
+          },
+        ),
         SizeFormWidget(form: form.sizeForm),
       ],
     );

@@ -14,6 +14,7 @@ abstract class SizeInputBase with Store {
     ..minimumFractionDigits = 0
     ..maximumFractionDigits = 2;
 
+  /// [TextEditingController] of this input
   final controller = TextEditingController();
 
   @observable
@@ -23,12 +24,20 @@ abstract class SizeInputBase with Store {
     controller.addListener(() => _onInputChanges(controller.text));
   }
 
+  /// Value (double) that is inputted
   @computed
   double get value => _value;
 
+  /// Formatted value for string output
+  /// - 4 -> 4
+  /// - 13.0 -> 13
+  /// - 42.5901 -> 42.59
   @computed
   String get formatted => _formatter.format(value);
 
+  /// Listener of controller's input changes
+  ///
+  /// Parses nums as double and empty/null string as 0
   @action
   void _onInputChanges(String? s) {
     if (s == null) _value = 0;
@@ -38,6 +47,7 @@ abstract class SizeInputBase with Store {
     }
   }
 
+  /// Clear controller text and input value
   void clear() => controller.clear();
 
   /// Проверяет строку на корректность

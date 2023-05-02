@@ -1,11 +1,11 @@
 import 'package:auto_route/annotations.dart';
-import 'package:carewool_profitability_calculator/app/widget/page/profitability/logistic_form_widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'profitability/logistic_form_widget.dart';
 import '../side_bar.dart';
 import '../../../domain/entity/storage_tariff/storage_tariff.dart';
 import '../../../domain/entity/product/product.dart';

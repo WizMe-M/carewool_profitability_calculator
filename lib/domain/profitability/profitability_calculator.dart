@@ -6,7 +6,6 @@ import '../entity/category_item/category_item.dart';
 import '../entity/storage_tariff/storage_tariff.dart';
 
 class ProfitabilityCalculator {
-  // TODO: parse excel "Коэффициент" sheet
   // TODO: pick selected storage from dropdowns
   // TODO: set sizes from inputs
   double calcLogistics(StorageTariff tariff, SizeForm size) {
@@ -21,7 +20,6 @@ class ProfitabilityCalculator {
     return logistics;
   }
 
-  // TODO: parse excel "Логистика, комиссия" sheet
   // TODO: pick selected item from category and subcategory dropdowns
   double calcSaleCommission(CategoryItem item) {
     var cost = 100; // TODO: set cost from product total 'cost price'
