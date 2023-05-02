@@ -23,7 +23,7 @@ class ProfitabilityPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Калькулятор рентабельности')),
-      drawer: SideBar(),
+      drawer: GetIt.I.get<SideBar>(),
       body: SafeArea(
         child: Expanded(
           child: SingleChildScrollView(

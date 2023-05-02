@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 import 'cost_price/bottom_total_bar.dart';
 import 'cost_price/cost_price_form_widget.dart';
@@ -36,7 +37,7 @@ class CostCalculatorPage extends StatelessWidget {
         ],
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      drawer: SideBar(),
+      drawer: GetIt.I.get<SideBar>(),
       body: SafeArea(
         child: Column(
           children: [

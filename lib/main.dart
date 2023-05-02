@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 
 import 'app/viewmodel/cost_price/form/cost_price_form.dart';
 import 'app/widget/app.dart';
+import 'app/widget/side_bar.dart';
 import 'domain/database/application_database.dart';
 import 'domain/database/repo/product_repository.dart';
 import 'domain/entity/category/category.dart';
@@ -32,6 +33,10 @@ Future<void> _registerDependencies() async {
       await repo.init();
       return repo;
     }, dependsOn: [ApplicationDatabase])
+    ..registerSingletonWithDependencies(
+      () => SideBar(),
+      dependsOn: [ProductRepository],
+    )
     ..registerFactory<CostPriceForm>(
       () => CostPriceForm.defaultTemplate()..init(),
     )
