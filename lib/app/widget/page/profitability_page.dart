@@ -14,7 +14,7 @@ import '../../../domain/parser/excel_parser.dart';
 
 @RoutePage()
 class ProfitabilityPage extends StatelessWidget {
-  final Logger _logger = GetIt.I.get<Logger>();
+  final Logger _logger = GetIt.I.get();
   final Product product;
 
   ProfitabilityPage({required this.product, super.key});

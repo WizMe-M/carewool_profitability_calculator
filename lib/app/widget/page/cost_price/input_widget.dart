@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../domain/cost_price/input.dart';
+import '../../../../domain/cost_price/form/input.dart';
 import '../../../util/position.dart';
 
 class InputWidget extends StatelessWidget {

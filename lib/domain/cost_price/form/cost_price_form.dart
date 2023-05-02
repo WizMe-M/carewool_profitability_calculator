@@ -8,9 +8,10 @@ import 'package:mobx/mobx.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:dfunc/dfunc.dart';
 
-import '../form_block.dart';
-import '../input.dart';
+import 'form_block.dart';
+import 'input.dart';
 import '../../entity/product/product.dart';
+import '../../entity/cost_price_form_template/cost_price_form_template.dart';
 
 part 'cost_price_form.g.dart';
 
@@ -40,69 +41,26 @@ abstract class CostPriceFormBase with Store {
   /// [TextEditingController] of product name
   final TextEditingController productNameController = TextEditingController();
 
-  CostPriceFormBase._({required this.blocks, String productName = ''}) {
-    productNameController.text = productName;
+  CostPriceFormBase.fromTemplate({required CostPriceFormTemplate template}) {
+    blocks = [
+      for (var entry in template.structure.entries)
+        FormBlock(
+          title: entry.key,
+          inputs: [
+            for (var inputLabel in entry.value) Input(label: inputLabel),
+          ],
+        ),
+    ];
+
     subscribeToInputStreams();
   }
 
-  CostPriceFormBase();
-
   CostPriceFormBase.defaultTemplate()
-      : this._(blocks: [
-          FormBlock(
-            title: 'Тара',
-            inputs: [
-              Input(label: 'Крышка'),
-              Input(label: 'Дозатор'),
-              Input(label: 'Флакон'),
-            ],
-          ),
-          FormBlock(
-            title: 'Упаковка',
-            inputs: [
-              Input(label: 'Этикетка'),
-              Input(label: 'Коробка'),
-            ],
-          ),
-          FormBlock(
-            title: 'Производство',
-            inputs: [
-              Input(label: 'Розлив'),
-              Input(label: 'Обклейка'),
-            ],
-          ),
-          FormBlock(
-            title: 'Логистика',
-            inputs: [
-              Input(label: 'Логистика от пр-ва'),
-              Input(label: 'Логистика до пр-ва'),
-            ],
-          ),
-        ]);
+      : this.fromTemplate(template: CostPriceFormTemplate.standard());
 
-  CostPriceFormBase.fromProduct({required Product product})
-      : this._(
-          productName: product.name,
-          blocks: [
-            for (var block in product.blocks)
-              FormBlock(
-                title: block.name,
-                inputs: block.parameters.map((parameter) {
-                  if (parameter.cost != 0) {
-                    var formatter = NumberFormat()..minimumFractionDigits = 0;
-                    var formatted = formatter.format(parameter.cost);
-
-                    return Input.withText(
-                      label: parameter.name,
-                      text: formatted,
-                    );
-                  }
-
-                  return Input(label: parameter.name);
-                }).toList(),
-              ),
-          ],
-        );
+  CostPriceFormBase.fromProduct({required Product product}) {
+    fillWithProduct(product);
+  }
 
   /// Total cost formatted to output
   ///
