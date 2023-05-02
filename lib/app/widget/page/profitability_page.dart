@@ -14,10 +14,10 @@ import '../../../domain/parser/excel_parser.dart';
 
 @RoutePage()
 class ProfitabilityPage extends StatelessWidget {
-  ProfitabilityPage({required this.product, super.key});
-
+  final Logger _logger = GetIt.I.get<Logger>();
   final Product product;
-  final Logger logger = GetIt.I.get<Logger>();
+
+  ProfitabilityPage({required this.product, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,21 +57,21 @@ class ProfitabilityPage extends StatelessWidget {
     );
     if (result != null) {
       var file = result.files.single;
-      logger.i('Picked file. Path: "${file.path}"');
+      _logger.i('Picked file. Path: "${file.path}"');
 
       var storageParser = GetIt.I.get<ExcelParser<List<StorageTariff>>>();
       var tariffs = storageParser.parse(file.bytes!);
       if (tariffs.isEmpty) {
-        logger.e('Parsed tariffs data is empty!');
+        _logger.e('Parsed tariffs data is empty!');
       }
 
       var categoryParser = GetIt.I.get<ExcelParser<List<Category>>>();
       var categories = categoryParser.parse(file.bytes!);
       if (categories.isEmpty) {
-        logger.e('Parsed categories data is empty!');
+        _logger.e('Parsed categories data is empty!');
       }
     } else {
-      logger.w('File was not picked');
+      _logger.w('File was not picked');
     }
   }
 }

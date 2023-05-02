@@ -3,7 +3,6 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
-import 'app/viewmodel/cost_price/form/cost_price_form.dart';
 import 'app/widget/app.dart';
 import 'app/widget/side_bar.dart';
 import 'domain/database/application_database.dart';
@@ -36,9 +35,6 @@ Future<void> _registerDependencies() async {
     ..registerSingletonWithDependencies(
       () => SideBar(),
       dependsOn: [ProductRepository],
-    )
-    ..registerFactory<CostPriceForm>(
-      () => CostPriceForm.defaultTemplate()..init(),
     )
     ..registerSingleton<ExcelParser<List<StorageTariff>>>(StorageParser())
     ..registerSingleton<ExcelParser<List<Category>>>(CategoryParser());

@@ -18,7 +18,7 @@ class DefaultPage extends StatelessWidget {
         if (snapshot.hasData) {
           FlutterNativeSplash.remove();
           return CostCalculatorPage(
-            form: CostPriceForm.defaultTemplate()..init(),
+            form: CostPriceForm.defaultTemplate(),
           );
         } else {
           return const Placeholder();

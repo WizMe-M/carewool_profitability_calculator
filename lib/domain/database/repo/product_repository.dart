@@ -14,7 +14,7 @@ part 'product_repository.g.dart';
 class ProductRepository = ProductRepositoryBase with _$ProductRepository;
 
 abstract class ProductRepositoryBase with Store {
-  final ApplicationDatabase _db = GetIt.I.get<ApplicationDatabase>();
+  final ApplicationDatabase _db = GetIt.I.get();
   final Logger _logger = GetIt.I.get();
 
   /// Список со всеми сохраненными расчетами

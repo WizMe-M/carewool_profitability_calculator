@@ -18,7 +18,7 @@ part 'cost_price_form.g.dart';
 class CostPriceForm = CostPriceFormBase with _$CostPriceForm;
 
 abstract class CostPriceFormBase with Store {
-  final Logger _logger = GetIt.I.get<Logger>();
+  final Logger _logger = GetIt.I.get();
 
   final NumberFormat _costFormatter = NumberFormat()
     ..minimumFractionDigits = 2
@@ -27,21 +27,25 @@ abstract class CostPriceFormBase with Store {
   /// Subscription of all inputs' changes stream
   StreamSubscription? _changesStreamSub;
 
-  /// Logical blocks of form
-  final List<FormBlock> blocks;
-
-  /// All form's inputs
-  late List<Input> allInputs;
-
   /// Total product's cost
   @observable
   double _costPrice = 0;
 
-  /// [TextEditingController] of product name
-  final TextEditingController productNameController;
+  /// Logical blocks of form
+  List<FormBlock> blocks = [];
 
-  CostPriceFormBase._({required this.blocks, String productName = ''})
-      : productNameController = TextEditingController(text: productName);
+  /// All form's inputs
+  List<Input> allInputs = [];
+
+  /// [TextEditingController] of product name
+  final TextEditingController productNameController = TextEditingController();
+
+  CostPriceFormBase._({required this.blocks, String productName = ''}) {
+    productNameController.text = productName;
+    subscribeToInputStreams();
+  }
+
+  CostPriceFormBase();
 
   CostPriceFormBase.defaultTemplate()
       : this._(blocks: [
@@ -79,27 +83,25 @@ abstract class CostPriceFormBase with Store {
   CostPriceFormBase.fromProduct({required Product product})
       : this._(
           productName: product.name,
-          blocks: product.blocks.map(
-            (block) {
-              return FormBlock(
+          blocks: [
+            for (var block in product.blocks)
+              FormBlock(
                 title: block.name,
-                inputs: block.parameters.map(
-                  (parameter) {
-                    if (parameter.cost != 0) {
-                      var formatter = NumberFormat()..minimumFractionDigits = 0;
-                      var formatted = formatter.format(parameter.cost);
+                inputs: block.parameters.map((parameter) {
+                  if (parameter.cost != 0) {
+                    var formatter = NumberFormat()..minimumFractionDigits = 0;
+                    var formatted = formatter.format(parameter.cost);
 
-                      return Input.withText(
-                        label: parameter.name,
-                        text: formatted,
-                      );
-                    }
-                    return Input(label: parameter.name);
-                  },
-                ).toList(),
-              );
-            },
-          ).toList(),
+                    return Input.withText(
+                      label: parameter.name,
+                      text: formatted,
+                    );
+                  }
+
+                  return Input(label: parameter.name);
+                }).toList(),
+              ),
+          ],
         );
 
   /// Total cost formatted to output
@@ -122,31 +124,12 @@ abstract class CostPriceFormBase with Store {
   /// Whether form calculation is valid to save
   bool get canBeSaved => nameFilled && isCostPositive && areInputsValid;
 
-  /// Folds all form inputs, initializes them, subscribes to their streams
-  /// and calculates initial product's cost
-  void init() {
-    _logger.i('Form initalize started');
-    allInputs = blocks.fold([], (inputList, block) {
-      return inputList..addAll(block.inputs);
-    });
-
-    for (var input in allInputs) {
-      input.init();
-    }
-    _logger.i('Form inputs were initialized');
-
-    _changesStreamSub = Rx.merge(allInputs.map((input) => input.stream))
-        .listen((_) => _calculateTotalCost());
-    _logger.i('Stream of changes were initialized');
-
-    _calculateTotalCost();
-  }
-
   /// Recalculates product's cost from all inputs' values
   @action
   void _calculateTotalCost() {
     _costPrice = sum(allInputs.map<double>((e) => e.value));
-    _logger.i('Sum was recalculated: $_costPrice');  }
+    _logger.i('Sum was recalculated: $_costPrice');
+  }
 
   /// Clears all of form inputs' values
   @action
@@ -158,5 +141,59 @@ abstract class CostPriceFormBase with Store {
     }
     _changesStreamSub!.resume();
     _logger.i('Form was resetted');
+  }
+
+  void fillWithProduct(Product product) {
+    productNameController.text = product.name;
+
+    var formatter = NumberFormat()
+      ..minimumFractionDigits = 0
+      ..maximumFractionDigits = 4;
+
+    for (var block in product.blocks) {
+      blocks.add(
+        FormBlock(
+          title: block.name,
+          inputs: [
+            for (var param in block.parameters)
+              Input.withText(
+                label: param.name,
+                text: param.cost > 0 ? formatter.format(param.cost) : '',
+              ),
+          ],
+        ),
+      );
+    }
+
+    subscribeToInputStreams();
+  }
+
+  void subscribeToInputStreams() {
+    allInputs = blocks.fold(
+      allInputs,
+      (inputList, block) => inputList..addAll(block.inputs),
+    );
+
+    for (var input in allInputs) {
+      input.addControllerListeners();
+    }
+
+    _changesStreamSub = Rx.merge(allInputs.map((input) => input.stream))
+        .listen((_) => _calculateTotalCost());
+
+    _logger.i('Stream of changes were initialized');
+  }
+
+  Future<void> unsubscribeFromInputStreamsAsync() async {
+    await _changesStreamSub!.cancel();
+
+    for (var input in allInputs) {
+      input.removeControllerListeners();
+    }
+
+    allInputs.clear();
+    _changesStreamSub = null;
+
+    _logger.i('Subscription cancelled and input listeners are unsubscribed');
   }
 }

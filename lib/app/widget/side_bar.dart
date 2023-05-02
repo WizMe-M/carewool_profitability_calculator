@@ -113,7 +113,7 @@ class SideBar extends StatelessWidget {
 
   void onCopyTap(BuildContext context, Product product) {
     clearScaffold(context);
-    var form = CostPriceForm.fromProduct(product: product)..init();
+    var form = CostPriceForm.fromProduct(product: product);
     context.router.replace(CostCalculatorRoute(form: form));
   }
 

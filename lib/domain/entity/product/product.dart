@@ -23,14 +23,16 @@ class Product with _$Product {
       name: form.productName,
       savedDate: DateTime.now().toUtc(),
       total: sum(form.allInputs.map<double>((e) => e.value)),
-      blocks: form.blocks.map((block) {
-        return Block(
-          name: block.title,
-          parameters: block.inputs.map((input) {
-            return Parameter(name: input.label, cost: input.value);
-          }).toList(),
-        );
-      }).toList(),
+      blocks: [
+        for (var formBlock in form.blocks)
+          Block(
+            name: formBlock.title,
+            parameters: [
+              for (var input in formBlock.inputs)
+                Parameter(name: input.label, cost: input.value),
+            ],
+          ),
+      ],
     );
     return product;
   }
