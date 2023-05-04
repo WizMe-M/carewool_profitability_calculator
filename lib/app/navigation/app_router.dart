@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
+import '../../domain/cost_price/form/edit/edit_cost_price_form.dart';
 import '../widget/page/cost_price_page.dart';
 import '../widget/page/default_page.dart';
 import '../widget/page/edit_cost_price_page.dart';

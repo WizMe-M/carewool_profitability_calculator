@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:carewool_profitability_calculator/domain/cost_price/form/edit/edit_cost_price_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -25,9 +26,12 @@ class SideBar extends StatelessWidget {
             Map<int, Product> products;
             try {
               products = _repo.getProducts();
-            } on Error catch (e, s) {
+            } on Error catch (error, stackTrace) {
               _logger.e(
-                  "Failed to get products for products' cost history", e, s);
+                "Failed to get productEntries for productEntries' cost history",
+                error,
+                stackTrace,
+              );
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(20),
@@ -67,13 +71,13 @@ class SideBar extends StatelessWidget {
                     );
                   }
 
-                  var key = products.keys.elementAt(i);
-                  var item = products[key]!;
+                  var entry = products.entries.elementAt(i);
+                  var product = entry.value;
                   var savedDate = DateFormat('dd.MM.yyyy HH:mm')
-                      .format(item.savedDate.toLocal());
+                      .format(product.savedDate.toLocal());
 
                   return ListTile(
-                    title: Text('${item.name} (${item.total}₽)'),
+                    title: Text('${product.name} (${product.total}₽)'),
                     subtitle: Text(savedDate),
                     trailing: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -82,16 +86,17 @@ class SideBar extends StatelessWidget {
                         IconButton(
                           tooltip: 'Клонировать расчет',
                           icon: const Icon(Icons.copy),
-                          onPressed: () => onCopyTap(context, item),
+                          onPressed: () => onCopyTap(context, product),
                         ),
                         const VerticalDivider(),
                         IconButton(
                           tooltip: 'Удалить расчет',
                           icon: const Icon(Icons.clear),
-                          onPressed: () => onRemoveTap(context, key),
+                          onPressed: () => onRemoveTap(context, entry.key),
                         ),
                       ],
                     ),
+                    onTap: () => onItemTap(context, entry.key, product),
                   );
                 },
               );
@@ -120,6 +125,12 @@ class SideBar extends StatelessWidget {
   Future<void> onRemoveTap(BuildContext context, int id) async {
     clearScaffold(context);
     await _repo.remove(id);
+  }
+
+  void onItemTap(BuildContext context, int id, Product product) {
+    clearScaffold(context);
+    var editWrap = EditWrapCostPriceForm(savedProduct: product, productId: id);
+    context.router.push(EditCostPriceRoute(editWrap: editWrap));
   }
 
   void clearScaffold(BuildContext context) {

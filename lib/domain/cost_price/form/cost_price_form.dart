@@ -52,7 +52,7 @@ abstract class CostPriceFormBase with Store {
         ),
     ];
 
-    initInputs();
+    initForm();
   }
 
   CostPriceFormBase.defaultTemplate()
@@ -78,7 +78,7 @@ abstract class CostPriceFormBase with Store {
       );
     }
 
-    initInputs();
+    initForm();
   }
 
   /// Total cost formatted to output
@@ -133,9 +133,11 @@ abstract class CostPriceFormBase with Store {
     _calculateCostPrice();
   }
 
-  void initInputs() {
+  /// Initializes form
+  void initForm() {
     setAllInputs();
     subscribeToInputStreams();
+    _calculateCostPrice();
   }
 
   void setAllInputs() {

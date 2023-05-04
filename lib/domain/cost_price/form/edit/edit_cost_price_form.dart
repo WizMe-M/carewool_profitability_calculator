@@ -1,19 +1,27 @@
 import 'package:mobx/mobx.dart';
 
-import '../cost_price_form.dart';
 import '../../../entity/product/product.dart';
+import '../cost_price_form.dart';
 
 part 'edit_cost_price_form.g.dart';
 
-class EditCostPriceForm = EditCostPriceFormBase with _$EditCostPriceForm;
+class EditWrapCostPriceForm = EditWrapCostPriceFormBase
+    with _$EditWrapCostPriceForm;
 
-abstract class EditCostPriceFormBase with Store {
+abstract class EditWrapCostPriceFormBase with Store {
   final Product savedProduct;
-  final CostPriceForm form;
+  final int productId;
 
-  EditCostPriceFormBase({required this.savedProduct})
-      : form = CostPriceForm.fromProduct(product: savedProduct);
+  @observable
+  CostPriceForm form;
+
+  EditWrapCostPriceFormBase({
+    required this.savedProduct,
+    required this.productId,
+  }) : form = CostPriceForm.fromProduct(product: savedProduct);
 
   @action
-  void resetChanges() {}
+  void resetChanges() {
+    form = CostPriceForm.fromProduct(product: savedProduct);
+  }
 }

@@ -99,7 +99,7 @@ class BottomTotalBar extends StatelessWidget {
     var product = Product.fromForm(form: form);
     var repo = GetIt.I.get<ProductRepository>();
 
-    repo.save(product).then((_) {
+    repo.add(product).then((_) {
       _logger.i('Product was saved');
       FocusManager.instance.primaryFocus?.unfocus();
       var messenger = ScaffoldMessenger.of(context);

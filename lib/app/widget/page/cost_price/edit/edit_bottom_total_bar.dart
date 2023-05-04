@@ -4,18 +4,18 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
-import '../../../../navigation/app_router.dart';
-import '../../../../../domain/cost_price/form/cost_price_form.dart';
-import '../../../../util/space.dart';
-import '../../../../../domain/entity/product/product.dart';
+import '../../../../../domain/cost_price/form/edit/edit_cost_price_form.dart';
 import '../../../../../domain/database/repo/product_repository.dart';
+import '../../../../../domain/entity/product/product.dart';
+import '../../../../navigation/app_router.dart';
+import '../../../../util/space.dart';
 
-class BottomTotalBar extends StatelessWidget {
+class EditBottomTotalBar extends StatelessWidget {
   final Logger _logger = GetIt.I.get();
 
-  final CostPriceForm form;
+  final EditWrapCostPriceForm editWrap;
 
-  BottomTotalBar({required this.form, super.key});
+  EditBottomTotalBar({required this.editWrap, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class BottomTotalBar extends StatelessWidget {
                     const Space(4),
                     Observer(
                       builder: (context) => Text(
-                        '${form.formattedCostPrice}₽',
+                        '${editWrap.form.formattedCostPrice}₽',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -68,8 +68,8 @@ class BottomTotalBar extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 28),
                 child: ElevatedButton(
-                  onPressed: () => saveProduct(context),
-                  child: const Text('Сохранить'),
+                  onPressed: () => saveChanges(context),
+                  child: const Text('Сохранить изменения'),
                 ),
               ),
             ),
@@ -79,12 +79,12 @@ class BottomTotalBar extends StatelessWidget {
     );
   }
 
-  Future<void> saveProduct(BuildContext context) async {
-    if (!form.isValid) {
+  Future<void> saveChanges(BuildContext context) async {
+    if (!editWrap.form.isValid) {
       final String content =
-          '${!form.isProductNameNotEmpty ? 'Название товара не заполнено.\n' : ''}'
-          '${!form.isCostPricePositive ? 'Поля стоимости не заполнены.\n' : ''}'
-          '${!form.areInputsValid ? 'Некоторые поля формы заполнены некорректно.' : ''}';
+          '${!editWrap.form.isProductNameNotEmpty ? 'Название товара не заполнено.\n' : ''}'
+          '${!editWrap.form.isCostPricePositive ? 'Поля стоимости не заполнены.\n' : ''}'
+          '${!editWrap.form.areInputsValid ? 'Некоторые поля формы заполнены некорректно.' : ''}';
 
       await showDialog(
         context: context,
@@ -96,46 +96,33 @@ class BottomTotalBar extends StatelessWidget {
       return;
     }
 
-    var product = Product.fromForm(form: form);
     var repo = GetIt.I.get<ProductRepository>();
+    var id = editWrap.productId;
+    var updatedProduct = Product.fromForm(form: editWrap.form);
+    var messenger = ScaffoldMessenger.of(context);
 
-    repo.save(product).then((_) {
+    repo.update(id, updatedProduct).then((_) {
       _logger.i('Product was saved');
-      FocusManager.instance.primaryFocus?.unfocus();
-      var messenger = ScaffoldMessenger.of(context);
-      messenger
-        ..removeCurrentMaterialBanner()
-        ..showMaterialBanner(
-          MaterialBanner(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            content: const Text('Расчеты сохранены'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  messenger.hideCurrentMaterialBanner();
-                  form.reset();
-                },
-                child: const Text('Очистить форму'),
-              ),
-              TextButton(
-                onPressed: () {
-                  messenger.hideCurrentMaterialBanner();
-                  context.router.push(ProfitabilityRoute(product: product));
-                },
-                child: const Text('Расчитать рентабельность'),
-              ),
-            ],
-          ),
-        );
+      var newEditWrap = EditWrapCostPriceForm(
+        savedProduct: updatedProduct,
+        productId: id,
+      );
+      context.router.replace(EditCostPriceRoute(editWrap: newEditWrap));
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Изменения сохранены'),
+          duration: Duration(seconds: 1),
+        ),
+      );
     }).onError((error, stackTrace) {
       _logger.e(
-        'Caught an error while was saving cost calculation',
+        'Caught an error while was saving changes',
         error,
         stackTrace,
       );
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         const SnackBar(
-          content: Text('Не удалось сохранить расчет'),
+          content: Text('Не удалось сохранить изменения'),
           duration: Duration(seconds: 1),
         ),
       );

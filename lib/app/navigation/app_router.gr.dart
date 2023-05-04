@@ -46,7 +46,7 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: EditCostPricePage(
-          form: args.form,
+          editWrap: args.editWrap,
           key: args.key,
         ),
       );
@@ -148,13 +148,13 @@ class CostCalculatorRouteArgs {
 /// [EditCostPricePage]
 class EditCostPriceRoute extends PageRouteInfo<EditCostPriceRouteArgs> {
   EditCostPriceRoute({
-    required CostPriceForm form,
+    required EditWrapCostPriceForm editWrap,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           EditCostPriceRoute.name,
           args: EditCostPriceRouteArgs(
-            form: form,
+            editWrap: editWrap,
             key: key,
           ),
           initialChildren: children,
@@ -168,16 +168,16 @@ class EditCostPriceRoute extends PageRouteInfo<EditCostPriceRouteArgs> {
 
 class EditCostPriceRouteArgs {
   const EditCostPriceRouteArgs({
-    required this.form,
+    required this.editWrap,
     this.key,
   });
 
-  final CostPriceForm form;
+  final EditWrapCostPriceForm editWrap;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'EditCostPriceRouteArgs{form: $form, key: $key}';
+    return 'EditCostPriceRouteArgs{editWrap: $editWrap, key: $key}';
   }
 }
