@@ -37,11 +37,11 @@ mixin _$CostPriceForm on CostPriceFormBase, Store {
       ActionController(name: 'CostPriceFormBase', context: context);
 
   @override
-  void _calculateTotalCost() {
+  void _calculateCostPrice() {
     final _$actionInfo = _$CostPriceFormBaseActionController.startAction(
         name: 'CostPriceFormBase._calculateTotalCost');
     try {
-      return super._calculateTotalCost();
+      return super._calculateCostPrice();
     } finally {
       _$CostPriceFormBaseActionController.endAction(_$actionInfo);
     }

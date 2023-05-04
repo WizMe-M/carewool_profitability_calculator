@@ -9,7 +9,7 @@ class Input {
   final Logger _logger = GetIt.I.get();
 
   /// Контроллер потока изменений текста в поле ввода
-  final StreamController _streamController = StreamController();
+  StreamController? _streamController;
 
   /// Наименование (метка) поля ввода
   final String label;
@@ -23,7 +23,7 @@ class Input {
       : controller = TextEditingController(text: text);
 
   /// Поток изменений текста в поле ввода
-  Stream get stream => _streamController.stream;
+  Stream? get stream => _streamController?.stream;
 
   String get text => controller.text;
 
@@ -55,15 +55,18 @@ class Input {
   }
 
   /// [Function] that should be executed when input was changed
-  void onInputChanged() => _streamController.add(null);
+  void onInputChanged() => _streamController!.add(null);
 
   /// Subscribes stream to [TextEditingController] listener
   void addControllerListeners() {
+    _streamController = StreamController();
     controller.addListener(onInputChanged);
   }
 
   void removeControllerListeners() {
     controller.removeListener(onInputChanged);
+    _streamController!.close();
+    _streamController = null;
   }
 
   /// Clear inputted text
@@ -71,6 +74,5 @@ class Input {
 
   void dispose() {
     controller.dispose();
-    _streamController.close();
   }
 }

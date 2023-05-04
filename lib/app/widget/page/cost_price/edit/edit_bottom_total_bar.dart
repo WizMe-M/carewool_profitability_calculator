@@ -80,10 +80,10 @@ class BottomTotalBar extends StatelessWidget {
   }
 
   Future<void> saveProduct(BuildContext context) async {
-    if (!form.canBeSaved) {
+    if (!form.isValid) {
       final String content =
-          '${!form.nameFilled ? 'Название товара не заполнено.\n' : ''}'
-          '${!form.isCostPositive ? 'Поля стоимости не заполнены.\n' : ''}'
+          '${!form.isProductNameNotEmpty ? 'Название товара не заполнено.\n' : ''}'
+          '${!form.isCostPricePositive ? 'Поля стоимости не заполнены.\n' : ''}'
           '${!form.areInputsValid ? 'Некоторые поля формы заполнены некорректно.' : ''}';
 
       await showDialog(

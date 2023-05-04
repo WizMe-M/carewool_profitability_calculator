@@ -52,106 +52,127 @@ abstract class CostPriceFormBase with Store {
         ),
     ];
 
-    subscribeToInputStreams();
+    initInputs();
   }
 
   CostPriceFormBase.defaultTemplate()
       : this.fromTemplate(template: CostPriceFormTemplate.standard());
 
   CostPriceFormBase.fromProduct({required Product product}) {
-    fillWithProduct(product);
+    productNameController.text = product.name;
+    var formatter = NumberFormat()
+      ..minimumFractionDigits = 0
+      ..maximumFractionDigits = 2;
+
+    for (var block in product.blocks) {
+      blocks.add(
+        FormBlock(
+          title: block.name,
+          inputs: block.parameters
+              .map((param) => Input.withText(
+                    label: param.name,
+                    text: param.cost > 0 ? formatter.format(param.cost) : '',
+                  ))
+              .toList(),
+        ),
+      );
+    }
+
+    initInputs();
   }
 
   /// Total cost formatted to output
   ///
+  /// ```
+  /// 1 -> 1.00
+  /// 2.4 -> 2.40
+  /// 42.001 -> 42.001
+  /// 213.200 -> 213.20
+  /// 110.9999 -> 110.9999
+  /// ```
   @computed
   String get formattedCostPrice => _costFormatter.format(_costPrice);
 
   /// Trimmed product name
   String get productName => productNameController.text.trim();
 
-  /// Whether all form inputs contains valid value
+  /// Does form inputs contain valid value
   bool get areInputsValid => allInputs.every((input) => input.isValid);
 
-  /// Whether product name is inputted and is not spaces
-  bool get nameFilled => productName.isNotEmpty;
+  /// Is product name not empty or spaces
+  bool get isProductNameNotEmpty => productName.isNotEmpty;
 
-  /// Whether total product cost is more than zero
-  bool get isCostPositive => _costPrice > 0;
+  /// Is cost price more than zero
+  bool get isCostPricePositive => _costPrice > 0;
 
-  /// Whether form calculation is valid to save
-  bool get canBeSaved => nameFilled && isCostPositive && areInputsValid;
+  /// Is form valid (product name is not empty to save, cost price is positive,
+  /// all form's inputs contain valid values) to be saved
+  bool get isValid =>
+      isProductNameNotEmpty && isCostPricePositive && areInputsValid;
 
   /// Recalculates product's cost from all inputs' values
   @action
-  void _calculateTotalCost() {
+  void _calculateCostPrice() {
     _costPrice = sum(allInputs.map<double>((e) => e.value));
-    _logger.i('Sum was recalculated: $_costPrice');
+    _logger.i('Cost price was recalculated: $_costPrice');
   }
 
   /// Clears all of form inputs' values
   @action
   void reset() {
-    _changesStreamSub!.pause();
+    unsubscribeFromInputStreams();
+
     productNameController.clear();
     for (var element in allInputs) {
       element.clear();
     }
-    _changesStreamSub!.resume();
+
+    subscribeToInputStreams();
     _logger.i('Form was resetted');
+
+    _calculateCostPrice();
   }
 
-  void fillWithProduct(Product product) {
-    productNameController.text = product.name;
-
-    var formatter = NumberFormat()
-      ..minimumFractionDigits = 0
-      ..maximumFractionDigits = 4;
-
-    for (var block in product.blocks) {
-      blocks.add(
-        FormBlock(
-          title: block.name,
-          inputs: [
-            for (var param in block.parameters)
-              Input.withText(
-                label: param.name,
-                text: param.cost > 0 ? formatter.format(param.cost) : '',
-              ),
-          ],
-        ),
-      );
-    }
-
+  void initInputs() {
+    setAllInputs();
     subscribeToInputStreams();
   }
 
-  void subscribeToInputStreams() {
+  void setAllInputs() {
     allInputs = blocks.fold(
       allInputs,
       (inputList, block) => inputList..addAll(block.inputs),
     );
+    _logger.i('Folded blocks inputs');
+  }
 
+  /// Subscribes on changes from inputs' streams to recalculate cost price.
+  ///
+  /// Add to [allInputs] controller listener.
+  ///
+  /// Sets [_changesStreamSub] as subscription of [_calculateCostPrice] on
+  /// merged [allInputs]' streams.
+  void subscribeToInputStreams() {
     for (var input in allInputs) {
       input.addControllerListeners();
     }
 
-    _changesStreamSub = Rx.merge(allInputs.map((input) => input.stream))
-        .listen((_) => _calculateTotalCost());
-
-    _logger.i('Stream of changes were initialized');
+    _changesStreamSub = Rx.merge(allInputs.map((input) => input.stream!))
+        .listen((_) => _calculateCostPrice());
+    _logger.i('Subscription created and input listeners are subscribed');
   }
 
-  Future<void> unsubscribeFromInputStreamsAsync() async {
-    await _changesStreamSub!.cancel();
-
+  /// Unsubscribes of changes from inputs' stremas.
+  ///
+  /// Removes controller listeners from [allInputs].
+  ///
+  /// Cancels [_changesStreamSub] subscription and sets it to null.
+  void unsubscribeFromInputStreams() {
+    _changesStreamSub!.cancel();
     for (var input in allInputs) {
       input.removeControllerListeners();
     }
-
-    allInputs.clear();
     _changesStreamSub = null;
-
     _logger.i('Subscription cancelled and input listeners are unsubscribed');
   }
 }
