@@ -15,22 +15,6 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
-    DefaultRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const DefaultPage(),
-      );
-    },
-    ProfitabilityRoute.name: (routeData) {
-      final args = routeData.argsAs<ProfitabilityRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ProfitabilityPage(
-          product: args.product,
-          key: args.key,
-        ),
-      );
-    },
     CostCalculatorRoute.name: (routeData) {
       final args = routeData.argsAs<CostCalculatorRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -39,6 +23,12 @@ abstract class _$AppRouter extends RootStackRouter {
           form: args.form,
           key: args.key,
         ),
+      );
+    },
+    DefaultRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const DefaultPage(),
       );
     },
     EditCostPriceRoute.name: (routeData) {
@@ -51,59 +41,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ProfitabilityRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfitabilityRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ProfitabilityPage(
+          product: args.product,
+          key: args.key,
+        ),
+      );
+    },
   };
-}
-
-/// generated route for
-/// [DefaultPage]
-class DefaultRoute extends PageRouteInfo<void> {
-  const DefaultRoute({List<PageRouteInfo>? children})
-      : super(
-          DefaultRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'DefaultRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfitabilityPage]
-class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
-  ProfitabilityRoute({
-    required Product product,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ProfitabilityRoute.name,
-          args: ProfitabilityRouteArgs(
-            product: product,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfitabilityRoute';
-
-  static const PageInfo<ProfitabilityRouteArgs> page =
-      PageInfo<ProfitabilityRouteArgs>(name);
-}
-
-class ProfitabilityRouteArgs {
-  const ProfitabilityRouteArgs({
-    required this.product,
-    this.key,
-  });
-
-  final Product product;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'ProfitabilityRouteArgs{product: $product, key: $key}';
-  }
 }
 
 /// generated route for
@@ -145,6 +93,20 @@ class CostCalculatorRouteArgs {
 }
 
 /// generated route for
+/// [DefaultPage]
+class DefaultRoute extends PageRouteInfo<void> {
+  const DefaultRoute({List<PageRouteInfo>? children})
+      : super(
+          DefaultRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'DefaultRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [EditCostPricePage]
 class EditCostPriceRoute extends PageRouteInfo<EditCostPriceRouteArgs> {
   EditCostPriceRoute({
@@ -179,5 +141,43 @@ class EditCostPriceRouteArgs {
   @override
   String toString() {
     return 'EditCostPriceRouteArgs{editWrap: $editWrap, key: $key}';
+  }
+}
+
+/// generated route for
+/// [ProfitabilityPage]
+class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
+  ProfitabilityRoute({
+    required Product product,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ProfitabilityRoute.name,
+          args: ProfitabilityRouteArgs(
+            product: product,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfitabilityRoute';
+
+  static const PageInfo<ProfitabilityRouteArgs> page =
+      PageInfo<ProfitabilityRouteArgs>(name);
+}
+
+class ProfitabilityRouteArgs {
+  const ProfitabilityRouteArgs({
+    required this.product,
+    this.key,
+  });
+
+  final Product product;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfitabilityRouteArgs{product: $product, key: $key}';
   }
 }

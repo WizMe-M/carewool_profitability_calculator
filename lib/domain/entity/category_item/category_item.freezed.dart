@@ -14,26 +14,17 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-CategoryItem _$CategoryItemFromJson(Map<String, dynamic> json) {
-  return _CategoryItem.fromJson(json);
-}
-
 /// @nodoc
 mixin _$CategoryItem {
   String get name => throw _privateConstructorUsedError;
   double get fbo => throw _privateConstructorUsedError;
   double get fbs => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$_CategoryItem implements _CategoryItem {
   _$_CategoryItem({required this.name, required this.fbo, required this.fbs});
-
-  factory _$_CategoryItem.fromJson(Map<String, dynamic> json) =>
-      _$$_CategoryItemFromJson(json);
 
   @override
   final String name;
@@ -46,13 +37,6 @@ class _$_CategoryItem implements _CategoryItem {
   String toString() {
     return 'CategoryItem(name: $name, fbo: $fbo, fbs: $fbs)';
   }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_CategoryItemToJson(
-      this,
-    );
-  }
 }
 
 abstract class _CategoryItem implements CategoryItem {
@@ -60,9 +44,6 @@ abstract class _CategoryItem implements CategoryItem {
       {required final String name,
       required final double fbo,
       required final double fbs}) = _$_CategoryItem;
-
-  factory _CategoryItem.fromJson(Map<String, dynamic> json) =
-      _$_CategoryItem.fromJson;
 
   @override
   String get name;

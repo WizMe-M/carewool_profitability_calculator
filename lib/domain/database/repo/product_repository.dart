@@ -10,6 +10,7 @@ import '../../error/json_to_entitiy_conversion_error.dart';
 
 part 'product_repository.g.dart';
 
+// TODO: remove in case of Isar usage
 class ProductRepository = ProductRepositoryBase with _$ProductRepository;
 
 abstract class ProductRepositoryBase with Store {

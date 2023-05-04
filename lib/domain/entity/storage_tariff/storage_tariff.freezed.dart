@@ -14,10 +14,6 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-StorageTariff _$StorageTariffFromJson(Map<String, dynamic> json) {
-  return _StorageTariff.fromJson(json);
-}
-
 /// @nodoc
 mixin _$StorageTariff {
   String get storageName => throw _privateConstructorUsedError;
@@ -27,12 +23,10 @@ mixin _$StorageTariff {
   double? get additionalStoring => throw _privateConstructorUsedError;
   double? get baseAcceptance => throw _privateConstructorUsedError;
   double? get additionalAcceptance => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$_StorageTariff implements _StorageTariff {
   _$_StorageTariff(
       {required this.storageName,
@@ -42,9 +36,6 @@ class _$_StorageTariff implements _StorageTariff {
       required this.additionalStoring,
       required this.baseAcceptance,
       required this.additionalAcceptance});
-
-  factory _$_StorageTariff.fromJson(Map<String, dynamic> json) =>
-      _$$_StorageTariffFromJson(json);
 
   @override
   final String storageName;
@@ -65,13 +56,6 @@ class _$_StorageTariff implements _StorageTariff {
   String toString() {
     return 'StorageTariff(storageName: $storageName, baseLogistic: $baseLogistic, additionalLogistic: $additionalLogistic, baseStoring: $baseStoring, additionalStoring: $additionalStoring, baseAcceptance: $baseAcceptance, additionalAcceptance: $additionalAcceptance)';
   }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_StorageTariffToJson(
-      this,
-    );
-  }
 }
 
 abstract class _StorageTariff implements StorageTariff {
@@ -83,9 +67,6 @@ abstract class _StorageTariff implements StorageTariff {
       required final double? additionalStoring,
       required final double? baseAcceptance,
       required final double? additionalAcceptance}) = _$_StorageTariff;
-
-  factory _StorageTariff.fromJson(Map<String, dynamic> json) =
-      _$_StorageTariff.fromJson;
 
   @override
   String get storageName;
