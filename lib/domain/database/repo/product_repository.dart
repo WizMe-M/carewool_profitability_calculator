@@ -1,7 +1,6 @@
 import 'dart:collection';
 
 import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
 import 'package:mobx/mobx.dart';
 import 'package:sembast/sembast.dart';
 
@@ -14,64 +13,76 @@ part 'product_repository.g.dart';
 class ProductRepository = ProductRepositoryBase with _$ProductRepository;
 
 abstract class ProductRepositoryBase with Store {
-  final ApplicationDatabase _db = GetIt.I.get<ApplicationDatabase>();
-  final Logger _logger = GetIt.I.get();
+  final ApplicationDatabase _db = GetIt.I.get();
 
-  /// Список со всеми сохраненными расчетами
-  ObservableList<RecordSnapshot<int, Map<String, dynamic>>> productsSnapshot =
+  /// Record snapshots of products
+  ObservableList<RecordSnapshot<int, Map<String, dynamic>>> _snapshots =
       ObservableList();
 
-  /// Инициализировать репозиторий
+  /// Init repository
   ///
-  /// Получает сохраненные ранее расчеты и
-  /// подписывается на изменения в базе данных
+  /// Get current data and subscribe to changes
   @action
   Future<void> init() async {
     var data = await _db.products.find(_db.client);
-    productsSnapshot = ObservableList.of(data);
+    _snapshots = ObservableList.of(data);
 
     _db.products.addOnChangesListener(_db.client, (transaction, changes) async {
-      var change = changes.first;
-      if (change.isAdd) {
-        var data = change.newSnapshot!;
-        productsSnapshot.add(data);
-      }
-      if (change.isDelete) {
-        var key = change.oldSnapshot!.key;
-        productsSnapshot.removeWhere((element) => element.key == key);
+      for (var change in changes) {
+        if (change.isAdd) {
+          var added = change.newSnapshot!;
+          _snapshots.add(added);
+        } else if (change.isUpdate) {
+          var key = change.newSnapshot!.key;
+          var updated = change.newSnapshot!;
+          _snapshots.removeWhere((element) => element.key == key);
+          _snapshots.add(updated);
+        } else if (change.isDelete) {
+          var key = change.oldSnapshot!.key;
+          _snapshots.removeWhere((element) => element.key == key);
+        }
       }
     });
   }
 
+  /// Receive the map of [Product]s with its ID
+  ///
+  /// Throws [JsonToEntityConversionError] when it is not available to parse
+  /// products from JSON (maybe because of migrating issues)
   UnmodifiableMapView<int, Product> getProducts() {
     Map<int, Product> map;
     try {
       map = {
-        for (var snapshot in productsSnapshot)
+        for (var snapshot in _snapshots)
           snapshot.key: Product.fromJson(snapshot.value),
       };
-      _logger.i(map);
     } on TypeError {
       throw JsonToEntityConversionError();
     }
     return UnmodifiableMapView(map);
   }
 
-  /// Сохранить продукцию в базе данных
+  /// Add new document with [product] data
   @action
-  Future<void> save(Product product) async {
+  Future<void> add(Product product) async {
     await _db.products.add(_db.client, product.toJson());
   }
 
-  /// Удалить продукцию в базе данных по ID
+  /// Update document under [id] with [product] data
+  @action
+  Future<void> update(int id, Product product) async {
+    await _db.products.record(id).put(_db.client, product.toJson());
+  }
+
+  /// Delete document by [id]
   @action
   Future<void> remove(int id) async {
     await _db.products.record(id).delete(_db.client);
   }
 
+  /// Delete all documents
   @action
   Future<void> deleteAll() async {
     await _db.products.delete(_db.client);
-    productsSnapshot.clear();
   }
 }

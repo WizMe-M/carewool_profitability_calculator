@@ -3,8 +3,8 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
-import 'app/viewmodel/cost_calculator/form/cost_calculator_form.dart';
 import 'app/widget/app.dart';
+import 'app/widget/side_bar.dart';
 import 'domain/database/application_database.dart';
 import 'domain/database/repo/product_repository.dart';
 import 'domain/entity/category/category.dart';
@@ -32,8 +32,9 @@ Future<void> _registerDependencies() async {
       await repo.init();
       return repo;
     }, dependsOn: [ApplicationDatabase])
-    ..registerFactory<CostCalculatorForm>(
-      () => CostCalculatorForm.defaultTemplate()..init(),
+    ..registerSingletonWithDependencies(
+      () => SideBar(),
+      dependsOn: [ProductRepository],
     )
     ..registerSingleton<ExcelParser<List<StorageTariff>>>(StorageParser())
     ..registerSingleton<ExcelParser<List<Category>>>(CategoryParser());

@@ -6,10 +6,10 @@ import 'package:logger/logger.dart';
 
 /// Числовое поле ввода
 class Input {
-  final Logger logger = GetIt.I.get<Logger>();
+  final Logger _logger = GetIt.I.get();
 
   /// Контроллер потока изменений текста в поле ввода
-  final StreamController _streamController = StreamController();
+  StreamController? _streamController;
 
   /// Наименование (метка) поля ввода
   final String label;
@@ -23,7 +23,7 @@ class Input {
       : controller = TextEditingController(text: text);
 
   /// Поток изменений текста в поле ввода
-  Stream get stream => _streamController.stream;
+  Stream? get stream => _streamController?.stream;
 
   String get text => controller.text;
 
@@ -32,11 +32,6 @@ class Input {
 
   /// Проверяет, корректно ли значение в поле
   bool get isValid => validate(text) == null;
-
-  /// Subscribes stream to [TextEditingController] listener
-  void init() {
-    controller.addListener(() => _streamController.add(null));
-  }
 
   /// Проверяет строку на корректность
   ///
@@ -47,20 +42,37 @@ class Input {
 
     var num = double.tryParse(s);
     if (num == null) {
-      logger.w('Input is not a number: "$s"');
+      _logger.w('Input is not a number: "$s"');
       return 'Введите число';
     }
 
     if (num <= 0) {
-      logger.w('Input is less or equal zero: "$num"');
+      _logger.w('Input is less or equal zero: "$num"');
       return 'Число должно быть больше нуля';
     }
 
     return null;
   }
 
+  /// [Function] that should be executed when input was changed
+  void onInputChanged() => _streamController!.add(null);
+
+  /// Subscribes stream to [TextEditingController] listener
+  void addControllerListeners() {
+    _streamController = StreamController();
+    controller.addListener(onInputChanged);
+  }
+
+  void removeControllerListeners() {
+    controller.removeListener(onInputChanged);
+    _streamController!.close();
+    _streamController = null;
+  }
+
   /// Clear inputted text
   void clear() => controller.clear();
 
-  void dispose() => controller.dispose();
+  void dispose() {
+    controller.dispose();
+  }
 }

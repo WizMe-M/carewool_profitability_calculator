@@ -5,15 +5,15 @@ import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 
 import '../../../navigation/app_router.dart';
-import '../../../viewmodel/cost_calculator/form/cost_calculator_form.dart';
+import '../../../../domain/cost_price/form/cost_price_form.dart';
 import '../../../util/space.dart';
 import '../../../../domain/entity/product/product.dart';
 import '../../../../domain/database/repo/product_repository.dart';
 
 class BottomTotalBar extends StatelessWidget {
-  final Logger logger = GetIt.I.get<Logger>();
+  final Logger _logger = GetIt.I.get();
 
-  final CostCalculatorForm form;
+  final CostPriceForm form;
 
   BottomTotalBar({required this.form, super.key});
 
@@ -51,7 +51,7 @@ class BottomTotalBar extends StatelessWidget {
                     const Space(4),
                     Observer(
                       builder: (context) => Text(
-                        '${form.costFormatted}₽',
+                        '${form.formattedCostPrice}₽',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -80,10 +80,10 @@ class BottomTotalBar extends StatelessWidget {
   }
 
   Future<void> saveProduct(BuildContext context) async {
-    if (!form.canBeSaved) {
+    if (!form.isValid) {
       final String content =
-          '${!form.nameFilled ? 'Название товара не заполнено.\n' : ''}'
-          '${!form.isCostPositive ? 'Поля стоимости не заполнены.\n' : ''}'
+          '${!form.isProductNameNotEmpty ? 'Название товара не заполнено.\n' : ''}'
+          '${!form.isCostPricePositive ? 'Поля стоимости не заполнены.\n' : ''}'
           '${!form.areInputsValid ? 'Некоторые поля формы заполнены некорректно.' : ''}';
 
       await showDialog(
@@ -99,8 +99,8 @@ class BottomTotalBar extends StatelessWidget {
     var product = Product.fromForm(form: form);
     var repo = GetIt.I.get<ProductRepository>();
 
-    repo.save(product).then((_) {
-      logger.i('Product was saved');
+    repo.add(product).then((_) {
+      _logger.i('Product was saved');
       FocusManager.instance.primaryFocus?.unfocus();
       var messenger = ScaffoldMessenger.of(context);
       messenger
@@ -128,8 +128,8 @@ class BottomTotalBar extends StatelessWidget {
           ),
         );
     }).onError((error, stackTrace) {
-      logger.e(
-        'Caught error while was saving cost calculation',
+      _logger.e(
+        'Caught an error while was saving cost calculation',
         error,
         stackTrace,
       );

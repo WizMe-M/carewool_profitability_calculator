@@ -17,12 +17,20 @@ mixin _$ProductRepository on ProductRepositoryBase, Store {
     return _$initAsyncAction.run(() => super.init());
   }
 
-  late final _$saveAsyncAction =
-      AsyncAction('ProductRepositoryBase.save', context: context);
+  late final _$addAsyncAction =
+      AsyncAction('ProductRepositoryBase.add', context: context);
 
   @override
-  Future<void> save(Product product) {
-    return _$saveAsyncAction.run(() => super.save(product));
+  Future<void> add(Product product) {
+    return _$addAsyncAction.run(() => super.add(product));
+  }
+
+  late final _$updateAsyncAction =
+      AsyncAction('ProductRepositoryBase.update', context: context);
+
+  @override
+  Future<void> update(int id, Product product) {
+    return _$updateAsyncAction.run(() => super.update(id, product));
   }
 
   late final _$removeAsyncAction =
