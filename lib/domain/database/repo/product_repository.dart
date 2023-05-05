@@ -1,14 +1,14 @@
 import 'dart:collection';
 
-import 'package:carewool_profitability_calculator/database/entity/cost_price.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 import 'package:mobx/mobx.dart';
 import 'package:sembast/sembast.dart';
 
-import '../application_database.dart';
+import '../../../database/entity/cost_price.dart';
 import '../../entity/product/product.dart';
 import '../../error/json_to_entitiy_conversion_error.dart';
+import '../application_database.dart';
 
 part 'product_repository.g.dart';
 
@@ -93,9 +93,6 @@ abstract class ProductRepositoryBase with Store {
   /// Delete all documents
   @action
   Future<void> deleteAll() async {
-    await _db.products.delete(_db.client);
-    await _isar.writeTxn(
-          () async => await _isar.costPrices.buildQuery().deleteAll(),
-    );
+
   }
 }
