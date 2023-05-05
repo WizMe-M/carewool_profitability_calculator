@@ -49,33 +49,29 @@ class CostPriceHistoryPage extends StatelessWidget {
           builder: (context, snapshot) {
             var data = snapshot.data;
             if (!snapshot.hasData || data!.isEmpty) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Expanded(
-                    child: Center(
-                      child: Text(
-                        'Нет сохраненных\n'
-                        'расчётов себестоимости',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+              return Center(
+                child: Column(
+                  children: [
+                    const Spacer(),
+                    const Text(
+                      'Нет сохраненных\n'
+                      'расчётов себестоимости',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
                       ),
                     ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Align(
-                      alignment: Alignment.topCenter,
+                    Padding(
+                      padding: const EdgeInsets.all(16),
                       child: ElevatedButton(
                         child: const Text('Добавить новый расчёт'),
                         onPressed: () => onAddCostPriceTap(context),
                       ),
                     ),
-                  ),
-                ],
+                    const Spacer(flex: 3),
+                  ],
+                ),
               );
             } else {
               return ListView.separated(
@@ -146,7 +142,7 @@ class CostPriceHistoryPage extends StatelessWidget {
         ..showSnackBar(
           const SnackBar(
             content: Text('Отсутствуют расчёты себестоимости'),
-            duration: Duration(milliseconds: 450),
+            duration: Duration(seconds: 1),
           ),
         );
     }
@@ -160,25 +156,21 @@ class CostPriceHistoryPage extends StatelessWidget {
 
   void onRemoveTap(BuildContext ctx, int id) {
     _isar.writeTxn(() async {
-      var messenger = ScaffoldMessenger.of(ctx);
       await _isar.costPrices.delete(id);
-      messenger
+    }).then((value) {
+      ScaffoldMessenger.of(ctx)
         ..hideCurrentSnackBar()
         ..showSnackBar(
           const SnackBar(
             content: Text('Расчёт удалён'),
-            duration: Duration(milliseconds: 450),
+            duration: Duration(seconds: 1),
           ),
         );
     });
   }
 
   void onItemTap(BuildContext ctx, CostPrice costPrice) {
-    var product = Product.fromEntity(entity: costPrice);
-    var editWrap = EditWrapCostPriceForm(
-      savedProduct: product,
-      productId: costPrice.id,
-    );
+    var editWrap = EditWrapCostPriceForm(costPrice: costPrice);
     ctx.router.push(EditCostPriceRoute(editWrap: editWrap));
   }
 }

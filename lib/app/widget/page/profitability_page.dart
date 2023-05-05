@@ -5,12 +5,12 @@ import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'profitability/logistic_form_widget.dart';
-import '../side_bar.dart';
 import '../../../domain/entity/storage_tariff/storage_tariff.dart';
 import '../../../domain/entity/product/product.dart';
 import '../../../domain/entity/category/category.dart';
 import '../../../domain/parser/excel_parser.dart';
+import '../side_bar.dart';
+import 'profitability/logistic_form_widget.dart';
 
 @RoutePage()
 class ProfitabilityPage extends StatelessWidget {

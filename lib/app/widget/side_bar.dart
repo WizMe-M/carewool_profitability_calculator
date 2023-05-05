@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 
 import '../../database/entity/cost_price.dart';
+import '../../domain/cost_price/form/cost_price_form.dart';
 import '../navigation/app_router.dart';
 
 class SideBar extends StatelessWidget {
@@ -31,6 +32,14 @@ class SideBar extends StatelessWidget {
             ),
             child: const SizedBox(),
           ),
+          ListTile(
+            leading: const Icon(Icons.add),
+            title: const Text('Добавить расчёт себестоимости'),
+            onTap: () {
+              var form = CostPriceForm.defaultTemplate();
+              context.router.push(CostCalculatorRoute(form: form));
+            },
+          ),
           FutureBuilder(
             future: Future.wait([
               Future(() async {
@@ -40,15 +49,12 @@ class SideBar extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListTile(
-                  title: const Text('Расчёты себестоимости'),
                   leading: const Icon(Icons.currency_ruble),
+                  title: const Text('Расчёты себестоимости'),
                   trailing: costPricesCount > 0
                       ? Counter(count: costPricesCount)
                       : null,
-                  onTap: () async {
-                    clearScaffold(context);
-                    context.router.push(CostPriceHistoryRoute());
-                  },
+                  onTap: () => context.router.push(CostPriceHistoryRoute()),
                 );
               } else {
                 return const LinearProgressIndicator();
@@ -58,12 +64,6 @@ class SideBar extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  void clearScaffold(BuildContext context) {
-    ScaffoldMessenger.of(context)
-      ..removeCurrentMaterialBanner()
-      ..removeCurrentSnackBar();
   }
 }
 
@@ -76,7 +76,7 @@ class Counter extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipOval(
       child: Container(
-        color: Colors.grey,
+        color: Colors.grey[350],
         width: 20,
         height: 20,
         child: Center(

@@ -58,6 +58,7 @@ abstract class CostPriceFormBase with Store {
   CostPriceFormBase.defaultTemplate()
       : this.fromTemplate(template: CostPriceFormTemplate.standard());
 
+  // TOOD: realize fromEntity instead
   CostPriceFormBase.fromProduct({required Product product}) {
     productNameController.text = product.name;
     var formatter = NumberFormat()

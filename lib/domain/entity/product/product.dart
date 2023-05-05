@@ -5,8 +5,7 @@ import '../../cost_price/form/cost_price_form.dart';
 
 part 'product.freezed.dart';
 
-part 'product.g.dart';
-
+// TODO: remove this unecessary interlayer
 @freezed
 class Product with _$Product {
   Product._();
@@ -29,6 +28,7 @@ class Product with _$Product {
     required List<Block> blocks,
   }) = _Product;
 
+  // TODO: realize CostPriceForm.toEntity instead
   factory Product.fromForm({required CostPriceForm form}) {
     var product = Product(
       name: form.productName,
@@ -66,10 +66,6 @@ class Product with _$Product {
     );
   }
 
-  // TODO: remove in case of Isar usage
-  factory Product.fromJson(Map<String, dynamic> json) =>
-      _$ProductFromJson(json);
-
   db.CostPrice toEntity() {
     var costPrice = db.CostPrice(
         name,
@@ -94,8 +90,6 @@ class Block with _$Block {
     required String name,
     required List<Parameter> parameters,
   }) = _Block;
-
-  factory Block.fromJson(Map<String, dynamic> json) => _$BlockFromJson(json);
 }
 
 @freezed
@@ -104,7 +98,4 @@ class Parameter with _$Parameter {
     required String name,
     required double cost,
   }) = _Parameter;
-
-  factory Parameter.fromJson(Map<String, dynamic> json) =>
-      _$ParameterFromJson(json);
 }

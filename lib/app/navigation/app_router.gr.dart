@@ -15,6 +15,14 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    CostPriceHistoryRoute.name: (routeData) {
+      final args = routeData.argsAs<CostPriceHistoryRouteArgs>(
+          orElse: () => const CostPriceHistoryRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CostPriceHistoryPage(key: args.key),
+      );
+    },
     CostCalculatorRoute.name: (routeData) {
       final args = routeData.argsAs<CostCalculatorRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -51,15 +59,36 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    CostPriceHistoryRoute.name: (routeData) {
-      final args = routeData.argsAs<CostPriceHistoryRouteArgs>(
-          orElse: () => const CostPriceHistoryRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CostPriceHistoryPage(key: args.key),
-      );
-    },
   };
+}
+
+/// generated route for
+/// [CostPriceHistoryPage]
+class CostPriceHistoryRoute extends PageRouteInfo<CostPriceHistoryRouteArgs> {
+  CostPriceHistoryRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CostPriceHistoryRoute.name,
+          args: CostPriceHistoryRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'CostPriceHistoryRoute';
+
+  static const PageInfo<CostPriceHistoryRouteArgs> page =
+      PageInfo<CostPriceHistoryRouteArgs>(name);
+}
+
+class CostPriceHistoryRouteArgs {
+  const CostPriceHistoryRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'CostPriceHistoryRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for
@@ -187,34 +216,5 @@ class ProfitabilityRouteArgs {
   @override
   String toString() {
     return 'ProfitabilityRouteArgs{product: $product, key: $key}';
-  }
-}
-
-/// generated route for
-/// [CostPriceHistoryPage]
-class CostPriceHistoryRoute extends PageRouteInfo<CostPriceHistoryRouteArgs> {
-  CostPriceHistoryRoute({
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CostPriceHistoryRoute.name,
-          args: CostPriceHistoryRouteArgs(key: key),
-          initialChildren: children,
-        );
-
-  static const String name = 'CostPriceHistoryRoute';
-
-  static const PageInfo<CostPriceHistoryRouteArgs> page =
-      PageInfo<CostPriceHistoryRouteArgs>(name);
-}
-
-class CostPriceHistoryRouteArgs {
-  const CostPriceHistoryRouteArgs({this.key});
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'CostPriceHistoryRouteArgs{key: $key}';
   }
 }

@@ -18,8 +18,9 @@ class EditCostPricePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(
-          editWrap.savedProduct.name,
+          editWrap.costPrice.productName!,
           style: const TextStyle(fontSize: 18),
         ),
         actions: [
@@ -29,7 +30,6 @@ class EditCostPricePage extends StatelessWidget {
             tooltip: 'Сбросить изменения',
           ),
         ],
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       drawer: GetIt.I.get<SideBar>(),
       body: SafeArea(
