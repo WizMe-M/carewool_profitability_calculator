@@ -49,9 +49,9 @@ class Product with _$Product {
 
   factory Product.fromEntity({required db.CostPrice entity}) {
     return Product(
-      name: entity.productName,
-      savedDate: entity.savedDate,
-      blocks: entity.blocks
+      name: entity.productName!,
+      savedDate: entity.savedDate!,
+      blocks: entity.blocks!
           .map(
             (block) => Block(
               name: block.name!,

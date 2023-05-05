@@ -57,6 +57,7 @@ extension on Sheet {
 
     if (c.isFormula) {
       logger.w('Cell contains formula!');
+      // TODO: check on @__xludf.dummyfunction
     } else if (T == String) {
       if (value is SharedString) return value.toString() as T;
       return value as T;

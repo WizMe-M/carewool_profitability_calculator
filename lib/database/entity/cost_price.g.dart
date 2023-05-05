@@ -59,15 +59,25 @@ int _costPriceEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.blocks.length * 3;
   {
-    final offsets = allOffsets[Block]!;
-    for (var i = 0; i < object.blocks.length; i++) {
-      final value = object.blocks[i];
-      bytesCount += BlockSchema.estimateSize(value, offsets, allOffsets);
+    final list = object.blocks;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[Block]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += BlockSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
     }
   }
-  bytesCount += 3 + object.productName.length * 3;
+  {
+    final value = object.productName;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -95,17 +105,17 @@ CostPrice _costPriceDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = CostPrice(
-    reader.readString(offsets[1]),
-    reader.readDateTime(offsets[2]),
+    reader.readStringOrNull(offsets[1]),
+    reader.readDateTimeOrNull(offsets[2]),
     reader.readObjectList<Block>(
-          offsets[0],
-          BlockSchema.deserialize,
-          allOffsets,
-          Block(),
-        ) ??
-        [],
-    reader.readDouble(offsets[3]),
+      offsets[0],
+      BlockSchema.deserialize,
+      allOffsets,
+      Block(),
+    ),
+    reader.readDoubleOrNull(offsets[3]),
   );
+  object.id = id;
   return object;
 }
 
@@ -118,18 +128,17 @@ P _costPriceDeserializeProp<P>(
   switch (propertyId) {
     case 0:
       return (reader.readObjectList<Block>(
-            offset,
-            BlockSchema.deserialize,
-            allOffsets,
-            Block(),
-          ) ??
-          []) as P;
+        offset,
+        BlockSchema.deserialize,
+        allOffsets,
+        Block(),
+      )) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 3:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readDoubleOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -143,7 +152,9 @@ List<IsarLinkBase<dynamic>> _costPriceGetLinks(CostPrice object) {
   return [];
 }
 
-void _costPriceAttach(IsarCollection<dynamic> col, Id id, CostPrice object) {}
+void _costPriceAttach(IsarCollection<dynamic> col, Id id, CostPrice object) {
+  object.id = id;
+}
 
 extension CostPriceQueryWhereSort
     on QueryBuilder<CostPrice, CostPrice, QWhere> {
@@ -224,6 +235,22 @@ extension CostPriceQueryWhere
 
 extension CostPriceQueryFilter
     on QueryBuilder<CostPrice, CostPrice, QFilterCondition> {
+  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> blocksIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'blocks',
+      ));
+    });
+  }
+
+  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> blocksIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'blocks',
+      ));
+    });
+  }
+
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> blocksLengthEqualTo(
       int length) {
     return QueryBuilder.apply(this, (query) {
@@ -363,8 +390,26 @@ extension CostPriceQueryFilter
     });
   }
 
+  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition>
+      productNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'productName',
+      ));
+    });
+  }
+
+  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition>
+      productNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'productName',
+      ));
+    });
+  }
+
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> productNameEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -378,7 +423,7 @@ extension CostPriceQueryFilter
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition>
       productNameGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -393,7 +438,7 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> productNameLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -408,8 +453,8 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> productNameBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -497,8 +542,25 @@ extension CostPriceQueryFilter
     });
   }
 
+  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> savedDateIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'savedDate',
+      ));
+    });
+  }
+
+  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition>
+      savedDateIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'savedDate',
+      ));
+    });
+  }
+
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> savedDateEqualTo(
-      DateTime value) {
+      DateTime? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'savedDate',
@@ -509,7 +571,7 @@ extension CostPriceQueryFilter
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition>
       savedDateGreaterThan(
-    DateTime value, {
+    DateTime? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -522,7 +584,7 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> savedDateLessThan(
-    DateTime value, {
+    DateTime? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -535,8 +597,8 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> savedDateBetween(
-    DateTime lower,
-    DateTime upper, {
+    DateTime? lower,
+    DateTime? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -551,8 +613,24 @@ extension CostPriceQueryFilter
     });
   }
 
+  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> totalIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'total',
+      ));
+    });
+  }
+
+  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> totalIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'total',
+      ));
+    });
+  }
+
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> totalEqualTo(
-    double value, {
+    double? value, {
     double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -565,7 +643,7 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> totalGreaterThan(
-    double value, {
+    double? value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
@@ -580,7 +658,7 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> totalLessThan(
-    double value, {
+    double? value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
@@ -595,8 +673,8 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> totalBetween(
-    double lower,
-    double upper, {
+    double? lower,
+    double? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     double epsilon = Query.epsilon,
@@ -746,25 +824,25 @@ extension CostPriceQueryProperty
     });
   }
 
-  QueryBuilder<CostPrice, List<Block>, QQueryOperations> blocksProperty() {
+  QueryBuilder<CostPrice, List<Block>?, QQueryOperations> blocksProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'blocks');
     });
   }
 
-  QueryBuilder<CostPrice, String, QQueryOperations> productNameProperty() {
+  QueryBuilder<CostPrice, String?, QQueryOperations> productNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'productName');
     });
   }
 
-  QueryBuilder<CostPrice, DateTime, QQueryOperations> savedDateProperty() {
+  QueryBuilder<CostPrice, DateTime?, QQueryOperations> savedDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'savedDate');
     });
   }
 
-  QueryBuilder<CostPrice, double, QQueryOperations> totalProperty() {
+  QueryBuilder<CostPrice, double?, QQueryOperations> totalProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'total');
     });

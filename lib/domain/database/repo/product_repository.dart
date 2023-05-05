@@ -1,6 +1,8 @@
 import 'dart:collection';
 
+import 'package:carewool_profitability_calculator/database/entity/cost_price.dart';
 import 'package:get_it/get_it.dart';
+import 'package:isar/isar.dart';
 import 'package:mobx/mobx.dart';
 import 'package:sembast/sembast.dart';
 
@@ -14,6 +16,7 @@ part 'product_repository.g.dart';
 class ProductRepository = ProductRepositoryBase with _$ProductRepository;
 
 abstract class ProductRepositoryBase with Store {
+  final Isar _isar = GetIt.I.get();
   final ApplicationDatabase _db = GetIt.I.get();
 
   /// Record snapshots of products
@@ -67,6 +70,9 @@ abstract class ProductRepositoryBase with Store {
   @action
   Future<void> add(Product product) async {
     await _db.products.add(_db.client, product.toJson());
+    await _isar.writeTxn(
+      () async => await _isar.costPrices.put(product.toEntity()),
+    );
   }
 
   /// Update document under [id] with [product] data
@@ -79,11 +85,17 @@ abstract class ProductRepositoryBase with Store {
   @action
   Future<void> remove(int id) async {
     await _db.products.record(id).delete(_db.client);
+    await _isar.writeTxn(
+      () async => await _isar.costPrices.delete(id),
+    );
   }
 
   /// Delete all documents
   @action
   Future<void> deleteAll() async {
     await _db.products.delete(_db.client);
+    await _isar.writeTxn(
+          () async => await _isar.costPrices.buildQuery().deleteAll(),
+    );
   }
 }
