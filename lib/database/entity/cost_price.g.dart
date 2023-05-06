@@ -145,7 +145,7 @@ P _costPriceDeserializeProp<P>(
 }
 
 Id _costPriceGetId(CostPrice object) {
-  return object.id;
+  return object.id ?? Isar.autoIncrement;
 }
 
 List<IsarLinkBase<dynamic>> _costPriceGetLinks(CostPrice object) {
@@ -337,8 +337,24 @@ extension CostPriceQueryFilter
     });
   }
 
+  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> idIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> idIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'id',
+      ));
+    });
+  }
+
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> idEqualTo(
-      Id value) {
+      Id? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -348,7 +364,7 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> idGreaterThan(
-    Id value, {
+    Id? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -361,7 +377,7 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> idLessThan(
-    Id value, {
+    Id? value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -374,8 +390,8 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> idBetween(
-    Id lower,
-    Id upper, {
+    Id? lower,
+    Id? upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {

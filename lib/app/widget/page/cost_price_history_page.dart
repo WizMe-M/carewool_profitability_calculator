@@ -7,8 +7,7 @@ import 'package:isar/isar.dart';
 
 import '../../../database/entity/cost_price.dart';
 import '../../../domain/cost_price/form/cost_price_form.dart';
-import '../../../domain/cost_price/form/edit/edit_cost_price_form.dart';
-import '../../../domain/entity/product/product.dart';
+import '../../../domain/cost_price/form/edit/edit_wrap.dart';
 import '../../navigation/app_router.dart';
 
 @RoutePage()
@@ -98,7 +97,7 @@ class CostPriceHistoryPage extends StatelessWidget {
                         IconButton(
                           tooltip: 'Удалить расчет',
                           icon: const Icon(Icons.clear),
-                          onPressed: () => onRemoveTap(context, costPrice.id),
+                          onPressed: () => onRemoveTap(context, costPrice.id!),
                         ),
                       ],
                     ),
@@ -149,8 +148,7 @@ class CostPriceHistoryPage extends StatelessWidget {
   }
 
   void onCopyTap(BuildContext ctx, CostPrice costPrice) {
-    var product = Product.fromEntity(entity: costPrice);
-    var form = CostPriceForm.fromProduct(product: product);
+    var form = CostPriceForm.fromEntity(costPrice: costPrice);
     ctx.router.replace(CostCalculatorRoute(form: form));
   }
 
@@ -170,7 +168,7 @@ class CostPriceHistoryPage extends StatelessWidget {
   }
 
   void onItemTap(BuildContext ctx, CostPrice costPrice) {
-    var editWrap = EditWrapCostPriceForm(costPrice: costPrice);
+    var editWrap = EditWrap(costPrice: costPrice);
     ctx.router.push(EditCostPriceRoute(editWrap: editWrap));
   }
 }

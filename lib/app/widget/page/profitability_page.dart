@@ -1,4 +1,5 @@
 import 'package:auto_route/annotations.dart';
+import 'package:carewool_profitability_calculator/database/entity/cost_price.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -6,7 +7,6 @@ import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../domain/entity/storage_tariff/storage_tariff.dart';
-import '../../../domain/entity/product/product.dart';
 import '../../../domain/entity/category/category.dart';
 import '../../../domain/parser/excel_parser.dart';
 import '../side_bar.dart';
@@ -15,9 +15,9 @@ import 'profitability/logistic_form_widget.dart';
 @RoutePage()
 class ProfitabilityPage extends StatelessWidget {
   final Logger _logger = GetIt.I.get();
-  final Product product;
+  final CostPrice costPrice;
 
-  ProfitabilityPage({required this.product, super.key});
+  ProfitabilityPage({required this.costPrice, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class ProfitabilityPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text('Себестоимость: ${product.total}₽'),
+                Text('Себестоимость: ${costPrice.total}₽'),
                 const Text('Дата последнего обновления: 01.05.23'),
                 ElevatedButton(
                   onPressed: pickExcelFile,

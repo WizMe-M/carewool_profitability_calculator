@@ -6,7 +6,6 @@ import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
 
 import '../../../../domain/cost_price/form/cost_price_form.dart';
-import '../../../../domain/entity/product/product.dart';
 import '../../../util/space.dart';
 
 class BottomTotalBar extends StatelessWidget {
@@ -96,7 +95,7 @@ class BottomTotalBar extends StatelessWidget {
     }
 
     FocusManager.instance.primaryFocus?.unfocus();
-    var costPrice = Product.fromForm(form: form).toEntity();
+    var costPrice = form.toEntity();
     _isar.writeTxn(() async {
       _isar.costPrices.put(costPrice);
     }).then((_) {

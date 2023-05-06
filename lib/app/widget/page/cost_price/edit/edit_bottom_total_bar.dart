@@ -6,8 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
 
-import '../../../../../domain/cost_price/form/edit/edit_cost_price_form.dart';
-import '../../../../../domain/entity/product/product.dart';
+import '../../../../../domain/cost_price/form/edit/edit_wrap.dart';
 import '../../../../navigation/app_router.dart';
 import '../../../../util/space.dart';
 
@@ -15,7 +14,7 @@ class EditBottomTotalBar extends StatelessWidget {
   final Isar _isar = GetIt.I.get();
   final Logger _logger = GetIt.I.get();
 
-  final EditWrapCostPriceForm editWrap;
+  final EditWrap editWrap;
 
   EditBottomTotalBar({required this.editWrap, super.key});
 
@@ -99,15 +98,14 @@ class EditBottomTotalBar extends StatelessWidget {
     }
 
     var messenger = ScaffoldMessenger.of(context);
-    var updatedCostPrice = Product.fromForm(form: editWrap.form).toEntity()
-      ..id = editWrap.costPrice.id;
+    var updatedCostPrice = editWrap.toEntity();
 
     _isar.writeTxn(() async {
       await _isar.costPrices.put(updatedCostPrice);
     }).then((updated) {
       _logger.i('Product was saved');
 
-      var newEditWrap = EditWrapCostPriceForm(costPrice: updatedCostPrice);
+      var newEditWrap = EditWrap(costPrice: updatedCostPrice);
       context.router.replace(EditCostPriceRoute(editWrap: newEditWrap));
 
       messenger.showSnackBar(

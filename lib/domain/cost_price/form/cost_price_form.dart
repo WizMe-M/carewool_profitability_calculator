@@ -8,10 +8,10 @@ import 'package:mobx/mobx.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:dfunc/dfunc.dart';
 
+import '../../../database/entity/cost_price.dart';
+import '../../entity/cost_price_form_template/cost_price_form_template.dart';
 import 'form_block.dart';
 import 'input.dart';
-import '../../entity/product/product.dart';
-import '../../entity/cost_price_form_template/cost_price_form_template.dart';
 
 part 'cost_price_form.g.dart';
 
@@ -58,21 +58,20 @@ abstract class CostPriceFormBase with Store {
   CostPriceFormBase.defaultTemplate()
       : this.fromTemplate(template: CostPriceFormTemplate.standard());
 
-  // TOOD: realize fromEntity instead
-  CostPriceFormBase.fromProduct({required Product product}) {
-    productNameController.text = product.name;
+  CostPriceFormBase.fromEntity({required CostPrice costPrice}) {
+    productNameController.text = costPrice.productName!;
     var formatter = NumberFormat()
       ..minimumFractionDigits = 0
       ..maximumFractionDigits = 2;
 
-    for (var block in product.blocks) {
+    for (var block in costPrice.blocks!) {
       blocks.add(
         FormBlock(
-          title: block.name,
-          inputs: block.parameters
-              .map((param) => Input.withText(
-                    label: param.name,
-                    text: param.cost > 0 ? formatter.format(param.cost) : '',
+          title: block.name!,
+          inputs: block.parts!
+              .map((part) => Input.withText(
+                    label: part.name!,
+                    text: part.cost! > 0 ? formatter.format(part.cost) : '',
                   ))
               .toList(),
         ),
@@ -80,6 +79,26 @@ abstract class CostPriceFormBase with Store {
     }
 
     initForm();
+  }
+
+  CostPrice toEntity() {
+    var entity = CostPrice(
+      productName,
+      DateTime.now(),
+      blocks.map((formBlock) {
+        var block = Block()
+          ..name = formBlock.title
+          ..parts = formBlock.inputs.map((input) {
+            return Part()
+              ..name = input.label
+              ..cost = input.value;
+          }).toList();
+        return block;
+      }).toList(),
+      _costPrice,
+    );
+
+    return entity;
   }
 
   /// Total cost formatted to output

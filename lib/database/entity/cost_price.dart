@@ -4,7 +4,7 @@ part 'cost_price.g.dart';
 
 @collection
 class CostPrice {
-  Id id = Isar.autoIncrement;
+  Id? id;
   String? productName;
   DateTime? savedDate;
   List<Block>? blocks;

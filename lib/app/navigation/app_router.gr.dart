@@ -54,7 +54,7 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: ProfitabilityPage(
-          product: args.product,
+          costPrice: args.costPrice,
           key: args.key,
         ),
       );
@@ -147,7 +147,7 @@ class DefaultRoute extends PageRouteInfo<void> {
 /// [EditCostPricePage]
 class EditCostPriceRoute extends PageRouteInfo<EditCostPriceRouteArgs> {
   EditCostPriceRoute({
-    required EditWrapCostPriceForm editWrap,
+    required EditWrap editWrap,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -171,7 +171,7 @@ class EditCostPriceRouteArgs {
     this.key,
   });
 
-  final EditWrapCostPriceForm editWrap;
+  final EditWrap editWrap;
 
   final Key? key;
 
@@ -185,13 +185,13 @@ class EditCostPriceRouteArgs {
 /// [ProfitabilityPage]
 class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
   ProfitabilityRoute({
-    required Product product,
+    required CostPrice costPrice,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           ProfitabilityRoute.name,
           args: ProfitabilityRouteArgs(
-            product: product,
+            costPrice: costPrice,
             key: key,
           ),
           initialChildren: children,
@@ -205,16 +205,16 @@ class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
 
 class ProfitabilityRouteArgs {
   const ProfitabilityRouteArgs({
-    required this.product,
+    required this.costPrice,
     this.key,
   });
 
-  final Product product;
+  final CostPrice costPrice;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'ProfitabilityRouteArgs{product: $product, key: $key}';
+    return 'ProfitabilityRouteArgs{costPrice: $costPrice, key: $key}';
   }
 }

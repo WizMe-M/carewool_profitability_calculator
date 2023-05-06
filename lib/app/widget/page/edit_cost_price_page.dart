@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../domain/cost_price/form/edit/edit_cost_price_form.dart';
+import '../../../domain/cost_price/form/edit/edit_wrap.dart';
 import '../side_bar.dart';
 import 'cost_price/cost_price_form_widget.dart';
 import 'cost_price/edit/edit_bottom_total_bar.dart';
 
 @RoutePage()
 class EditCostPricePage extends StatelessWidget {
-  final EditWrapCostPriceForm editWrap;
+  final EditWrap editWrap;
 
   const EditCostPricePage({required this.editWrap, super.key});
 
@@ -20,7 +20,7 @@ class EditCostPricePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(
-          editWrap.costPrice.productName!,
+          editWrap.form.productName,
           style: const TextStyle(fontSize: 18),
         ),
         actions: [
