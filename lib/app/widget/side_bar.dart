@@ -34,11 +34,18 @@ class SideBar extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.add),
-            title: const Text('Добавить расчёт себестоимости'),
+            title: const Text('Себестоимость'),
+            subtitle: const Text('Добавить новый расчёт'),
             onTap: () {
               var form = CostPriceForm.defaultTemplate();
               context.router.push(CostCalculatorRoute(form: form));
             },
+          ),
+          ListTile(
+            leading: const Icon(Icons.add),
+            title: const Text('Рентабельность'),
+            subtitle: const Text('Добавить новый расчёт'),
+            onTap: () => context.router.push(NewProfitabilityRoute()),
           ),
           FutureBuilder(
             future: Future.wait([

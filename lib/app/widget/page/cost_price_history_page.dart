@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:carewool_profitability_calculator/app/widget/side_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +8,7 @@ import '../../../database/entity/cost_price.dart';
 import '../../../domain/cost_price/form/cost_price_form.dart';
 import '../../../domain/cost_price/form/edit/edit_wrap.dart';
 import '../../navigation/app_router.dart';
+import '../side_bar.dart';
 
 @RoutePage()
 class CostPriceHistoryPage extends StatelessWidget {
@@ -27,7 +27,10 @@ class CostPriceHistoryPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () => onAddCostPriceTap(context),
+            onPressed: () {
+              var form = CostPriceForm.defaultTemplate();
+              context.router.push(CostCalculatorRoute(form: form));
+            },
             icon: const Icon(Icons.add),
             tooltip: 'Добавить новый расчёт',
           ),
@@ -65,7 +68,10 @@ class CostPriceHistoryPage extends StatelessWidget {
                       padding: const EdgeInsets.all(16),
                       child: ElevatedButton(
                         child: const Text('Добавить новый расчёт'),
-                        onPressed: () => onAddCostPriceTap(context),
+                        onPressed: () {
+                          var form = CostPriceForm.defaultTemplate();
+                          context.router.push(CostCalculatorRoute(form: form));
+                        },
                       ),
                     ),
                     const Spacer(flex: 3),
@@ -91,7 +97,12 @@ class CostPriceHistoryPage extends StatelessWidget {
                         IconButton(
                           tooltip: 'Клонировать расчет',
                           icon: const Icon(Icons.copy),
-                          onPressed: () => onCopyTap(context, costPrice),
+                          onPressed: () {
+                            var form =
+                                CostPriceForm.fromEntity(costPrice: costPrice);
+                            context.router
+                                .replace(CostCalculatorRoute(form: form));
+                          },
                         ),
                         const VerticalDivider(),
                         IconButton(
@@ -101,7 +112,12 @@ class CostPriceHistoryPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    onTap: () => onItemTap(context, costPrice),
+                    onTap: () {
+                      var editWrap = EditWrap(costPrice: costPrice);
+                      context.router.push(
+                        EditCostPriceRoute(editWrap: editWrap),
+                      );
+                    },
                   );
                 },
                 separatorBuilder: (_, __) => const Divider(),
@@ -111,11 +127,6 @@ class CostPriceHistoryPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void onAddCostPriceTap(BuildContext ctx) {
-    var form = CostPriceForm.defaultTemplate();
-    ctx.router.push(CostCalculatorRoute(form: form));
   }
 
   Future<void> onRemoveAll(BuildContext ctx) async {
@@ -147,11 +158,6 @@ class CostPriceHistoryPage extends StatelessWidget {
     }
   }
 
-  void onCopyTap(BuildContext ctx, CostPrice costPrice) {
-    var form = CostPriceForm.fromEntity(costPrice: costPrice);
-    ctx.router.replace(CostCalculatorRoute(form: form));
-  }
-
   void onRemoveTap(BuildContext ctx, int id) {
     _isar.writeTxn(() async {
       await _isar.costPrices.delete(id);
@@ -165,10 +171,5 @@ class CostPriceHistoryPage extends StatelessWidget {
           ),
         );
     });
-  }
-
-  void onItemTap(BuildContext ctx, CostPrice costPrice) {
-    var editWrap = EditWrap(costPrice: costPrice);
-    ctx.router.push(EditCostPriceRoute(editWrap: editWrap));
   }
 }

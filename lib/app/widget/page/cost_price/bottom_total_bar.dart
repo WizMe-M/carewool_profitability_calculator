@@ -1,10 +1,10 @@
-import 'package:carewool_profitability_calculator/database/entity/cost_price.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
 
+import '../../../../database/entity/cost_price.dart';
 import '../../../../domain/cost_price/form/cost_price_form.dart';
 import '../../../util/space.dart';
 
