@@ -15,6 +15,11 @@ class SideBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var costPricesCount = 0;
+
+    var costPricesFuture = Future(() async {
+      return costPricesCount = await _isar.costPrices.count();
+    });
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -32,42 +37,55 @@ class SideBar extends StatelessWidget {
             ),
             child: const SizedBox(),
           ),
+          FutureBuilder(
+            future: Future.wait([costPricesFuture]),
+            builder: (context, snapshot) {
+              return snapshot.hasData
+                  ? const SizedBox.shrink()
+                  : const LinearProgressIndicator();
+            },
+          ),
+          const ListTile(
+            title: Text(
+              'Себестоимость',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
           ListTile(
             leading: const Icon(Icons.add),
-            title: const Text('Себестоимость'),
-            subtitle: const Text('Добавить новый расчёт'),
+            title: const Text('Добавить новый расчёт'),
             onTap: () {
               var form = CostPriceForm.defaultTemplate();
               context.router.push(CostCalculatorRoute(form: form));
             },
           ),
           ListTile(
+            leading: const Icon(Icons.list),
+            title: const Text('Сохраненные'),
+            trailing: FutureBuilder(
+              future: costPricesFuture,
+              builder: (context, snapshot) {
+                return snapshot.hasData
+                    ? costPricesCount > 0
+                        ? Counter(count: costPricesCount)
+                        : const SizedBox.shrink()
+                    : const CircularProgressIndicator();
+              },
+            ),
+            onTap: () => context.router.push(CostPriceHistoryRoute()),
+          ),
+          const Divider(),
+          const ListTile(
+            title: Text(
+              'Рентабельность',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          ListTile(
             leading: const Icon(Icons.add),
-            title: const Text('Рентабельность'),
-            subtitle: const Text('Добавить новый расчёт'),
+            title: const Text('Добавить новый расчёт'),
             onTap: () => context.router.push(NewProfitabilityRoute()),
           ),
-          FutureBuilder(
-            future: Future.wait([
-              Future(() async {
-                return costPricesCount = await _isar.costPrices.count();
-              }),
-            ]),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListTile(
-                  leading: const Icon(Icons.currency_ruble),
-                  title: const Text('Расчёты себестоимости'),
-                  trailing: costPricesCount > 0
-                      ? Counter(count: costPricesCount)
-                      : null,
-                  onTap: () => context.router.push(CostPriceHistoryRoute()),
-                );
-              } else {
-                return const LinearProgressIndicator();
-              }
-            },
-          )
         ],
       ),
     );
