@@ -7,6 +7,7 @@ import 'package:isar/isar.dart';
 import '../../../database/entity/cost_price.dart';
 import '../../../domain/cost_price/form/cost_price_form.dart';
 import '../../../domain/cost_price/form/edit/edit_wrap.dart';
+import '../../../domain/util/symbols.dart';
 import '../../navigation/app_router.dart';
 import '../side_bar.dart';
 
@@ -87,8 +88,10 @@ class CostPriceHistoryPage extends StatelessWidget {
                       .format(costPrice.savedDate!.toLocal());
 
                   return ListTile(
-                    title:
-                        Text('${costPrice.productName} (${costPrice.total}₽)'),
+                    title: Text(
+                      '${costPrice.productName} '
+                      '(${costPrice.total}$rubleCurrency)',
+                    ),
                     subtitle: Text(savedDate),
                     trailing: Row(
                       mainAxisAlignment: MainAxisAlignment.end,

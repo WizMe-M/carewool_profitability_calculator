@@ -6,6 +6,7 @@ import 'package:isar/isar.dart';
 
 import '../../../database/entity/cost_price.dart';
 import '../../../domain/cost_price/form/cost_price_form.dart';
+import '../../../domain/util/symbols.dart';
 import '../../navigation/app_router.dart';
 import '../side_bar.dart';
 
@@ -87,13 +88,15 @@ class NewProfitabilityPage extends StatelessWidget {
 
                         return ListTile(
                           title: Text(
-                              '${costPrice.productName} (${costPrice.total}₽)'),
+                            '${costPrice.productName} '
+                            '(${costPrice.total}$rubleCurrency)',
+                          ),
                           subtitle: Text(savedDate),
                           trailing: IconButton.outlined(
                             icon: const Icon(Icons.navigate_next),
                             onPressed: () {
                               context.router.push(
-                                ProfitabilityRoute(costPrice: costPrice),
+                                LogisticRoute(costPrice: costPrice),
                               );
                             },
                           ),

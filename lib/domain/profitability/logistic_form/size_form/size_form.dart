@@ -30,7 +30,10 @@ abstract class SizeFormBase with Store {
 
   /// Value of volume over liter cap (5) in liters
   @computed
-  int get overLiterCap => volumeInLiters - 5;
+  int get overLiterCap {
+    var over = volumeInLiters - 5;
+    return over > 0 ? over : 0;
+  }
 
   /// Whether is size extra large
   /// (if so, it'll be calculated cargo delivery logistics cost)

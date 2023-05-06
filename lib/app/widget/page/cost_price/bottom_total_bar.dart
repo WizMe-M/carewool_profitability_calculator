@@ -6,6 +6,7 @@ import 'package:logger/logger.dart';
 
 import '../../../../database/entity/cost_price.dart';
 import '../../../../domain/cost_price/form/cost_price_form.dart';
+import '../../../../domain/util/symbols.dart';
 import '../../../util/space.dart';
 
 class BottomTotalBar extends StatelessWidget {
@@ -49,7 +50,7 @@ class BottomTotalBar extends StatelessWidget {
                     const Space(4),
                     Observer(
                       builder: (context) => Text(
-                        '${form.formattedCostPrice}₽',
+                        '${form.formattedCostPrice}$rubleCurrency',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

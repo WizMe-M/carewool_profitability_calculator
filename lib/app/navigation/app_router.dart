@@ -9,7 +9,7 @@ import '../widget/page/cost_price_page.dart';
 import '../widget/page/default_page.dart';
 import '../widget/page/edit_cost_price_page.dart';
 import '../widget/page/new_profitability_page.dart';
-import '../widget/page/profitability_page.dart';
+import '../widget/page/logistic_page.dart';
 
 part 'app_router.gr.dart';
 
@@ -23,7 +23,7 @@ class AppRouter extends _$AppRouter {
       AutoRoute(page: EditCostPriceRoute.page),
       AutoRoute(page: CostPriceHistoryRoute.page),
       AutoRoute(page: NewProfitabilityRoute.page),
-      AutoRoute(page: ProfitabilityRoute.page),
+      AutoRoute(page: LogisticRoute.page),
     ];
   }
 }

@@ -1,36 +1,41 @@
+import 'dart:math';
+
 import 'package:mobx/mobx.dart';
 
+import '../../../database/entity/storage.dart';
+import 'storage_selector/storage_selector.dart';
+
 import 'size_form/size_form.dart';
-import '../../entity/storage_tariff/storage_tariff.dart';
 
 part 'logistic_form.g.dart';
 
-class LogisticForm = LogisticFormBase with _$LogisticForm;
+class LogisticCalculator = LogisticCalculatorBase with _$LogisticCalculator;
 
-abstract class LogisticFormBase with Store {
+abstract class LogisticCalculatorBase with Store {
+  final StorageSelector storageSelector = StorageSelector.defaultTariffs();
   final SizeForm sizeForm = SizeForm();
 
-  final storageTariffs = <StorageTariff>[
-    StorageTariff(
-      storageName: 'Базовый тариф',
-      baseLogistic: 50,
-      additionalLogistic: 5,
-      baseStoring: 0.1,
-      additionalStoring: 0.01,
-      baseAcceptance: 15,
-      additionalAcceptance: 1.5,
-    ),
-    StorageTariff(
-      storageName: 'Чехов 1, Новоселки вл 11 стр 5',
-      baseLogistic: 74,
-      additionalLogistic: 7.4,
-      baseStoring: 0.076,
-      additionalStoring: 0.007,
-      baseAcceptance: 0,
-      additionalAcceptance: 0,
-    ),
-  ];
+  @computed
+  Tariff? get logisticTariff => storageSelector.selected?.tariffs
+      ?.firstWhere((tariff) => tariff.name == 'Логистика');
 
-  @observable
-  StorageTariff? selectedTariff;
+  @computed
+  double get baseCost => logisticTariff?.baseCost ?? 0;
+
+  @computed
+  double get costPerLiter => logisticTariff?.costPerLiter ?? 0;
+
+  @computed
+  double get costForSize => baseCost + costPerLiter * sizeForm.overLiterCap;
+
+  @computed
+  double get costForExtraLarge {
+    return sizeForm.isExtraLargeProduct
+        ? max<double>(1000, costForSize)
+        : costForSize;
+  }
+
+  /// Total logistics cost for inputted sizes of product
+  @computed
+  double get totalCost => logisticTariff != null ? costForExtraLarge : 0;
 }

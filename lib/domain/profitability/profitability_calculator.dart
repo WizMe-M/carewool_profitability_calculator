@@ -6,8 +6,6 @@ import '../entity/category_item/category_item.dart';
 import '../entity/storage_tariff/storage_tariff.dart';
 
 class ProfitabilityCalculator {
-  // TODO: pick selected storage from dropdowns
-  // TODO: set sizes from inputs
   double calcLogistics(StorageTariff tariff, SizeForm size) {
     var logisticsForVolume = tariff.baseLogistic +
         max<double>(0, (size.volume - 5)) * tariff.additionalLogistic;

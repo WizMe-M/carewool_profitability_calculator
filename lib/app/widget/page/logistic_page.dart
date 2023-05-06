@@ -9,15 +9,19 @@ import '../../../database/entity/cost_price.dart';
 import '../../../domain/entity/storage_tariff/storage_tariff.dart';
 import '../../../domain/entity/category/category.dart';
 import '../../../domain/parser/excel_parser.dart';
+import '../../../domain/profitability/logistic_form/logistic_form.dart';
+import '../../../domain/util/symbols.dart';
 import '../side_bar.dart';
-import 'profitability/logistic_form_widget.dart';
+import 'logistic/logistic_form_widget.dart';
+import 'logistic/logistic_result_widget.dart';
 
 @RoutePage()
-class ProfitabilityPage extends StatelessWidget {
+class LogisticPage extends StatelessWidget {
   final Logger _logger = GetIt.I.get();
   final CostPrice costPrice;
+  final LogisticCalculator _logisticCalculator = LogisticCalculator();
 
-  ProfitabilityPage({required this.costPrice, super.key});
+  LogisticPage({required this.costPrice, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,17 +34,24 @@ class ProfitabilityPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Text('Себестоимость: ${costPrice.total}₽'),
+                Text('Себестоимость: ${costPrice.total}$rubleCurrency'),
                 const Text('Дата последнего обновления: 01.05.23'),
                 ElevatedButton(
                   onPressed: pickExcelFile,
                   child: const Text('Загрузить Excel-файл с '
                       'тарифами складов и комиссиями'),
                 ),
-                LogisticFormWidget(),
+                LogisticFormWidget(logisticCalculator: _logisticCalculator),
               ],
             ),
           ),
+        ),
+      ),
+      bottomSheet: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: SizedBox(
+          width: double.infinity,
+          child: LogisticResultWidget(logistic: _logisticCalculator),
         ),
       ),
     );
