@@ -1,19 +1,20 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:carewool_profitability_calculator/database/entity/cost_price.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
 
-import '../../../../../domain/cost_price/form/edit/edit_cost_price_form.dart';
-import '../../../../../domain/database/repo/product_repository.dart';
-import '../../../../../domain/entity/product/product.dart';
+import '../../../../../domain/cost_price/form/edit/edit_wrap.dart';
 import '../../../../navigation/app_router.dart';
 import '../../../../util/space.dart';
 
 class EditBottomTotalBar extends StatelessWidget {
+  final Isar _isar = GetIt.I.get();
   final Logger _logger = GetIt.I.get();
 
-  final EditWrapCostPriceForm editWrap;
+  final EditWrap editWrap;
 
   EditBottomTotalBar({required this.editWrap, super.key});
 
@@ -96,30 +97,26 @@ class EditBottomTotalBar extends StatelessWidget {
       return;
     }
 
-    var repo = GetIt.I.get<ProductRepository>();
-    var id = editWrap.productId;
-    var updatedProduct = Product.fromForm(form: editWrap.form);
     var messenger = ScaffoldMessenger.of(context);
+    var updatedCostPrice = editWrap.toEntity();
 
-    repo.update(id, updatedProduct).then((_) {
+    _isar.writeTxn(() async {
+      await _isar.costPrices.put(updatedCostPrice);
+    }).then((updated) {
       _logger.i('Product was saved');
-      var newEditWrap = EditWrapCostPriceForm(
-        savedProduct: updatedProduct,
-        productId: id,
-      );
+
+      var newEditWrap = EditWrap(costPrice: updatedCostPrice);
       context.router.replace(EditCostPriceRoute(editWrap: newEditWrap));
+
       messenger.showSnackBar(
         const SnackBar(
           content: Text('Изменения сохранены'),
           duration: Duration(seconds: 1),
         ),
       );
-    }).onError((error, stackTrace) {
-      _logger.e(
-        'Caught an error while was saving changes',
-        error,
-        stackTrace,
-      );
+    }).onError((e, s) {
+      _logger.e('Caught an error while was saving changes', e, s);
+
       messenger.showSnackBar(
         const SnackBar(
           content: Text('Не удалось сохранить изменения'),

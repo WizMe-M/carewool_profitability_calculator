@@ -15,20 +15,12 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
-    DefaultRoute.name: (routeData) {
+    CostPriceHistoryRoute.name: (routeData) {
+      final args = routeData.argsAs<CostPriceHistoryRouteArgs>(
+          orElse: () => const CostPriceHistoryRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const DefaultPage(),
-      );
-    },
-    ProfitabilityRoute.name: (routeData) {
-      final args = routeData.argsAs<ProfitabilityRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ProfitabilityPage(
-          product: args.product,
-          key: args.key,
-        ),
+        child: CostPriceHistoryPage(key: args.key),
       );
     },
     CostCalculatorRoute.name: (routeData) {
@@ -41,6 +33,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    DefaultRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const DefaultPage(),
+      );
+    },
     EditCostPriceRoute.name: (routeData) {
       final args = routeData.argsAs<EditCostPriceRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -51,58 +49,45 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ProfitabilityRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfitabilityRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ProfitabilityPage(
+          costPrice: args.costPrice,
+          key: args.key,
+        ),
+      );
+    },
   };
 }
 
 /// generated route for
-/// [DefaultPage]
-class DefaultRoute extends PageRouteInfo<void> {
-  const DefaultRoute({List<PageRouteInfo>? children})
-      : super(
-          DefaultRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'DefaultRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
-}
-
-/// generated route for
-/// [ProfitabilityPage]
-class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
-  ProfitabilityRoute({
-    required Product product,
+/// [CostPriceHistoryPage]
+class CostPriceHistoryRoute extends PageRouteInfo<CostPriceHistoryRouteArgs> {
+  CostPriceHistoryRoute({
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
-          ProfitabilityRoute.name,
-          args: ProfitabilityRouteArgs(
-            product: product,
-            key: key,
-          ),
+          CostPriceHistoryRoute.name,
+          args: CostPriceHistoryRouteArgs(key: key),
           initialChildren: children,
         );
 
-  static const String name = 'ProfitabilityRoute';
+  static const String name = 'CostPriceHistoryRoute';
 
-  static const PageInfo<ProfitabilityRouteArgs> page =
-      PageInfo<ProfitabilityRouteArgs>(name);
+  static const PageInfo<CostPriceHistoryRouteArgs> page =
+      PageInfo<CostPriceHistoryRouteArgs>(name);
 }
 
-class ProfitabilityRouteArgs {
-  const ProfitabilityRouteArgs({
-    required this.product,
-    this.key,
-  });
-
-  final Product product;
+class CostPriceHistoryRouteArgs {
+  const CostPriceHistoryRouteArgs({this.key});
 
   final Key? key;
 
   @override
   String toString() {
-    return 'ProfitabilityRouteArgs{product: $product, key: $key}';
+    return 'CostPriceHistoryRouteArgs{key: $key}';
   }
 }
 
@@ -145,10 +130,24 @@ class CostCalculatorRouteArgs {
 }
 
 /// generated route for
+/// [DefaultPage]
+class DefaultRoute extends PageRouteInfo<void> {
+  const DefaultRoute({List<PageRouteInfo>? children})
+      : super(
+          DefaultRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'DefaultRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [EditCostPricePage]
 class EditCostPriceRoute extends PageRouteInfo<EditCostPriceRouteArgs> {
   EditCostPriceRoute({
-    required EditWrapCostPriceForm editWrap,
+    required EditWrap editWrap,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
@@ -172,12 +171,50 @@ class EditCostPriceRouteArgs {
     this.key,
   });
 
-  final EditWrapCostPriceForm editWrap;
+  final EditWrap editWrap;
 
   final Key? key;
 
   @override
   String toString() {
     return 'EditCostPriceRouteArgs{editWrap: $editWrap, key: $key}';
+  }
+}
+
+/// generated route for
+/// [ProfitabilityPage]
+class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
+  ProfitabilityRoute({
+    required CostPrice costPrice,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ProfitabilityRoute.name,
+          args: ProfitabilityRouteArgs(
+            costPrice: costPrice,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfitabilityRoute';
+
+  static const PageInfo<ProfitabilityRouteArgs> page =
+      PageInfo<ProfitabilityRouteArgs>(name);
+}
+
+class ProfitabilityRouteArgs {
+  const ProfitabilityRouteArgs({
+    required this.costPrice,
+    this.key,
+  });
+
+  final CostPrice costPrice;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfitabilityRouteArgs{costPrice: $costPrice, key: $key}';
   }
 }

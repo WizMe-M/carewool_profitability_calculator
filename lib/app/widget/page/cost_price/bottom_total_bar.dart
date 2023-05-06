@@ -1,18 +1,16 @@
-import 'package:auto_route/auto_route.dart';
+import 'package:carewool_profitability_calculator/database/entity/cost_price.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
 
-import '../../../navigation/app_router.dart';
 import '../../../../domain/cost_price/form/cost_price_form.dart';
 import '../../../util/space.dart';
-import '../../../../domain/entity/product/product.dart';
-import '../../../../domain/database/repo/product_repository.dart';
 
 class BottomTotalBar extends StatelessWidget {
+  final Isar _isar = GetIt.I.get();
   final Logger _logger = GetIt.I.get();
-
   final CostPriceForm form;
 
   BottomTotalBar({required this.form, super.key});
@@ -96,43 +94,20 @@ class BottomTotalBar extends StatelessWidget {
       return;
     }
 
-    var product = Product.fromForm(form: form);
-    var repo = GetIt.I.get<ProductRepository>();
-
-    repo.add(product).then((_) {
-      _logger.i('Product was saved');
-      FocusManager.instance.primaryFocus?.unfocus();
-      var messenger = ScaffoldMessenger.of(context);
-      messenger
-        ..removeCurrentMaterialBanner()
-        ..showMaterialBanner(
-          MaterialBanner(
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            content: const Text('Расчеты сохранены'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  messenger.hideCurrentMaterialBanner();
-                  form.reset();
-                },
-                child: const Text('Очистить форму'),
-              ),
-              TextButton(
-                onPressed: () {
-                  messenger.hideCurrentMaterialBanner();
-                  context.router.push(ProfitabilityRoute(product: product));
-                },
-                child: const Text('Расчитать рентабельность'),
-              ),
-            ],
-          ),
-        );
-    }).onError((error, stackTrace) {
-      _logger.e(
-        'Caught an error while was saving cost calculation',
-        error,
-        stackTrace,
+    FocusManager.instance.primaryFocus?.unfocus();
+    var costPrice = form.toEntity();
+    _isar.writeTxn(() async {
+      _isar.costPrices.put(costPrice);
+    }).then((_) {
+      _logger.i('Cost price was saved');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Расчёт сохранён'),
+          duration: Duration(seconds: 1),
+        ),
       );
+    }).onError((e, s) {
+      _logger.e('Caught an error while was saving cost calculation', e, s);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Не удалось сохранить расчет'),

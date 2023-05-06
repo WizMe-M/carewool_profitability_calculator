@@ -1,17 +1,19 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'cost_price_form_template.freezed.dart';
+import '../../../database/entity/template.dart';
 
-part 'cost_price_form_template.g.dart';
+part 'cost_price_form_template.freezed.dart';
 
 @freezed
 class CostPriceFormTemplate with _$CostPriceFormTemplate {
   const factory CostPriceFormTemplate({
+    required String name,
     required Map<String, List<String>> structure,
   }) = _CostPriceFormTemplate;
 
   factory CostPriceFormTemplate.standard() {
     return const CostPriceFormTemplate(
+      name: 'Шаблон по умолчанию',
       structure: {
         'Тара': ['Крышка', 'Дозатор', 'Флакон'],
         'Упаковка': ['Этикетка', 'Коробка'],
@@ -21,6 +23,10 @@ class CostPriceFormTemplate with _$CostPriceFormTemplate {
     );
   }
 
-  factory CostPriceFormTemplate.fromJson(Map<String, dynamic> json) =>
-      _$CostPriceFormTemplateFromJson(json);
+  factory CostPriceFormTemplate.fromEntity({required Template template}) {
+    return CostPriceFormTemplate(name: template.name, structure: {
+      for (var templateBlock in template.blocks)
+        templateBlock.name!: templateBlock.partNames!
+    });
+  }
 }

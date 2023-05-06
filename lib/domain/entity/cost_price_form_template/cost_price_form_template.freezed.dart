@@ -14,28 +14,21 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-CostPriceFormTemplate _$CostPriceFormTemplateFromJson(
-    Map<String, dynamic> json) {
-  return _CostPriceFormTemplate.fromJson(json);
-}
-
 /// @nodoc
 mixin _$CostPriceFormTemplate {
+  String get name => throw _privateConstructorUsedError;
   Map<String, List<String>> get structure => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$_CostPriceFormTemplate implements _CostPriceFormTemplate {
   const _$_CostPriceFormTemplate(
-      {required final Map<String, List<String>> structure})
+      {required this.name, required final Map<String, List<String>> structure})
       : _structure = structure;
 
-  factory _$_CostPriceFormTemplate.fromJson(Map<String, dynamic> json) =>
-      _$$_CostPriceFormTemplateFromJson(json);
-
+  @override
+  final String name;
   final Map<String, List<String>> _structure;
   @override
   Map<String, List<String>> get structure {
@@ -46,25 +39,18 @@ class _$_CostPriceFormTemplate implements _CostPriceFormTemplate {
 
   @override
   String toString() {
-    return 'CostPriceFormTemplate(structure: $structure)';
-  }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_CostPriceFormTemplateToJson(
-      this,
-    );
+    return 'CostPriceFormTemplate(name: $name, structure: $structure)';
   }
 }
 
 abstract class _CostPriceFormTemplate implements CostPriceFormTemplate {
   const factory _CostPriceFormTemplate(
-          {required final Map<String, List<String>> structure}) =
+          {required final String name,
+          required final Map<String, List<String>> structure}) =
       _$_CostPriceFormTemplate;
 
-  factory _CostPriceFormTemplate.fromJson(Map<String, dynamic> json) =
-      _$_CostPriceFormTemplate.fromJson;
-
+  @override
+  String get name;
   @override
   Map<String, List<String>> get structure;
 }

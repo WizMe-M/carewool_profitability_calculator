@@ -1,7 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'storage_tariff.g.dart';
-
 part 'storage_tariff.freezed.dart';
 
 @freezed
@@ -15,7 +13,4 @@ class StorageTariff with _$StorageTariff {
     required double? baseAcceptance,
     required double? additionalAcceptance,
   }) = _StorageTariff;
-
-  factory StorageTariff.fromJson(Map<String, dynamic> json) =>
-      _$StorageTariffFromJson(json);
 }

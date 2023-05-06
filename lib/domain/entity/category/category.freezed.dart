@@ -14,25 +14,16 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-Category _$CategoryFromJson(Map<String, dynamic> json) {
-  return _Category.fromJson(json);
-}
-
 /// @nodoc
 mixin _$Category {
   String get name => throw _privateConstructorUsedError;
   List<CategoryItem> get items => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$_Category implements _Category {
   _$_Category({required this.name, required this.items});
-
-  factory _$_Category.fromJson(Map<String, dynamic> json) =>
-      _$$_CategoryFromJson(json);
 
   @override
   final String name;
@@ -43,21 +34,12 @@ class _$_Category implements _Category {
   String toString() {
     return 'Category(name: $name, items: $items)';
   }
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$_CategoryToJson(
-      this,
-    );
-  }
 }
 
 abstract class _Category implements Category {
   factory _Category(
       {required final String name,
       required final List<CategoryItem> items}) = _$_Category;
-
-  factory _Category.fromJson(Map<String, dynamic> json) = _$_Category.fromJson;
 
   @override
   String get name;

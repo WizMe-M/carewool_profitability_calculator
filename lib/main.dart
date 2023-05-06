@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
+import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
 
 import 'app/widget/app.dart';
 import 'app/widget/side_bar.dart';
-import 'domain/database/application_database.dart';
-import 'domain/database/repo/product_repository.dart';
+import 'database/database.dart';
 import 'domain/entity/category/category.dart';
 import 'domain/entity/storage_tariff/storage_tariff.dart';
 import 'domain/parser/category_parser.dart';
@@ -25,17 +25,8 @@ Future<void> _registerDependencies() async {
 
   GetIt.instance
     ..registerSingleton<Logger>(logger)
-    ..registerSingletonAsync<ApplicationDatabase>(
-        () async => ApplicationDatabase().init())
-    ..registerSingletonAsync<ProductRepository>(() async {
-      var repo = ProductRepository();
-      await repo.init();
-      return repo;
-    }, dependsOn: [ApplicationDatabase])
-    ..registerSingletonWithDependencies(
-      () => SideBar(),
-      dependsOn: [ProductRepository],
-    )
+    ..registerSingletonAsync<Isar>(() => openIsarDatabase())
+    ..registerSingletonWithDependencies(() => SideBar(), dependsOn: [Isar])
     ..registerSingleton<ExcelParser<List<StorageTariff>>>(StorageParser())
     ..registerSingleton<ExcelParser<List<Category>>>(CategoryParser());
 
