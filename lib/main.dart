@@ -7,8 +7,8 @@ import 'package:logger/logger.dart';
 import 'app/widget/app.dart';
 import 'app/widget/side_bar.dart';
 import 'database/database.dart';
-import 'domain/entity/category/category.dart';
-import 'domain/entity/storage_tariff/storage_tariff.dart';
+import 'database/entity/category.dart';
+import 'database/entity/storage.dart';
 import 'domain/parser/category_parser.dart';
 import 'domain/parser/excel_parser.dart';
 import 'domain/parser/storage_parser.dart';
@@ -27,8 +27,8 @@ Future<void> _registerDependencies() async {
     ..registerSingleton<Logger>(logger)
     ..registerSingletonAsync<Isar>(() => openIsarDatabase())
     ..registerSingletonWithDependencies(() => SideBar(), dependsOn: [Isar])
-    ..registerSingleton<ExcelParser<List<StorageTariff>>>(StorageParser())
-    ..registerSingleton<ExcelParser<List<Category>>>(CategoryParser());
+    ..registerSingleton<ExcelParser<StorageList>>(StorageParser())
+    ..registerSingleton<ExcelParser<CategoryList>>(CategoryParser());
 
   logger.i('All dependencies registered');
 }

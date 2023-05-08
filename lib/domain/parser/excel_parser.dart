@@ -6,5 +6,5 @@ abstract class ExcelParser<T> {
   /// Parses data from Excel sheet to [T]
   ///
   /// Value of [bytes] are data from [FilePickerResult]'s excel (.xlsx or .xls) file
-  T parse(Uint8List bytes);
+  T? parse(Uint8List bytes);
 }

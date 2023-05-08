@@ -67,6 +67,14 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ExcelUploadRoute.name: (routeData) {
+      final args = routeData.argsAs<ExcelUploadRouteArgs>(
+          orElse: () => const ExcelUploadRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ExcelUploadPage(key: args.key),
+      );
+    },
   };
 }
 
@@ -253,5 +261,34 @@ class LogisticRouteArgs {
   @override
   String toString() {
     return 'LogisticRouteArgs{costPrice: $costPrice, key: $key}';
+  }
+}
+
+/// generated route for
+/// [ExcelUploadPage]
+class ExcelUploadRoute extends PageRouteInfo<ExcelUploadRouteArgs> {
+  ExcelUploadRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ExcelUploadRoute.name,
+          args: ExcelUploadRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'ExcelUploadRoute';
+
+  static const PageInfo<ExcelUploadRouteArgs> page =
+      PageInfo<ExcelUploadRouteArgs>(name);
+}
+
+class ExcelUploadRouteArgs {
+  const ExcelUploadRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ExcelUploadRouteArgs{key: $key}';
   }
 }

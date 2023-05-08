@@ -1,14 +1,8 @@
 import 'package:auto_route/annotations.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../../database/entity/cost_price.dart';
-import '../../../domain/entity/storage_tariff/storage_tariff.dart';
-import '../../../domain/entity/category/category.dart';
-import '../../../domain/parser/excel_parser.dart';
 import '../../../domain/profitability/logistic_form/logistic_form.dart';
 import '../../../domain/util/symbols.dart';
 import '../side_bar.dart';
@@ -17,9 +11,8 @@ import 'logistic/logistic_result_widget.dart';
 
 @RoutePage()
 class LogisticPage extends StatelessWidget {
-  final Logger _logger = GetIt.I.get();
-  final CostPrice costPrice;
   final LogisticCalculator _logisticCalculator = LogisticCalculator();
+  final CostPrice costPrice;
 
   LogisticPage({required this.costPrice, super.key});
 
@@ -35,12 +28,6 @@ class LogisticPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text('Себестоимость: ${costPrice.total}$rubleCurrency'),
-                const Text('Дата последнего обновления: 01.05.23'),
-                ElevatedButton(
-                  onPressed: pickExcelFile,
-                  child: const Text('Загрузить Excel-файл с '
-                      'тарифами складов и комиссиями'),
-                ),
                 LogisticFormWidget(logisticCalculator: _logisticCalculator),
               ],
             ),
@@ -55,34 +42,5 @@ class LogisticPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> pickExcelFile() async {
-    var downloads = await getApplicationDocumentsDirectory();
-
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['xlsx', 'xls'],
-      initialDirectory: downloads.path,
-      withData: true,
-    );
-    if (result != null) {
-      var file = result.files.single;
-      _logger.i('Picked file. Path: "${file.path}"');
-
-      var storageParser = GetIt.I.get<ExcelParser<List<StorageTariff>>>();
-      var tariffs = storageParser.parse(file.bytes!);
-      if (tariffs.isEmpty) {
-        _logger.e('Parsed tariffs data is empty!');
-      }
-
-      var categoryParser = GetIt.I.get<ExcelParser<List<Category>>>();
-      var categories = categoryParser.parse(file.bytes!);
-      if (categories.isEmpty) {
-        _logger.e('Parsed categories data is empty!');
-      }
-    } else {
-      _logger.w('File was not picked');
-    }
   }
 }

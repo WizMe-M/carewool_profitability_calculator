@@ -17,6 +17,7 @@ class SideBar extends StatelessWidget {
     var costPricesCount = 0;
 
     var costPricesFuture = Future(() async {
+      await Future.delayed(const Duration(seconds: 1));
       return costPricesCount = await _isar.costPrices.count();
     });
 
@@ -80,6 +81,12 @@ class SideBar extends StatelessWidget {
               'Рентабельность',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.update),
+            title: const Text('Загрузить Excel'),
+            subtitle: const Text('Последнее обновление: 24.12.24'),
+            onTap: () => context.router.push(ExcelUploadRoute()),
           ),
           ListTile(
             leading: const Icon(Icons.add),

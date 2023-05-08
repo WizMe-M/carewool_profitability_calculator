@@ -3,10 +3,15 @@ import 'package:isar/isar.dart';
 part 'storage.g.dart';
 
 @collection
-class Storage {
+class StorageList {
   Id? id;
+  List<Storage> storages = [];
+}
+
+@embedded
+class Storage {
   String? name;
-  List<Tariff>? tariffs;
+  List<Tariff> tariffs = [];
 }
 
 @embedded
