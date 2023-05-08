@@ -1,26 +1,12 @@
-import 'dart:typed_data';
-
 import 'package:excel/excel.dart';
-import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
 
 import '../../database/entity/storage.dart';
-import 'excel_parser.dart';
+import 'excel_sheet_parser.dart';
 import 'sheet_extensions.dart';
 
-class StorageParser implements ExcelParser<StorageList> {
-  final Logger _logger = GetIt.I.get();
-
+class StorageParser implements ExcelSheetParser<StorageList> {
   @override
-  StorageList? parse(Uint8List bytes) {
-    var excel = Excel.decodeBytes(bytes);
-    const sheetName = 'Склады';
-    var sheet = excel.sheets[sheetName];
-    if (sheet == null) {
-      _logger.e("Can't find sheet named '$sheetName'!");
-      return null;
-    }
-
+  StorageList? parse(Sheet sheet) {
     var list = StorageList();
     for (var i = 5; i < sheet.maxRows; i++) {
       var storageName = sheet.valueOf<String>(0, i);

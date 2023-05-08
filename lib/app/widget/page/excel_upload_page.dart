@@ -1,18 +1,14 @@
 import 'package:auto_route/annotations.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../../domain/excel_upload/excel_parsing_handler.dart';
 import '../side_bar.dart';
 
 @RoutePage()
 class ExcelUploadPage extends StatelessWidget {
-  final Logger _logger = GetIt.I.get();
-  final _handler = ExcelParsingHandler();
+  final _uploader = ExcelUploader();
 
   ExcelUploadPage({super.key});
 
@@ -36,14 +32,14 @@ class ExcelUploadPage extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
-                onPressed: pickExcelFile,
+                onPressed: () async => await _uploader.uploadExcel(),
                 child: const Text('Загрузить Excel-файл'),
               ),
               const Text('Дата последнего обновления: 01.05.23'),
               const Spacer(),
               Observer(
                 builder: (_) {
-                  switch (_handler.status) {
+                  switch (_uploader.status) {
                     case ParsingStatus.notStarted:
                     case ParsingStatus.done:
                     case ParsingStatus.error:
@@ -59,24 +55,5 @@ class ExcelUploadPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> pickExcelFile() async {
-    var downloads = await getApplicationDocumentsDirectory();
-
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['xlsx', 'xls'],
-      initialDirectory: downloads.path,
-      withData: true,
-    );
-
-    if (result != null) {
-      var file = result.files.single;
-      _logger.i('Picked file. Path: "${file.path}"');
-      await _handler.handleParsing(file.bytes!);
-    } else {
-      _logger.w('File was not picked');
-    }
   }
 }
