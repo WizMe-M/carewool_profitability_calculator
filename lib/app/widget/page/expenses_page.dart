@@ -3,8 +3,8 @@ import 'package:get_it/get_it.dart';
 
 import '../side_bar.dart';
 
-class ProfitabilityPage extends StatelessWidget {
-  const ProfitabilityPage({super.key});
+class ExpensesPage extends StatelessWidget {
+  const ExpensesPage({super.key});
 
   @override
   Widget build(BuildContext context) {

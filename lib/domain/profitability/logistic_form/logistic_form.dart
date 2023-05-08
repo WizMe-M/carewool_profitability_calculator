@@ -17,7 +17,7 @@ abstract class LogisticCalculatorBase with Store {
 
   @computed
   Tariff? get logisticTariff => storageSelector.selected?.tariffs
-      ?.firstWhere((tariff) => tariff.name == 'Логистика');
+      .firstWhere((tariff) => tariff.name == 'Логистика');
 
   @computed
   double get baseCost => logisticTariff?.baseCost ?? 0;

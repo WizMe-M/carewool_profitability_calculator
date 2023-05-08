@@ -18,9 +18,8 @@ class ProfitabilityCalculator {
     return logistics;
   }
 
-  // TODO: pick selected item from category and subcategory dropdowns
   double calcSaleCommission(CategoryItem item) {
-    var cost = 100; // TODO: set cost from product total 'cost price'
+    var cost = 100;
     var commission = cost * item.fbo / 100;
     return commission;
   }
@@ -49,7 +48,6 @@ class ProfitabilityCalculator {
     return cost - commission - logistics - paidAcceptance;
   }
 
-  // TODO: pick selected tax from STS taxes dropdown
   double calcTax(SimpleTaxationSystem tax) {
     var cost = calcCostWithDiscount(100, 20);
     switch (tax) {
