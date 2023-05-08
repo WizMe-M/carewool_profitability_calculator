@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:carewool_profitability_calculator/database/entity/category.dart';
-import 'package:carewool_profitability_calculator/database/entity/storage.dart';
-import 'package:carewool_profitability_calculator/database/entity/upload.dart';
+import 'entity/category.dart';
+import 'entity/storage.dart';
+import 'entity/upload.dart';
 import 'package:isar/isar.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';

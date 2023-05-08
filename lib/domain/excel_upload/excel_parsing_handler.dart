@@ -32,7 +32,26 @@ abstract class ExcelUploaderBase with Store {
   final ExcelSheetParser<CategoryList> _categoryParser = GetIt.I.get();
 
   @observable
+  Upload? lastUpload;
+
+  @observable
   ParsingStatus status = ParsingStatus.notStarted;
+
+  @computed
+  bool get isExecuting =>
+      status != ParsingStatus.notStarted &&
+      status != ParsingStatus.done &&
+      status != ParsingStatus.error;
+
+  @action
+  Future<bool> updateLastUpload() async {
+    var upload = await _isar.uploads.where().sortByUploadTimeDesc().findFirst();
+    if (upload == null) {
+      _logger.i('No upload was made yet');
+    }
+    lastUpload = upload;
+    return upload != null;
+  }
 
   @action
   Future<void> uploadExcel() async {
@@ -100,5 +119,6 @@ abstract class ExcelUploaderBase with Store {
       status = ParsingStatus.error;
     });
     status = ParsingStatus.done;
+    lastUpload = upload;
   }
 }

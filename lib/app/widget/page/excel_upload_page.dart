@@ -2,6 +2,7 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 
 import '../../../domain/excel_upload/excel_parsing_handler.dart';
 import '../side_bar.dart';
@@ -31,22 +32,47 @@ class ExcelUploadPage extends StatelessWidget {
                   style: TextStyle(fontSize: 16),
                 ),
               ),
-              ElevatedButton(
-                onPressed: () async => await _uploader.uploadExcel(),
-                child: const Text('Загрузить Excel-файл'),
+              Observer(
+                builder: (context) {
+                  return ElevatedButton(
+                    onPressed: _uploader.isExecuting
+                        ? null
+                        : () async => await _uploader.uploadExcel(),
+                    child: const Text('Загрузить Excel-файл'),
+                  );
+                },
               ),
-              const Text('Дата последнего обновления: 01.05.23'),
+              FutureBuilder(
+                future: _uploader.updateLastUpload(),
+                builder: (_, snapshot) {
+                  return snapshot.hasData
+                      ? const SizedBox.shrink()
+                      : const SizedBox(
+                          width: 200,
+                          child: LinearProgressIndicator(),
+                        );
+                },
+              ),
+              Observer(
+                builder: (context) {
+                  var upload = _uploader.lastUpload;
+                  if (upload != null) {
+                    var uploadedAt = DateFormat('dd.MM.yy HH:mm:ss')
+                        .format(upload.uploadTime!);
+                    return Text(
+                      'Дата последнего обновления:\n$uploadedAt',
+                      textAlign: TextAlign.center,
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
               const Spacer(),
               Observer(
                 builder: (_) {
-                  switch (_uploader.status) {
-                    case ParsingStatus.notStarted:
-                    case ParsingStatus.done:
-                    case ParsingStatus.error:
-                      return const SizedBox.shrink();
-                    default:
-                      return const CircularProgressIndicator();
-                  }
+                  return _uploader.isExecuting
+                      ? const CircularProgressIndicator()
+                      : const SizedBox.shrink();
                 },
               ),
               const Spacer(),

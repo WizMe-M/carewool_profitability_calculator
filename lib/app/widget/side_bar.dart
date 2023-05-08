@@ -1,24 +1,35 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 
 import '../../database/entity/cost_price.dart';
 import '../../domain/cost_price/form/cost_price_form.dart';
+import '../../domain/excel_upload/excel_parsing_handler.dart';
 import '../navigation/app_router.dart';
 
 class SideBar extends StatelessWidget {
   final Isar _isar = GetIt.I.get();
+  final ExcelUploader _uploader = GetIt.I.get();
 
   SideBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var costPricesCount = 0;
-
     var costPricesFuture = Future(() async {
       await Future.delayed(const Duration(seconds: 1));
-      return costPricesCount = await _isar.costPrices.count();
+      return await _isar.costPrices.count();
+    });
+
+    var lastUpdateFuture = Future(() async {
+      await Future.delayed(const Duration(seconds: 1));
+      var lastUploadExist = await _uploader.updateLastUpload();
+      if (lastUploadExist) {
+        return _uploader.lastUpload!.uploadTime;
+      } else {
+        return null;
+      }
     });
 
     return Drawer(
@@ -66,11 +77,14 @@ class SideBar extends StatelessWidget {
             trailing: FutureBuilder(
               future: costPricesFuture,
               builder: (context, snapshot) {
-                return snapshot.hasData
-                    ? costPricesCount > 0
-                        ? Counter(count: costPricesCount)
-                        : const SizedBox.shrink()
-                    : const CircularProgressIndicator();
+                if (snapshot.hasData) {
+                  var count = snapshot.data!;
+                  return count > 0
+                      ? Counter(count: count)
+                      : const SizedBox.shrink();
+                } else {
+                  return const CircularProgressIndicator();
+                }
               },
             ),
             onTap: () => context.router.push(CostPriceHistoryRoute()),
@@ -82,11 +96,25 @@ class SideBar extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.update),
-            title: const Text('Загрузить Excel'),
-            subtitle: const Text('Последнее обновление: 24.12.24'),
-            onTap: () => context.router.push(ExcelUploadRoute()),
+          FutureBuilder(
+            future: lastUpdateFuture,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                var updated = DateFormat('dd.MM.yy').format(snapshot.data!);
+                return ListTile(
+                  leading: const Icon(Icons.update),
+                  title: const Text('Загрузить Excel'),
+                  subtitle: Text('Последнее обновление: $updated'),
+                  onTap: () => context.router.push(ExcelUploadRoute()),
+                );
+              } else {
+                return ListTile(
+                  leading: const Icon(Icons.update),
+                  title: const Text('Загрузить Excel'),
+                  onTap: () => context.router.push(ExcelUploadRoute()),
+                );
+              }
+            },
           ),
           ListTile(
             leading: const Icon(Icons.add),
