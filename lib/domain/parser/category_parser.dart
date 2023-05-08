@@ -1,50 +1,36 @@
-import 'dart:typed_data';
-
 import 'package:dfunc/dfunc.dart';
 import 'package:excel/excel.dart';
-import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
 
-import 'excel_parser.dart';
-import '../entity/category/category.dart';
-import '../entity/category_item/category_item.dart';
+import '../../database/entity/category.dart';
+import 'excel_sheet_parser.dart';
+import 'sheet_extensions.dart';
 
-class CategoryParser implements ExcelParser<List<Category>> {
-  final Logger logger = GetIt.I.get();
-
+class CategoryParser implements ExcelSheetParser<CategoryList> {
   @override
-  List<Category> parse(Uint8List bytes) {
-    var excel = Excel.decodeBytes(bytes);
-    const sheetName = 'Логистика, комиссия';
-    var sheet = excel.sheets[sheetName];
-    if (sheet == null) {
-      logger.e("Can't find sheet named '$sheetName'!");
-      return [];
-    }
-
-    var categories = <Category>[];
+  CategoryList? parse(Sheet sheet) {
+    var list = CategoryList();
     for (var i = 1; i < sheet.maxRows; i++) {
-      var categoryName = sheet
-          .cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: i))
-          .value as String;
+      var categoryName = sheet.valueOf<String>(0, i);
       var category =
-          categories.maybeFirstWhere((c) => c.name == categoryName) ??
-              Category(name: categoryName, items: []);
+          list.categories.maybeFirstWhere((e) => e.name == categoryName);
+      if (category == null) {
+        category = Category()
+          ..name = categoryName
+          ..subcategories = [];
+        list.categories.add(category);
+      }
 
-      var itemName = sheet
-          .cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: i))
-          .value as String;
-      var fbo = sheet
-          .cell(CellIndex.indexByColumnRow(columnIndex: 3, rowIndex: i))
-          .value as double;
-      var fbs = sheet
-          .cell(CellIndex.indexByColumnRow(columnIndex: 4, rowIndex: i))
-          .value as double;
+      var subcategoryName = sheet.valueOf<String>(1, i);
+      var fbo = sheet.valueOf<double>(3, i);
+      var fbs = sheet.valueOf<double>(4, i);
 
-      var item = CategoryItem(name: itemName, fbo: fbo, fbs: fbs);
-      category.items.add(item);
+      var subcategory = Subcategory()
+        ..name = subcategoryName
+        ..fbo = fbo
+        ..fbs = fbs;
+      category.subcategories.add(subcategory);
     }
 
-    return categories;
+    return list;
   }
 }

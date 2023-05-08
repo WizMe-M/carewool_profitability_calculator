@@ -15,14 +15,6 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
-    CostPriceHistoryRoute.name: (routeData) {
-      final args = routeData.argsAs<CostPriceHistoryRouteArgs>(
-          orElse: () => const CostPriceHistoryRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: CostPriceHistoryPage(key: args.key),
-      );
-    },
     CostCalculatorRoute.name: (routeData) {
       final args = routeData.argsAs<CostCalculatorRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -49,46 +41,52 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CostPriceHistoryRoute.name: (routeData) {
+      final args = routeData.argsAs<CostPriceHistoryRouteArgs>(
+          orElse: () => const CostPriceHistoryRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CostPriceHistoryPage(key: args.key),
+      );
+    },
+    NewProfitabilityRoute.name: (routeData) {
+      final args = routeData.argsAs<NewProfitabilityRouteArgs>(
+          orElse: () => const NewProfitabilityRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: NewProfitabilityPage(key: args.key),
+      );
+    },
+    LogisticRoute.name: (routeData) {
+      final args = routeData.argsAs<LogisticRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: LogisticPage(
+          costPrice: args.costPrice,
+          key: args.key,
+        ),
+      );
+    },
+    ExcelUploadRoute.name: (routeData) {
+      final args = routeData.argsAs<ExcelUploadRouteArgs>(
+          orElse: () => const ExcelUploadRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ExcelUploadPage(key: args.key),
+      );
+    },
     ProfitabilityRoute.name: (routeData) {
       final args = routeData.argsAs<ProfitabilityRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: ProfitabilityPage(
           costPrice: args.costPrice,
+          lastUpload: args.lastUpload,
           key: args.key,
         ),
       );
     },
   };
-}
-
-/// generated route for
-/// [CostPriceHistoryPage]
-class CostPriceHistoryRoute extends PageRouteInfo<CostPriceHistoryRouteArgs> {
-  CostPriceHistoryRoute({
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          CostPriceHistoryRoute.name,
-          args: CostPriceHistoryRouteArgs(key: key),
-          initialChildren: children,
-        );
-
-  static const String name = 'CostPriceHistoryRoute';
-
-  static const PageInfo<CostPriceHistoryRouteArgs> page =
-      PageInfo<CostPriceHistoryRouteArgs>(name);
-}
-
-class CostPriceHistoryRouteArgs {
-  const CostPriceHistoryRouteArgs({this.key});
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'CostPriceHistoryRouteArgs{key: $key}';
-  }
 }
 
 /// generated route for
@@ -182,16 +180,143 @@ class EditCostPriceRouteArgs {
 }
 
 /// generated route for
+/// [CostPriceHistoryPage]
+class CostPriceHistoryRoute extends PageRouteInfo<CostPriceHistoryRouteArgs> {
+  CostPriceHistoryRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CostPriceHistoryRoute.name,
+          args: CostPriceHistoryRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'CostPriceHistoryRoute';
+
+  static const PageInfo<CostPriceHistoryRouteArgs> page =
+      PageInfo<CostPriceHistoryRouteArgs>(name);
+}
+
+class CostPriceHistoryRouteArgs {
+  const CostPriceHistoryRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'CostPriceHistoryRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
+/// [NewProfitabilityPage]
+class NewProfitabilityRoute extends PageRouteInfo<NewProfitabilityRouteArgs> {
+  NewProfitabilityRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          NewProfitabilityRoute.name,
+          args: NewProfitabilityRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'NewProfitabilityRoute';
+
+  static const PageInfo<NewProfitabilityRouteArgs> page =
+      PageInfo<NewProfitabilityRouteArgs>(name);
+}
+
+class NewProfitabilityRouteArgs {
+  const NewProfitabilityRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'NewProfitabilityRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
+/// [LogisticPage]
+class LogisticRoute extends PageRouteInfo<LogisticRouteArgs> {
+  LogisticRoute({
+    required CostPrice costPrice,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          LogisticRoute.name,
+          args: LogisticRouteArgs(
+            costPrice: costPrice,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'LogisticRoute';
+
+  static const PageInfo<LogisticRouteArgs> page =
+      PageInfo<LogisticRouteArgs>(name);
+}
+
+class LogisticRouteArgs {
+  const LogisticRouteArgs({
+    required this.costPrice,
+    this.key,
+  });
+
+  final CostPrice costPrice;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'LogisticRouteArgs{costPrice: $costPrice, key: $key}';
+  }
+}
+
+/// generated route for
+/// [ExcelUploadPage]
+class ExcelUploadRoute extends PageRouteInfo<ExcelUploadRouteArgs> {
+  ExcelUploadRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ExcelUploadRoute.name,
+          args: ExcelUploadRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'ExcelUploadRoute';
+
+  static const PageInfo<ExcelUploadRouteArgs> page =
+      PageInfo<ExcelUploadRouteArgs>(name);
+}
+
+class ExcelUploadRouteArgs {
+  const ExcelUploadRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ExcelUploadRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
 /// [ProfitabilityPage]
 class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
   ProfitabilityRoute({
     required CostPrice costPrice,
+    required Upload lastUpload,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           ProfitabilityRoute.name,
           args: ProfitabilityRouteArgs(
             costPrice: costPrice,
+            lastUpload: lastUpload,
             key: key,
           ),
           initialChildren: children,
@@ -206,15 +331,18 @@ class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
 class ProfitabilityRouteArgs {
   const ProfitabilityRouteArgs({
     required this.costPrice,
+    required this.lastUpload,
     this.key,
   });
 
   final CostPrice costPrice;
 
+  final Upload lastUpload;
+
   final Key? key;
 
   @override
   String toString() {
-    return 'ProfitabilityRouteArgs{costPrice: $costPrice, key: $key}';
+    return 'ProfitabilityRouteArgs{costPrice: $costPrice, lastUpload: $lastUpload, key: $key}';
   }
 }

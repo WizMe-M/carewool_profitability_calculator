@@ -1,12 +1,13 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:carewool_profitability_calculator/database/entity/cost_price.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
 
+import '../../../../../database/entity/cost_price.dart';
 import '../../../../../domain/cost_price/form/edit/edit_wrap.dart';
+import '../../../../../domain/util/symbols.dart';
 import '../../../../navigation/app_router.dart';
 import '../../../../util/space.dart';
 
@@ -52,7 +53,7 @@ class EditBottomTotalBar extends StatelessWidget {
                     const Space(4),
                     Observer(
                       builder: (context) => Text(
-                        '${editWrap.form.formattedCostPrice}₽',
+                        '${editWrap.form.formattedCostPrice}$rubleCurrency',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

@@ -1,77 +1,62 @@
 import 'package:auto_route/annotations.dart';
-import 'package:carewool_profitability_calculator/database/entity/cost_price.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
-import 'package:path_provider/path_provider.dart';
 
-import '../../../domain/entity/storage_tariff/storage_tariff.dart';
-import '../../../domain/entity/category/category.dart';
-import '../../../domain/parser/excel_parser.dart';
+import '../../../database/entity/cost_price.dart';
+import '../../../database/entity/upload.dart';
+import '../../../domain/profitability/profitability_form.dart';
 import '../side_bar.dart';
-import 'profitability/logistic_form_widget.dart';
+import 'logistic/logistic_result_widget.dart';
+import 'logistic/size_form_widget.dart';
+import 'logistic/storage_selector_widget.dart';
+import 'profitability/calculations_result_widget.dart';
+import 'profitability/category_selector_widget.dart';
+import 'profitability/sale_price_widget.dart';
+import 'profitability/tax_selector_widget.dart';
 
 @RoutePage()
 class ProfitabilityPage extends StatelessWidget {
-  final Logger _logger = GetIt.I.get();
+  final ProfitabilityForm _form;
   final CostPrice costPrice;
 
-  ProfitabilityPage({required this.costPrice, super.key});
+  ProfitabilityPage({
+    required this.costPrice,
+    required Upload lastUpload,
+    super.key,
+  }) : _form = ProfitabilityForm(costPrice: costPrice, upload: lastUpload);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Калькулятор рентабельности')),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Калькулятор рентабельности'),
+      ),
       drawer: GetIt.I.get<SideBar>(),
       body: SafeArea(
         child: Expanded(
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text('Себестоимость: ${costPrice.total}₽'),
-                const Text('Дата последнего обновления: 01.05.23'),
-                ElevatedButton(
-                  onPressed: pickExcelFile,
-                  child: const Text('Загрузить Excel-файл с '
-                      'тарифами складов и комиссиями'),
-                ),
-                LogisticFormWidget(),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  StorageSelectorWidget(selector: _form.storageSelector),
+                  SizeFormWidget(form: _form.sizeForm),
+                  LogisticResultWidget(profitabilityForm: _form),
+                  CategorySelectorWidget(selector: _form.categorySelector),
+                  SalePriceWidget(
+                    desiredCostInput: _form.desiredCost,
+                    discountInput: _form.discount,
+                  ),
+                  TaxSelectorWidget(form: _form),
+                  CalculationsResultWidget(form: _form),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
-  }
-
-  Future<void> pickExcelFile() async {
-    var downloads = await getApplicationDocumentsDirectory();
-
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['xlsx', 'xls'],
-      initialDirectory: downloads.path,
-      withData: true,
-    );
-    if (result != null) {
-      var file = result.files.single;
-      _logger.i('Picked file. Path: "${file.path}"');
-
-      var storageParser = GetIt.I.get<ExcelParser<List<StorageTariff>>>();
-      var tariffs = storageParser.parse(file.bytes!);
-      if (tariffs.isEmpty) {
-        _logger.e('Parsed tariffs data is empty!');
-      }
-
-      var categoryParser = GetIt.I.get<ExcelParser<List<Category>>>();
-      var categories = categoryParser.parse(file.bytes!);
-      if (categories.isEmpty) {
-        _logger.e('Parsed categories data is empty!');
-      }
-    } else {
-      _logger.w('File was not picked');
-    }
   }
 }
