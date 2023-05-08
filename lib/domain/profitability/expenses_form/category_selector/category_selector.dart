@@ -10,20 +10,20 @@ abstract class CategorySelectorBase with Store {
   final List<Category> list;
 
   @observable
-  Category? selectedCategory;
+  Category? category;
 
   @observable
-  Subcategory? selectedSubcategory;
+  Subcategory? subcategory;
 
   CategorySelectorBase({required CategoryList categoryList})
       : list = categoryList.categories;
 
   @action
-  void setSelectedCategory(Category value) {
-    selectedCategory = value;
-    selectedSubcategory = null;
+  void setSelectedCategory(Category? value) {
+    category = value;
+    subcategory = null;
   }
 
   @computed
-  double get fboCommission => selectedSubcategory?.fbo ?? 0;
+  double get fbsCommission => subcategory?.fbs ?? 0;
 }

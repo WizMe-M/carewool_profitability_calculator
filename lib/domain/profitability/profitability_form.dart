@@ -1,21 +1,23 @@
 import 'dart:math';
 
-import 'package:carewool_profitability_calculator/domain/profitability/simple_taxation_system.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../database/entity/storage.dart';
 import '../../database/entity/upload.dart';
+import '../../database/entity/cost_price.dart';
 import 'expenses_form/category_selector/category_selector.dart';
 import 'expenses_form/inputs/cost_input.dart';
 import 'expenses_form/inputs/discount_input.dart';
 import 'logistic_form/size_form/size_form.dart';
 import 'logistic_form/storage_selector/storage_selector.dart';
+import 'simple_taxation_system.dart';
 
 part 'profitability_form.g.dart';
 
 class ProfitabilityForm = ProfitabilityFormBase with _$ProfitabilityForm;
 
 abstract class ProfitabilityFormBase with Store {
+  final CostPrice costPrice;
   final Upload upload;
   final StorageSelector storageSelector;
   final CategorySelector categorySelector;
@@ -33,13 +35,15 @@ abstract class ProfitabilityFormBase with Store {
   @observable
   SimpleTaxationSystem selectedTax = SimpleTaxationSystem.perIncome;
 
-  ProfitabilityFormBase({required this.upload})
+  ProfitabilityFormBase({required this.costPrice, required this.upload})
       : storageSelector = StorageSelector(
           list: upload.storages.value!,
         ),
         categorySelector = CategorySelector(
           categoryList: upload.categories.value!,
-        );
+        ) {
+    addListeners();
+  }
 
   @computed
   Tariff? get logisticTariff => storageSelector.selected?.tariffs
@@ -62,6 +66,12 @@ abstract class ProfitabilityFormBase with Store {
         : logisticCostForSize;
   }
 
+  /// Total logistics cost for inputted sizes of product
+  @computed
+  double get logisticTotalCost =>
+      logisticTariff != null ? logisticCostForExtraLarge : 0;
+
+  /// Cost of paid acceptance, if it's included in storage tariffs
   @computed
   double get paidAcceptanceCost {
     var acceptanceTariff = storageSelector.selected?.tariffs
@@ -69,35 +79,41 @@ abstract class ProfitabilityFormBase with Store {
     return acceptanceTariff?.baseCost ?? 0;
   }
 
-  /// Total logistics cost for inputted sizes of product
-  @computed
-  double get logisticTotalCost =>
-      logisticTariff != null ? logisticCostForExtraLarge : 0;
-
+  // Income for one saled production
   @computed
   double get discountedCost => desiredCostValue * (100 - discountValue) / 100;
 
+  /// Commission on sale for set [discountedCost]
   @computed
   double get commissionForCost =>
-      discountedCost * categorySelector.fboCommission;
+      discountedCost * categorySelector.fbsCommission;
 
   @computed
-  double get totalPayments =>
-      discountedCost -
-      categorySelector.fboCommission -
-      logisticTotalCost -
+  double get expenses =>
+      costPrice.total! +
+      categorySelector.fbsCommission +
+      logisticTotalCost +
       paidAcceptanceCost;
 
   @computed
   double get taxSize {
+    var tax = selectedTax.taxSize / 100;
     switch (selectedTax) {
       case SimpleTaxationSystem.perIncome:
-        return discountedCost * selectedTax.taxSize;
+        return discountedCost * tax;
       case SimpleTaxationSystem.perProfit:
-        return max<double>(0, totalPayments - discountedCost) *
-            selectedTax.taxSize;
+        return max<double>(0, discountedCost - expenses) * tax;
     }
   }
+
+  @computed
+  double get expensesWithTax => expenses + taxSize;
+
+  @computed
+  double get profit => discountedCost - expensesWithTax;
+
+  @computed
+  double get profitability => profit / discountedCost;
 
   void addListeners() {
     desiredCost.controller

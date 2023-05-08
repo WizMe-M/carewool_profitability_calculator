@@ -37,7 +37,7 @@ abstract class ExpensesFormBase with Store {
 
   @computed
   double get commissionForCost =>
-      discountedCost * categorySelector.fboCommission;
+      discountedCost * categorySelector.fbsCommission;
 
   @computed
   double get taxSize {

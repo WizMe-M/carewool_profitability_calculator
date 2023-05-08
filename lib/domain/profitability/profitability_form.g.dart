@@ -45,19 +45,19 @@ mixin _$ProfitabilityForm on ProfitabilityFormBase, Store {
               () => super.logisticCostForExtraLarge,
               name: 'ProfitabilityFormBase.logisticCostForExtraLarge'))
           .value;
-  Computed<double>? _$paidAcceptanceCostComputed;
-
-  @override
-  double get paidAcceptanceCost => (_$paidAcceptanceCostComputed ??=
-          Computed<double>(() => super.paidAcceptanceCost,
-              name: 'ProfitabilityFormBase.paidAcceptanceCost'))
-      .value;
   Computed<double>? _$logisticTotalCostComputed;
 
   @override
   double get logisticTotalCost => (_$logisticTotalCostComputed ??=
           Computed<double>(() => super.logisticTotalCost,
               name: 'ProfitabilityFormBase.logisticTotalCost'))
+      .value;
+  Computed<double>? _$paidAcceptanceCostComputed;
+
+  @override
+  double get paidAcceptanceCost => (_$paidAcceptanceCostComputed ??=
+          Computed<double>(() => super.paidAcceptanceCost,
+              name: 'ProfitabilityFormBase.paidAcceptanceCost'))
       .value;
   Computed<double>? _$discountedCostComputed;
 
@@ -73,12 +73,12 @@ mixin _$ProfitabilityForm on ProfitabilityFormBase, Store {
           Computed<double>(() => super.commissionForCost,
               name: 'ProfitabilityFormBase.commissionForCost'))
       .value;
-  Computed<double>? _$totalPaymentsComputed;
+  Computed<double>? _$expensesComputed;
 
   @override
-  double get totalPayments =>
-      (_$totalPaymentsComputed ??= Computed<double>(() => super.totalPayments,
-              name: 'ProfitabilityFormBase.totalPayments'))
+  double get expenses =>
+      (_$expensesComputed ??= Computed<double>(() => super.expenses,
+              name: 'ProfitabilityFormBase.expenses'))
           .value;
   Computed<double>? _$taxSizeComputed;
 
@@ -86,6 +86,27 @@ mixin _$ProfitabilityForm on ProfitabilityFormBase, Store {
   double get taxSize =>
       (_$taxSizeComputed ??= Computed<double>(() => super.taxSize,
               name: 'ProfitabilityFormBase.taxSize'))
+          .value;
+  Computed<double>? _$expensesWithTaxComputed;
+
+  @override
+  double get expensesWithTax => (_$expensesWithTaxComputed ??= Computed<double>(
+          () => super.expensesWithTax,
+          name: 'ProfitabilityFormBase.expensesWithTax'))
+      .value;
+  Computed<double>? _$profitComputed;
+
+  @override
+  double get profit =>
+      (_$profitComputed ??= Computed<double>(() => super.profit,
+              name: 'ProfitabilityFormBase.profit'))
+          .value;
+  Computed<double>? _$profitabilityComputed;
+
+  @override
+  double get profitability =>
+      (_$profitabilityComputed ??= Computed<double>(() => super.profitability,
+              name: 'ProfitabilityFormBase.profitability'))
           .value;
 
   late final _$desiredCostValueAtom =
@@ -147,12 +168,15 @@ logisticBaseCost: ${logisticBaseCost},
 logisticCostPerLiter: ${logisticCostPerLiter},
 logisticCostForSize: ${logisticCostForSize},
 logisticCostForExtraLarge: ${logisticCostForExtraLarge},
-paidAcceptanceCost: ${paidAcceptanceCost},
 logisticTotalCost: ${logisticTotalCost},
+paidAcceptanceCost: ${paidAcceptanceCost},
 discountedCost: ${discountedCost},
 commissionForCost: ${commissionForCost},
-totalPayments: ${totalPayments},
-taxSize: ${taxSize}
+expenses: ${expenses},
+taxSize: ${taxSize},
+expensesWithTax: ${expensesWithTax},
+profit: ${profit},
+profitability: ${profitability}
     ''';
   }
 }

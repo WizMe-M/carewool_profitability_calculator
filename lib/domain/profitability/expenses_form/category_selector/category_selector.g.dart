@@ -9,43 +9,43 @@ part of 'category_selector.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$CategorySelector on CategorySelectorBase, Store {
-  Computed<double>? _$fboCommissionComputed;
+  Computed<double>? _$fbsCommissionComputed;
 
   @override
-  double get fboCommission =>
-      (_$fboCommissionComputed ??= Computed<double>(() => super.fboCommission,
-              name: 'CategorySelectorBase.fboCommission'))
+  double get fbsCommission =>
+      (_$fbsCommissionComputed ??= Computed<double>(() => super.fbsCommission,
+              name: 'CategorySelectorBase.fbsCommission'))
           .value;
 
-  late final _$selectedCategoryAtom =
-      Atom(name: 'CategorySelectorBase.selectedCategory', context: context);
+  late final _$categoryAtom =
+      Atom(name: 'CategorySelectorBase.category', context: context);
 
   @override
-  Category? get selectedCategory {
-    _$selectedCategoryAtom.reportRead();
-    return super.selectedCategory;
+  Category? get category {
+    _$categoryAtom.reportRead();
+    return super.category;
   }
 
   @override
-  set selectedCategory(Category? value) {
-    _$selectedCategoryAtom.reportWrite(value, super.selectedCategory, () {
-      super.selectedCategory = value;
+  set category(Category? value) {
+    _$categoryAtom.reportWrite(value, super.category, () {
+      super.category = value;
     });
   }
 
-  late final _$selectedSubcategoryAtom =
-      Atom(name: 'CategorySelectorBase.selectedSubcategory', context: context);
+  late final _$subcategoryAtom =
+      Atom(name: 'CategorySelectorBase.subcategory', context: context);
 
   @override
-  Subcategory? get selectedSubcategory {
-    _$selectedSubcategoryAtom.reportRead();
-    return super.selectedSubcategory;
+  Subcategory? get subcategory {
+    _$subcategoryAtom.reportRead();
+    return super.subcategory;
   }
 
   @override
-  set selectedSubcategory(Subcategory? value) {
-    _$selectedSubcategoryAtom.reportWrite(value, super.selectedSubcategory, () {
-      super.selectedSubcategory = value;
+  set subcategory(Subcategory? value) {
+    _$subcategoryAtom.reportWrite(value, super.subcategory, () {
+      super.subcategory = value;
     });
   }
 
@@ -53,7 +53,7 @@ mixin _$CategorySelector on CategorySelectorBase, Store {
       ActionController(name: 'CategorySelectorBase', context: context);
 
   @override
-  void setSelectedCategory(Category value) {
+  void setSelectedCategory(Category? value) {
     final _$actionInfo = _$CategorySelectorBaseActionController.startAction(
         name: 'CategorySelectorBase.setSelectedCategory');
     try {
@@ -66,9 +66,9 @@ mixin _$CategorySelector on CategorySelectorBase, Store {
   @override
   String toString() {
     return '''
-selectedCategory: ${selectedCategory},
-selectedSubcategory: ${selectedSubcategory},
-fboCommission: ${fboCommission}
+category: ${category},
+subcategory: ${subcategory},
+fbsCommission: ${fbsCommission}
     ''';
   }
 }

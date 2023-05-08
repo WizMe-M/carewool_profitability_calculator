@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 
 import '../../../database/entity/cost_price.dart';
+import '../../../database/entity/upload.dart';
 import '../../../domain/cost_price/form/cost_price_form.dart';
 import '../../../domain/util/symbols.dart';
 import '../../navigation/app_router.dart';
@@ -21,10 +22,7 @@ class NewProfitabilityPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text(
-          'Новый расчёт рентабельности',
-          style: TextStyle(fontSize: 18),
-        ),
+        title: const Text('Новый расчёт рентабельности'),
       ),
       drawer: GetIt.I.get<SideBar>(),
       body: SafeArea(
@@ -94,10 +92,20 @@ class NewProfitabilityPage extends StatelessWidget {
                           subtitle: Text(savedDate),
                           trailing: IconButton.outlined(
                             icon: const Icon(Icons.navigate_next),
-                            onPressed: () {
-                              context.router.push(
-                                LogisticRoute(costPrice: costPrice),
-                              );
+                            onPressed: () async {
+                              var upload = await _isar.uploads
+                                  .where()
+                                  .sortByUploadTimeDesc()
+                                  .findFirst();
+
+                              if (context.mounted) {
+                                context.router.push(
+                                  ProfitabilityRoute(
+                                    costPrice: costPrice,
+                                    lastUpload: upload!,
+                                  ),
+                                );
+                              }
                             },
                           ),
                         );

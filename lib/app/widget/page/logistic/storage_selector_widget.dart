@@ -12,7 +12,7 @@ class StorageSelectorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(vertical: 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -24,7 +24,10 @@ class StorageSelectorWidget extends StatelessWidget {
                 items: selector.storages.map((tariff) {
                   return DropdownMenuItem<Storage>(
                     value: tariff,
-                    child: Text(tariff.name!),
+                    child: Text(
+                      tariff.name!,
+                      style: const TextStyle(fontSize: 14),
+                    ),
                   );
                 }).toList(),
               );
@@ -40,7 +43,8 @@ class StorageSelectorWidget extends StatelessWidget {
                   canTapOnHeader: true,
                   headerBuilder: (_, isExpanded) {
                     return ListTile(
-                      title: Text('${isExpanded ? 'Скрыть' : 'Показать'} тарифы'),
+                      title:
+                          Text('${isExpanded ? 'Скрыть' : 'Показать'} тарифы'),
                     );
                   },
                   body: Observer(
@@ -49,7 +53,7 @@ class StorageSelectorWidget extends StatelessWidget {
                         if (selector.selected == null)
                           const Center(child: Text('Выберите склад'))
                         else
-                          ...selector.selected!.tariffs!.map((tariff) {
+                          ...selector.selected!.tariffs.map((tariff) {
                             return Padding(
                               padding: const EdgeInsets.all(8),
                               child: InputDecorator(
@@ -60,8 +64,8 @@ class StorageSelectorWidget extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   label: Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(horizontal: 8),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8),
                                     child: Text(
                                       tariff.name!,
                                       style: const TextStyle(
@@ -76,10 +80,12 @@ class StorageSelectorWidget extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Базовая стоимость: ${tariff.baseCost}руб.',
+                                      'Базовая стоимость: '
+                                      '${tariff.baseCost == null ? 'Не принимает' : '${tariff.baseCost}руб.'}',
                                     ),
                                     Text(
-                                      'Доп. стоимость: ${tariff.costPerLiter}руб.',
+                                      'Доп. стоимость: '
+                                      '${tariff.costPerLiter == null ? 'Не принимает' : '${tariff.costPerLiter}руб.'}',
                                     ),
                                   ],
                                 ),

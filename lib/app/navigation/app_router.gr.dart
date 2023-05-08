@@ -75,6 +75,17 @@ abstract class _$AppRouter extends RootStackRouter {
         child: ExcelUploadPage(key: args.key),
       );
     },
+    ProfitabilityRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfitabilityRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ProfitabilityPage(
+          costPrice: args.costPrice,
+          lastUpload: args.lastUpload,
+          key: args.key,
+        ),
+      );
+    },
   };
 }
 
@@ -290,5 +301,48 @@ class ExcelUploadRouteArgs {
   @override
   String toString() {
     return 'ExcelUploadRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
+/// [ProfitabilityPage]
+class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
+  ProfitabilityRoute({
+    required CostPrice costPrice,
+    required Upload lastUpload,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ProfitabilityRoute.name,
+          args: ProfitabilityRouteArgs(
+            costPrice: costPrice,
+            lastUpload: lastUpload,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfitabilityRoute';
+
+  static const PageInfo<ProfitabilityRouteArgs> page =
+      PageInfo<ProfitabilityRouteArgs>(name);
+}
+
+class ProfitabilityRouteArgs {
+  const ProfitabilityRouteArgs({
+    required this.costPrice,
+    required this.lastUpload,
+    this.key,
+  });
+
+  final CostPrice costPrice;
+
+  final Upload lastUpload;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfitabilityRouteArgs{costPrice: $costPrice, lastUpload: $lastUpload, key: $key}';
   }
 }

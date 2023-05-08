@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../../domain/profitability/logistic_form/logistic_form.dart';
 import '../logistic/storage_selector_widget.dart';
-import 'logistic_result_widget.dart';
 import 'size_form_widget.dart';
 
 class LogisticFormWidget extends StatelessWidget {
@@ -17,7 +16,7 @@ class LogisticFormWidget extends StatelessWidget {
       children: [
         StorageSelectorWidget(selector: logisticCalculator.storageSelector),
         SizeFormWidget(form: logisticCalculator.sizeForm),
-        LogisticResultWidget(logistic: logisticCalculator),
+        // LogisticResultWidget(profitabilityForm: logisticCalculator),
       ],
     );
   }
