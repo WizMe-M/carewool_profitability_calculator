@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-import '../../../../domain/profitability/profitability_form.dart';
-import '../../../../domain/profitability/simple_taxation_system.dart';
+import '../../../../../domain/profitability/profitability_form.dart';
+import '../../../../../domain/profitability/simple_taxation_system.dart';
 
 class TaxSelectorWidget extends StatelessWidget {
   final ProfitabilityForm form;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../domain/profitability/expenses_form/inputs/cost_input.dart';
-import '../../../../domain/profitability/expenses_form/inputs/discount_input.dart';
+import '../../../../domain/profitability/inputs/cost_input.dart';
+import '../../../../domain/profitability/inputs/discount_input.dart';
 
 class SalePriceWidget extends StatelessWidget {
   final CostInput desiredCostInput;

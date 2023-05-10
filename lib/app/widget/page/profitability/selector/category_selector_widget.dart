@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-import '../../../../database/entity/category.dart';
-import '../../../../domain/profitability/expenses_form/category_selector/category_selector.dart';
+import '../../../../../database/entity/category.dart';
+import '../../../../../domain/profitability/category_selector/category_selector.dart';
 
 class CategorySelectorWidget extends StatelessWidget {
   final CategorySelector selector;
@@ -52,10 +52,13 @@ class CategorySelectorWidget extends StatelessWidget {
               );
             },
           ),
-          Observer(
-            builder: (context) {
-              return Text('Размер FBS-комиссии ${selector.fbsCommission}%');
-            },
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Observer(
+              builder: (context) {
+                return Text('Размер FBS-комиссии ${selector.fbsCommission}%');
+              },
+            ),
           ),
         ],
       ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-import '../../../../domain/profitability/profitability_form.dart';
-import '../../../../domain/util/symbols.dart';
+import '../../../../../domain/profitability/profitability_form.dart';
+import '../../../../../domain/util/symbols.dart';
 
 class CalculationsResultWidget extends StatelessWidget {
   final ProfitabilityForm form;

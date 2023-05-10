@@ -49,16 +49,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: CostPriceHistoryPage(key: args.key),
       );
     },
-    LogisticRoute.name: (routeData) {
-      final args = routeData.argsAs<LogisticRouteArgs>();
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: LogisticPage(
-          costPrice: args.costPrice,
-          key: args.key,
-        ),
-      );
-    },
     ExcelUploadRoute.name: (routeData) {
       final args = routeData.argsAs<ExcelUploadRouteArgs>(
           orElse: () => const ExcelUploadRouteArgs());
@@ -205,44 +195,6 @@ class CostPriceHistoryRouteArgs {
   @override
   String toString() {
     return 'CostPriceHistoryRouteArgs{key: $key}';
-  }
-}
-
-/// generated route for
-/// [LogisticPage]
-class LogisticRoute extends PageRouteInfo<LogisticRouteArgs> {
-  LogisticRoute({
-    required CostPrice costPrice,
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          LogisticRoute.name,
-          args: LogisticRouteArgs(
-            costPrice: costPrice,
-            key: key,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'LogisticRoute';
-
-  static const PageInfo<LogisticRouteArgs> page =
-      PageInfo<LogisticRouteArgs>(name);
-}
-
-class LogisticRouteArgs {
-  const LogisticRouteArgs({
-    required this.costPrice,
-    this.key,
-  });
-
-  final CostPrice costPrice;
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'LogisticRouteArgs{costPrice: $costPrice, key: $key}';
   }
 }
 
