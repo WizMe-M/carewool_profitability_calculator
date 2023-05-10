@@ -44,13 +44,11 @@ abstract class ExcelUploaderBase with Store {
       status != ParsingStatus.error;
 
   @action
-  Future<bool> updateLastUpload() async {
-    var upload = await _isar.uploads.where().sortByUploadTimeDesc().findFirst();
-    if (upload == null) {
+  Future<void> updateLastUpload() async {
+    lastUpload = await _isar.uploads.where().sortByUploadTimeDesc().findFirst();
+    if (lastUpload == null) {
       _logger.i('No upload was made yet');
     }
-    lastUpload = upload;
-    return upload != null;
   }
 
   @action

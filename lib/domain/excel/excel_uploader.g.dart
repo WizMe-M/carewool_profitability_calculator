@@ -53,7 +53,7 @@ mixin _$ExcelUploader on ExcelUploaderBase, Store {
       AsyncAction('ExcelUploaderBase.updateLastUpload', context: context);
 
   @override
-  Future<bool> updateLastUpload() {
+  Future<void> updateLastUpload() {
     return _$updateLastUploadAsyncAction.run(() => super.updateLastUpload());
   }
 
