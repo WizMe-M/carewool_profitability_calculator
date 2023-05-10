@@ -37,13 +37,13 @@ mixin _$ExcelUploader on ExcelUploaderBase, Store {
       Atom(name: 'ExcelUploaderBase.status', context: context);
 
   @override
-  ParsingStatus get status {
+  ImportExcelStatus get status {
     _$statusAtom.reportRead();
     return super.status;
   }
 
   @override
-  set status(ParsingStatus value) {
+  set status(ImportExcelStatus value) {
     _$statusAtom.reportWrite(value, super.status, () {
       super.status = value;
     });

@@ -11,24 +11,10 @@ import 'package:mobx/mobx.dart';
 import '../../database/entity/storage.dart';
 import '../../database/entity/category.dart';
 import '../../database/entity/upload.dart';
+import 'import_excel_status_enum.dart';
 import 'parsing/excel_sheet_parser.dart';
 
 part 'excel_uploader.g.dart';
-
-enum ParsingStatus {
-  notStarted(''),
-  downloadingFile('Загружаем файл'),
-  decodingBytes('Загружаем страницы Excel'),
-  parsingStorages('Импортируем склады'),
-  parsingCategories('Импортируем категории товаров'),
-  saving('Сохраняем данные'),
-  done(''),
-  error('Произошла ошибка');
-
-  final String message;
-
-  const ParsingStatus(this.message);
-}
 
 class ExcelUploader = ExcelUploaderBase with _$ExcelUploader;
 
@@ -42,13 +28,11 @@ abstract class ExcelUploaderBase with Store {
   Upload? lastUpload;
 
   @observable
-  ParsingStatus status = ParsingStatus.notStarted;
+  ImportExcelStatus status = ImportExcelStatus.notExecuting;
 
   @computed
   bool get isExecuting =>
-      status != ParsingStatus.notStarted &&
-      status != ParsingStatus.done &&
-      status != ParsingStatus.error;
+      status != ImportExcelStatus.notExecuting && status != ImportExcelStatus.error;
 
   Future<bool> tryUpdateLastUpload() async {
     await updateLastUpload();
@@ -65,7 +49,7 @@ abstract class ExcelUploaderBase with Store {
 
   @action
   Future<void> uploadExcel() async {
-    status = ParsingStatus.downloadingFile;
+    status = ImportExcelStatus.downloadingFile;
     var pickedFile = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['xlsx', 'xls'],
@@ -73,47 +57,44 @@ abstract class ExcelUploaderBase with Store {
     );
     if (pickedFile == null) {
       _logger.w('File was not picked');
-      status = ParsingStatus.notStarted;
+      status = ImportExcelStatus.notExecuting;
       return;
     }
 
     var file = pickedFile.files.single;
     _logger.i('Picked file. Path: "${file.path}"');
 
-    status = ParsingStatus.decodingBytes;
+    status = ImportExcelStatus.importing;
     var excel = await compute((bytes) => Excel.decodeBytes(bytes), file.bytes!);
 
     var categoriesSheet = excel.sheets['Комиссия'];
     if (categoriesSheet == null) {
       _logger.e('Отсутствует страница с комиссиями');
-      status = ParsingStatus.error;
+      status = ImportExcelStatus.error;
       return;
     }
 
     var storagesSheet = excel.sheets['Склады'];
     if (storagesSheet == null) {
       _logger.e('Отсутствует страница со складами');
-      status = ParsingStatus.error;
+      status = ImportExcelStatus.error;
       return;
     }
 
-    status = ParsingStatus.parsingStorages;
     var storages = _storageParser.parse(storagesSheet);
     if (storages == null) {
       _logger.e('Unable to parse storages!');
-      status = ParsingStatus.error;
+      status = ImportExcelStatus.error;
       return;
     }
 
-    status = ParsingStatus.parsingCategories;
     var categories = _categoryParser.parse(categoriesSheet);
     if (categories == null) {
       _logger.e('Unable to parse categories!');
-      status = ParsingStatus.error;
+      status = ImportExcelStatus.error;
       return;
     }
 
-    status = ParsingStatus.saving;
     var upload = Upload()
       ..uploadTime = DateTime.now()
       ..storages.value = storages
@@ -126,10 +107,10 @@ abstract class ExcelUploaderBase with Store {
       await upload.categories.save();
     }).onError((error, stackTrace) {
       _logger.e('Unable to save upload info!', error, stackTrace);
-      status = ParsingStatus.error;
+      status = ImportExcelStatus.error;
     });
 
-    status = ParsingStatus.done;
+    status = ImportExcelStatus.notExecuting;
     lastUpload = upload;
   }
 }

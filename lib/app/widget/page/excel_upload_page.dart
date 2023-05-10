@@ -56,20 +56,18 @@ class ExcelUploadPage extends StatelessWidget {
                         );
                 },
               ),
-              Observer(
-                builder: (context) {
-                  var upload = _uploader.lastUpload;
-                  if (upload != null) {
-                    var uploadedAt = DateFormat('dd.MM.yy HH:mm:ss')
-                        .format(upload.uploadTime!);
-                    return Text(
-                      'Дата последнего обновления:\n$uploadedAt',
-                      textAlign: TextAlign.center,
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
+              Observer(builder: (context) {
+                var upload = _uploader.lastUpload;
+                if (upload != null) {
+                  var uploadedAt = DateFormat('dd.MM.yy HH:mm:ss')
+                      .format(upload.uploadTime!);
+                  return Text(
+                    'Дата последнего обновления:\n$uploadedAt',
+                    textAlign: TextAlign.center,
+                  );
+                }
+                return const SizedBox.shrink();
+              }),
               const Spacer(),
               Observer(
                 builder: (_) {
