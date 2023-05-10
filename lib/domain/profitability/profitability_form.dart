@@ -5,12 +5,12 @@ import 'package:mobx/mobx.dart';
 import '../../database/entity/storage.dart';
 import '../../database/entity/upload.dart';
 import '../../database/entity/cost_price.dart';
-import 'expenses_form/category_selector/category_selector.dart';
-import 'expenses_form/inputs/cost_input.dart';
-import 'expenses_form/inputs/discount_input.dart';
-import 'logistic_form/size_form/size_form.dart';
-import 'logistic_form/storage_selector/storage_selector.dart';
-import 'simple_taxation_system.dart';
+import 'category_selector/category_selector.dart';
+import 'inputs/cost_input.dart';
+import 'inputs/discount_input.dart';
+import 'simple_taxation_system_enum.dart';
+import 'size_form/size_form.dart';
+import 'storage_selector/storage_selector.dart';
 
 part 'profitability_form.g.dart';
 
@@ -116,8 +116,11 @@ abstract class ProfitabilityFormBase with Store {
   double get profitability => profit / discountedCost;
 
   void addListeners() {
-    desiredCost.controller
-        .addListener(() => desiredCostValue = desiredCost.value);
-    discount.controller.addListener(() => discountValue = discount.value);
+    desiredCost.controller.addListener(() {
+      desiredCostValue = desiredCost.value;
+    });
+    discount.controller.addListener(() {
+      discountValue = discount.value;
+    });
   }
 }

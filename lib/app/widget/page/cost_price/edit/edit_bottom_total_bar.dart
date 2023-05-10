@@ -9,7 +9,6 @@ import '../../../../../database/entity/cost_price.dart';
 import '../../../../../domain/cost_price/form/edit/edit_wrap.dart';
 import '../../../../../domain/util/symbols.dart';
 import '../../../../navigation/app_router.dart';
-import '../../../../util/space.dart';
 
 class EditBottomTotalBar extends StatelessWidget {
   final Isar _isar = GetIt.I.get();
@@ -50,13 +49,15 @@ class EditBottomTotalBar extends StatelessWidget {
                         fontSize: 18,
                       ),
                     ),
-                    const Space(4),
-                    Observer(
-                      builder: (context) => Text(
-                        '${editWrap.form.formattedCostPrice}$rubleCurrency',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Observer(
+                        builder: (context) => Text(
+                          '${editWrap.form.formattedCostPrice}$rubleCurrency',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),

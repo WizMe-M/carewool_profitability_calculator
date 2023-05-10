@@ -6,13 +6,13 @@ import '../../../database/entity/cost_price.dart';
 import '../../../database/entity/upload.dart';
 import '../../../domain/profitability/profitability_form.dart';
 import '../side_bar.dart';
-import 'logistic/logistic_result_widget.dart';
-import 'logistic/size_form_widget.dart';
-import 'logistic/storage_selector_widget.dart';
-import 'profitability/calculations_result_widget.dart';
-import 'profitability/category_selector_widget.dart';
+import 'profitability/result/logistic_result_widget.dart';
+import 'profitability/size/size_form_widget.dart';
+import 'profitability/selector/storage/storage_selector_widget.dart';
+import 'profitability/result/calculations_result_widget.dart';
+import 'profitability/selector/category_selector_widget.dart';
 import 'profitability/sale_price_widget.dart';
-import 'profitability/tax_selector_widget.dart';
+import 'profitability/selector/tax_selector_widget.dart';
 
 @RoutePage()
 class ProfitabilityPage extends StatelessWidget {

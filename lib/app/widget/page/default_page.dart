@@ -21,7 +21,7 @@ class DefaultPage extends StatelessWidget {
             form: CostPriceForm.defaultTemplate(),
           );
         } else {
-          return const Placeholder();
+          return const CircularProgressIndicator();
         }
       },
     );

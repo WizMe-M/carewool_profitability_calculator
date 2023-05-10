@@ -4,7 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
-import '../../../domain/excel_upload/excel_parsing_handler.dart';
+import '../../../domain/excel/excel_uploader.dart';
 import '../side_bar.dart';
 
 @RoutePage()
@@ -16,7 +16,10 @@ class ExcelUploadPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Калькулятор рентабельности')),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Импортировать данные'),
+      ),
       drawer: GetIt.I.get<SideBar>(),
       body: SafeArea(
         child: Center(
@@ -43,7 +46,7 @@ class ExcelUploadPage extends StatelessWidget {
                 },
               ),
               FutureBuilder(
-                future: _uploader.updateLastUpload(),
+                future: _uploader.tryUpdateLastUpload(),
                 builder: (_, snapshot) {
                   return snapshot.hasData
                       ? const SizedBox.shrink()
@@ -53,20 +56,18 @@ class ExcelUploadPage extends StatelessWidget {
                         );
                 },
               ),
-              Observer(
-                builder: (context) {
-                  var upload = _uploader.lastUpload;
-                  if (upload != null) {
-                    var uploadedAt = DateFormat('dd.MM.yy HH:mm:ss')
-                        .format(upload.uploadTime!);
-                    return Text(
-                      'Дата последнего обновления:\n$uploadedAt',
-                      textAlign: TextAlign.center,
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
+              Observer(builder: (context) {
+                var upload = _uploader.lastUpload;
+                if (upload != null) {
+                  var uploadedAt = DateFormat('dd.MM.yy HH:mm:ss')
+                      .format(upload.uploadTime!);
+                  return Text(
+                    'Дата последнего обновления:\n$uploadedAt',
+                    textAlign: TextAlign.center,
+                  );
+                }
+                return const SizedBox.shrink();
+              }),
               const Spacer(),
               Observer(
                 builder: (_) {
@@ -74,6 +75,12 @@ class ExcelUploadPage extends StatelessWidget {
                       ? const CircularProgressIndicator()
                       : const SizedBox.shrink();
                 },
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Observer(
+                  builder: (_) => Text(_uploader.status.message),
+                ),
               ),
               const Spacer(),
             ],

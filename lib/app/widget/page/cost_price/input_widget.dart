@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../../domain/cost_price/form/input.dart';
-import '../../../util/position.dart';
+import 'position_enum.dart';
 
 class InputWidget extends StatelessWidget {
   final Position position;
   final Input input;
 
-  const InputWidget({
-    required this.position,
-    required this.input,
-    super.key,
-  });
+  const InputWidget({required this.position, required this.input, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +23,7 @@ class InputWidget extends StatelessWidget {
         hintText: 'Введите стоимость',
         suffixIcon: const Icon(Icons.currency_ruble),
       ),
-      autofocus: position == Position.first || position == Position.single,
-      textInputAction: position == Position.last
-          ? TextInputAction.done
-          : TextInputAction.next,
+      textInputAction: position.action,
     );
   }
 }

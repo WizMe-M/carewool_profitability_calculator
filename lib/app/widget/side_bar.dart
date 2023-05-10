@@ -6,7 +6,7 @@ import 'package:isar/isar.dart';
 
 import '../../database/entity/cost_price.dart';
 import '../../domain/cost_price/form/cost_price_form.dart';
-import '../../domain/excel_upload/excel_parsing_handler.dart';
+import '../../domain/excel/excel_uploader.dart';
 import '../navigation/app_router.dart';
 
 class SideBar extends StatelessWidget {
@@ -15,23 +15,19 @@ class SideBar extends StatelessWidget {
 
   SideBar({super.key});
 
+  Future get costPricesFuture {
+    return Future(() async => await _isar.costPrices.count());
+  }
+
+  Future get lastUpdateFuture {
+    return Future(() async {
+      await _uploader.updateLastUpload();
+      return _uploader.lastUpload?.uploadTime;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var costPricesFuture = Future(() async {
-      await Future.delayed(const Duration(seconds: 1));
-      return await _isar.costPrices.count();
-    });
-
-    var lastUpdateFuture = Future(() async {
-      await Future.delayed(const Duration(seconds: 1));
-      var lastUploadExist = await _uploader.updateLastUpload();
-      if (lastUploadExist) {
-        return _uploader.lastUpload!.uploadTime;
-      } else {
-        return null;
-      }
-    });
-
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -50,7 +46,7 @@ class SideBar extends StatelessWidget {
             child: const SizedBox(),
           ),
           FutureBuilder(
-            future: Future.wait([costPricesFuture]),
+            future: Future.wait([costPricesFuture, lastUpdateFuture]),
             builder: (context, snapshot) {
               return snapshot.hasData
                   ? const SizedBox.shrink()
@@ -119,7 +115,7 @@ class SideBar extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.add),
             title: const Text('Добавить новый расчёт'),
-            onTap: () => context.router.push(NewProfitabilityRoute()),
+            onTap: () => context.router.push(StartNewProfitabilityRoute()),
           ),
         ],
       ),

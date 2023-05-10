@@ -7,7 +7,6 @@ import 'package:logger/logger.dart';
 import '../../../../database/entity/cost_price.dart';
 import '../../../../domain/cost_price/form/cost_price_form.dart';
 import '../../../../domain/util/symbols.dart';
-import '../../../util/space.dart';
 
 class BottomTotalBar extends StatelessWidget {
   final Isar _isar = GetIt.I.get();
@@ -47,13 +46,15 @@ class BottomTotalBar extends StatelessWidget {
                         fontSize: 18,
                       ),
                     ),
-                    const Space(4),
-                    Observer(
-                      builder: (context) => Text(
-                        '${form.formattedCostPrice}$rubleCurrency',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Observer(
+                        builder: (context) => Text(
+                          '${form.formattedCostPrice}$rubleCurrency',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
