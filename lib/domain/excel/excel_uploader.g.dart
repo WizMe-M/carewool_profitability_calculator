@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'excel_parsing_handler.dart';
+part of 'excel_uploader.dart';
 
 // **************************************************************************
 // StoreGenerator

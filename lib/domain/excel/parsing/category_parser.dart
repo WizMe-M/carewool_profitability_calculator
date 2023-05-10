@@ -1,7 +1,7 @@
 import 'package:dfunc/dfunc.dart';
 import 'package:excel/excel.dart';
 
-import '../../database/entity/category.dart';
+import '../../../database/entity/category.dart';
 import 'excel_sheet_parser.dart';
 import 'sheet_extensions.dart';
 

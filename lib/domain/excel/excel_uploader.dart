@@ -8,9 +8,9 @@ import 'package:mobx/mobx.dart';
 import '../../database/entity/storage.dart';
 import '../../database/entity/category.dart';
 import '../../database/entity/upload.dart';
-import '../parser/excel_sheet_parser.dart';
+import 'parsing/excel_sheet_parser.dart';
 
-part 'excel_parsing_handler.g.dart';
+part 'excel_uploader.g.dart';
 
 enum ParsingStatus {
   notStarted,

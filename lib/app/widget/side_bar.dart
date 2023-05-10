@@ -6,7 +6,7 @@ import 'package:isar/isar.dart';
 
 import '../../database/entity/cost_price.dart';
 import '../../domain/cost_price/form/cost_price_form.dart';
-import '../../domain/excel_upload/excel_parsing_handler.dart';
+import '../../domain/excel/excel_uploader.dart';
 import '../navigation/app_router.dart';
 
 class SideBar extends StatelessWidget {

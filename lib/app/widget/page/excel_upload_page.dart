@@ -4,7 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
-import '../../../domain/excel_upload/excel_parsing_handler.dart';
+import '../../../domain/excel/excel_uploader.dart';
 import '../side_bar.dart';
 
 @RoutePage()
