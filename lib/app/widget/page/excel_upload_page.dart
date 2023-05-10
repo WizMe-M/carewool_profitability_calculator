@@ -43,7 +43,7 @@ class ExcelUploadPage extends StatelessWidget {
                 },
               ),
               FutureBuilder(
-                future: _uploader.updateLastUpload(),
+                future: _uploader.tryUpdateLastUpload(),
                 builder: (_, snapshot) {
                   return snapshot.hasData
                       ? const SizedBox.shrink()
@@ -74,6 +74,12 @@ class ExcelUploadPage extends StatelessWidget {
                       ? const CircularProgressIndicator()
                       : const SizedBox.shrink();
                 },
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Observer(
+                  builder: (_) => Text(_uploader.status.message),
+                ),
               ),
               const Spacer(),
             ],

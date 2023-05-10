@@ -1,9 +1,9 @@
-import 'package:carewool_profitability_calculator/app/widget/page/profitability/selector/storage/storage_info_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../../../../../database/entity/storage.dart';
 import '../../../../../../domain/profitability/storage_selector/storage_selector.dart';
+import 'storage_info_widget.dart';
 
 class StorageSelectorWidget extends StatelessWidget {
   final StorageSelector selector;

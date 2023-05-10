@@ -13,14 +13,18 @@ import 'parsing/excel_sheet_parser.dart';
 part 'excel_uploader.g.dart';
 
 enum ParsingStatus {
-  notStarted,
-  downloadingFile,
-  decodingBytes,
-  parsingStorages,
-  parsingCategories,
-  saving,
-  done,
-  error,
+  notStarted(''),
+  downloadingFile('Загружаем файл'),
+  decodingBytes('Загружаем страницы Excel'),
+  parsingStorages('Импортируем склады'),
+  parsingCategories('Импортируем категории товаров'),
+  saving('Сохраняем данные'),
+  done(''),
+  error('Произошла ошибка');
+
+  final String message;
+
+  const ParsingStatus(this.message);
 }
 
 class ExcelUploader = ExcelUploaderBase with _$ExcelUploader;
@@ -42,6 +46,11 @@ abstract class ExcelUploaderBase with Store {
       status != ParsingStatus.notStarted &&
       status != ParsingStatus.done &&
       status != ParsingStatus.error;
+
+  Future<bool> tryUpdateLastUpload() async {
+    await updateLastUpload();
+    return lastUpload != null;
+  }
 
   @action
   Future<void> updateLastUpload() async {
