@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../domain/cost_price/form/input.dart';
-import 'position.dart';
+import 'position_enum.dart';
 
 class InputWidget extends StatelessWidget {
   final Position position;

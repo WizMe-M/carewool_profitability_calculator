@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../domain/cost_price/form/form_block.dart';
 import 'input_widget.dart';
-import 'position.dart';
+import 'position_enum.dart';
 
 class FormBlockWidget extends StatelessWidget {
   final FormBlock block;

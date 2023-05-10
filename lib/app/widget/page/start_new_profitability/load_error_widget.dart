@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../domain/start_new_profitability/load_error.dart';
+import '../../../../domain/start_new_profitability/load_error_enum.dart';
 
 class LoadErrorWidget extends StatelessWidget {
   final LoadError error;

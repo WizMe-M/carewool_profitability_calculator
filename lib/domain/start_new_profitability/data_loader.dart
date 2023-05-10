@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
 import '../../app/widget/page/start_new_profitability_page.dart';
 import '../../database/entity/cost_price.dart';
 import '../../database/entity/upload.dart';
-import 'load_error.dart';
+import 'load_error_enum.dart';
 
 /// Loader of data for [StartNewProfitabilityPage]
 class DataLoader {

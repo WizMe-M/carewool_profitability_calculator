@@ -8,7 +8,7 @@ import '../../database/entity/cost_price.dart';
 import 'category_selector/category_selector.dart';
 import 'inputs/cost_input.dart';
 import 'inputs/discount_input.dart';
-import 'simple_taxation_system.dart';
+import 'simple_taxation_system_enum.dart';
 import 'size_form/size_form.dart';
 import 'storage_selector/storage_selector.dart';
 
