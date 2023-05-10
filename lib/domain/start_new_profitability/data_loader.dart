@@ -30,7 +30,7 @@ class DataLoader {
     }
 
     lastUpload = await _isar.uploads.where().sortByUploadTimeDesc().findFirst();
-    if (costPrices.isEmpty) {
+    if (lastUpload == null) {
       _logger.w('No upload was found');
       errors.add(LoadError.missingUpload);
     }

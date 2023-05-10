@@ -19,10 +19,7 @@ class EditCostPricePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(
-          editWrap.form.productName,
-          style: const TextStyle(fontSize: 18),
-        ),
+        title: Text(editWrap.form.productName),
         actions: [
           IconButton(
             onPressed: editWrap.resetChanges,

@@ -16,7 +16,10 @@ class ExcelUploadPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Калькулятор рентабельности')),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: const Text('Импортировать данные'),
+      ),
       drawer: GetIt.I.get<SideBar>(),
       body: SafeArea(
         child: Center(

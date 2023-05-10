@@ -25,9 +25,10 @@ class StartNewProfitabilityPage extends StatelessWidget {
         child: FutureBuilder(
           future: _loader.fetchData(),
           builder: (context, snapshot) {
+            var errors = snapshot.data;
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.data!.isNotEmpty) {
+            } else if (errors!.isNotEmpty) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: snapshot.data!

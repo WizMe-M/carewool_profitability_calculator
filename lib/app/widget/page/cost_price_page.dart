@@ -18,10 +18,7 @@ class CostCalculatorPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text(
-          'Калькулятор себестоимости',
-          style: TextStyle(fontSize: 18),
-        ),
+        title: const Text('Калькулятор себестоимости'),
         actions: [
           IconButton(
             onPressed: form.reset,

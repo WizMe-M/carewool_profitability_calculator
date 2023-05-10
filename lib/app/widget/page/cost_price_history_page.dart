@@ -24,7 +24,7 @@ class CostPriceHistoryPage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text(
           'Расчеты себестоимости',
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 20),
         ),
         actions: [
           IconButton(

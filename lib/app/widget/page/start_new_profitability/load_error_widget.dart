@@ -26,7 +26,7 @@ class LoadErrorWidget extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               child: Text(error.errorButtonText),
-              onPressed: () => error.onTap,
+              onPressed: () => error.onTap(context),
             ),
           ],
         ),
