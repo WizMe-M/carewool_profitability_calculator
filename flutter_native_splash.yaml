@@ -1,13 +1,11 @@
 flutter_native_splash:
-  color: "#42a5f5"
-  image: assets/carewool-icon.png
-  color_dark: "#042a49"
-  image_dark: assets/carewool-icon.png
+  color: "#bac2ff"
+  color_dark: "#3c3f56"
 
   android_12:
-    image: assets/carewool-icon.png
     icon_background_color: "#ffffff"
-    color: "#42a5f5"
+    color: "#bac2ff"
+    color_dark: "#3c3f56"
 
   ios: false
   web: false
