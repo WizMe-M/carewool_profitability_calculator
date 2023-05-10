@@ -9,7 +9,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:dfunc/dfunc.dart';
 
 import '../../../database/entity/cost_price.dart';
-import '../../entity/cost_price_form_template/cost_price_form_template.dart';
+import 'template/form_template.dart';
 import 'form_block.dart';
 import 'input.dart';
 
@@ -41,22 +41,21 @@ abstract class CostPriceFormBase with Store {
   /// [TextEditingController] of product name
   final TextEditingController productNameController = TextEditingController();
 
-  CostPriceFormBase.fromTemplate({required CostPriceFormTemplate template}) {
-    blocks = [
-      for (var entry in template.structure.entries)
-        FormBlock(
-          title: entry.key,
-          inputs: [
-            for (var inputLabel in entry.value) Input(label: inputLabel),
-          ],
-        ),
-    ];
+  CostPriceFormBase.fromTemplate({required FormTemplate template}) {
+    blocks = template.structure.entries.map((entry) {
+      return FormBlock(
+        title: entry.key,
+        inputs: entry.value.map((inputLabel) {
+          return Input(label: inputLabel);
+        }).toList(),
+      );
+    }).toList();
 
     initForm();
   }
 
   CostPriceFormBase.defaultTemplate()
-      : this.fromTemplate(template: CostPriceFormTemplate.standard());
+      : this.fromTemplate(template: FormTemplate.standard());
 
   CostPriceFormBase.fromEntity({required CostPrice costPrice}) {
     productNameController.text = costPrice.productName!;
