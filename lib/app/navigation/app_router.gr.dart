@@ -49,14 +49,6 @@ abstract class _$AppRouter extends RootStackRouter {
         child: CostPriceHistoryPage(key: args.key),
       );
     },
-    NewProfitabilityRoute.name: (routeData) {
-      final args = routeData.argsAs<NewProfitabilityRouteArgs>(
-          orElse: () => const NewProfitabilityRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: NewProfitabilityPage(key: args.key),
-      );
-    },
     LogisticRoute.name: (routeData) {
       final args = routeData.argsAs<LogisticRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -84,6 +76,14 @@ abstract class _$AppRouter extends RootStackRouter {
           lastUpload: args.lastUpload,
           key: args.key,
         ),
+      );
+    },
+    StartNewProfitabilityRoute.name: (routeData) {
+      final args = routeData.argsAs<StartNewProfitabilityRouteArgs>(
+          orElse: () => const StartNewProfitabilityRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: StartNewProfitabilityPage(key: args.key),
       );
     },
   };
@@ -209,35 +209,6 @@ class CostPriceHistoryRouteArgs {
 }
 
 /// generated route for
-/// [NewProfitabilityPage]
-class NewProfitabilityRoute extends PageRouteInfo<NewProfitabilityRouteArgs> {
-  NewProfitabilityRoute({
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          NewProfitabilityRoute.name,
-          args: NewProfitabilityRouteArgs(key: key),
-          initialChildren: children,
-        );
-
-  static const String name = 'NewProfitabilityRoute';
-
-  static const PageInfo<NewProfitabilityRouteArgs> page =
-      PageInfo<NewProfitabilityRouteArgs>(name);
-}
-
-class NewProfitabilityRouteArgs {
-  const NewProfitabilityRouteArgs({this.key});
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'NewProfitabilityRouteArgs{key: $key}';
-  }
-}
-
-/// generated route for
 /// [LogisticPage]
 class LogisticRoute extends PageRouteInfo<LogisticRouteArgs> {
   LogisticRoute({
@@ -344,5 +315,35 @@ class ProfitabilityRouteArgs {
   @override
   String toString() {
     return 'ProfitabilityRouteArgs{costPrice: $costPrice, lastUpload: $lastUpload, key: $key}';
+  }
+}
+
+/// generated route for
+/// [StartNewProfitabilityPage]
+class StartNewProfitabilityRoute
+    extends PageRouteInfo<StartNewProfitabilityRouteArgs> {
+  StartNewProfitabilityRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          StartNewProfitabilityRoute.name,
+          args: StartNewProfitabilityRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'StartNewProfitabilityRoute';
+
+  static const PageInfo<StartNewProfitabilityRouteArgs> page =
+      PageInfo<StartNewProfitabilityRouteArgs>(name);
+}
+
+class StartNewProfitabilityRouteArgs {
+  const StartNewProfitabilityRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'StartNewProfitabilityRouteArgs{key: $key}';
   }
 }

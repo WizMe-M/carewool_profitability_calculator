@@ -119,7 +119,7 @@ class SideBar extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.add),
             title: const Text('Добавить новый расчёт'),
-            onTap: () => context.router.push(NewProfitabilityRoute()),
+            onTap: () => context.router.push(StartNewProfitabilityRoute()),
           ),
         ],
       ),
