@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
@@ -78,7 +81,7 @@ abstract class ExcelUploaderBase with Store {
     _logger.i('Picked file. Path: "${file.path}"');
 
     status = ParsingStatus.decodingBytes;
-    var excel = Excel.decodeBytes(file.bytes!);
+    var excel = await compute((bytes) => Excel.decodeBytes(bytes), file.bytes!);
 
     var categoriesSheet = excel.sheets['Комиссия'];
     if (categoriesSheet == null) {
@@ -125,6 +128,7 @@ abstract class ExcelUploaderBase with Store {
       _logger.e('Unable to save upload info!', error, stackTrace);
       status = ParsingStatus.error;
     });
+
     status = ParsingStatus.done;
     lastUpload = upload;
   }
