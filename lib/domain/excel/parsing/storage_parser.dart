@@ -4,9 +4,9 @@ import '../../../database/entity/storage.dart';
 import 'excel_sheet_parser.dart';
 import 'sheet_extensions.dart';
 
-class StorageParser implements ExcelSheetParser<List<Storage>> {
+class StorageParser implements ExcelSheetParser<Storage> {
   @override
-  List<Storage>? parse(Sheet sheet) {
+  List<Storage> parse(Sheet sheet) {
     var list = <Storage>[];
     for (var i = 2; i < sheet.maxRows; i++) {
       var storageName = sheet.valueOf<String>(0, i);

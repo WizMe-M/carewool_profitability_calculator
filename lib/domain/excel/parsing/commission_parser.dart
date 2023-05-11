@@ -4,9 +4,9 @@ import '../../../database/entity/commission.dart';
 import 'excel_sheet_parser.dart';
 import 'sheet_extensions.dart';
 
-class CommissionParser extends ExcelSheetParser<List<Commission>> {
+class CommissionParser extends ExcelSheetParser<Commission> {
   @override
-  List<Commission>? parse(Sheet sheet) {
+  List<Commission> parse(Sheet sheet) {
     var list = <Commission>[];
 
     for (var i = 1; i < sheet.maxRows; i++) {
