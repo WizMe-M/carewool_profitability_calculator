@@ -17,16 +17,16 @@ const CommissionUploadSchema = CollectionSchema(
   name: r'CommissionUpload',
   id: 5709928892684947988,
   properties: {
-    r'commissions': PropertySchema(
-      id: 0,
-      name: r'commissions',
-      type: IsarType.objectList,
-      target: r'Commission',
-    ),
     r'uploadTime': PropertySchema(
-      id: 1,
+      id: 0,
       name: r'uploadTime',
       type: IsarType.dateTime,
+    ),
+    r'uploadedItems': PropertySchema(
+      id: 1,
+      name: r'uploadedItems',
+      type: IsarType.objectList,
+      target: r'Commission',
     )
   },
   estimateSize: _commissionUploadEstimateSize,
@@ -49,11 +49,11 @@ int _commissionUploadEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.commissions.length * 3;
+  bytesCount += 3 + object.uploadedItems.length * 3;
   {
     final offsets = allOffsets[Commission]!;
-    for (var i = 0; i < object.commissions.length; i++) {
-      final value = object.commissions[i];
+    for (var i = 0; i < object.uploadedItems.length; i++) {
+      final value = object.uploadedItems[i];
       bytesCount += CommissionSchema.estimateSize(value, offsets, allOffsets);
     }
   }
@@ -66,13 +66,13 @@ void _commissionUploadSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
+  writer.writeDateTime(offsets[0], object.uploadTime);
   writer.writeObjectList<Commission>(
-    offsets[0],
+    offsets[1],
     allOffsets,
     CommissionSchema.serialize,
-    object.commissions,
+    object.uploadedItems,
   );
-  writer.writeDateTime(offsets[1], object.uploadTime);
 }
 
 CommissionUpload _commissionUploadDeserialize(
@@ -82,15 +82,15 @@ CommissionUpload _commissionUploadDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = CommissionUpload();
-  object.commissions = reader.readObjectList<Commission>(
-        offsets[0],
+  object.id = id;
+  object.uploadTime = reader.readDateTimeOrNull(offsets[0]);
+  object.uploadedItems = reader.readObjectList<Commission>(
+        offsets[1],
         CommissionSchema.deserialize,
         allOffsets,
         Commission(),
       ) ??
       [];
-  object.id = id;
-  object.uploadTime = reader.readDateTimeOrNull(offsets[1]);
   return object;
 }
 
@@ -102,6 +102,8 @@ P _commissionUploadDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readDateTimeOrNull(offset)) as P;
+    case 1:
       return (reader.readObjectList<Commission>(
             offset,
             CommissionSchema.deserialize,
@@ -109,8 +111,6 @@ P _commissionUploadDeserializeProp<P>(
             Commission(),
           ) ??
           []) as P;
-    case 1:
-      return (reader.readDateTimeOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -210,95 +210,6 @@ extension CommissionUploadQueryWhere
 
 extension CommissionUploadQueryFilter
     on QueryBuilder<CommissionUpload, CommissionUpload, QFilterCondition> {
-  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      commissionsLengthEqualTo(int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'commissions',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      commissionsIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'commissions',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      commissionsIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'commissions',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      commissionsLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'commissions',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      commissionsLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'commissions',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      commissionsLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'commissions',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
-    });
-  }
-
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
       idIsNull() {
     return QueryBuilder.apply(this, (query) {
@@ -446,14 +357,103 @@ extension CommissionUploadQueryFilter
       ));
     });
   }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      uploadedItemsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'uploadedItems',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      uploadedItemsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'uploadedItems',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      uploadedItemsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'uploadedItems',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      uploadedItemsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'uploadedItems',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      uploadedItemsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'uploadedItems',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      uploadedItemsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'uploadedItems',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
 }
 
 extension CommissionUploadQueryObject
     on QueryBuilder<CommissionUpload, CommissionUpload, QFilterCondition> {
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      commissionsElement(FilterQuery<Commission> q) {
+      uploadedItemsElement(FilterQuery<Commission> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'commissions');
+      return query.object(q, r'uploadedItems');
     });
   }
 }
@@ -526,17 +526,17 @@ extension CommissionUploadQueryProperty
     });
   }
 
-  QueryBuilder<CommissionUpload, List<Commission>, QQueryOperations>
-      commissionsProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'commissions');
-    });
-  }
-
   QueryBuilder<CommissionUpload, DateTime?, QQueryOperations>
       uploadTimeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'uploadTime');
+    });
+  }
+
+  QueryBuilder<CommissionUpload, List<Commission>, QQueryOperations>
+      uploadedItemsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'uploadedItems');
     });
   }
 }
