@@ -34,25 +34,23 @@ class ProfitabilityPage extends StatelessWidget {
       ),
       drawer: GetIt.I.get<SideBar>(),
       body: SafeArea(
-        child: Expanded(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  StorageSelectorWidget(selector: _form.storageSelector),
-                  SizeFormWidget(form: _form.sizeForm),
-                  LogisticResultWidget(profitabilityForm: _form),
-                  CategorySelectorWidget(selector: _form.categorySelector),
-                  SalePriceWidget(
-                    desiredCostInput: _form.desiredCost,
-                    discountInput: _form.discount,
-                  ),
-                  TaxSelectorWidget(form: _form),
-                  CalculationsResultWidget(form: _form),
-                ],
-              ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                StorageSelectorWidget(selector: _form.storageSelector),
+                SizeFormWidget(form: _form.sizeForm),
+                LogisticResultWidget(profitabilityForm: _form),
+                CategorySelectorWidget(selector: _form.categorySelector),
+                SalePriceWidget(
+                  desiredCostInput: _form.desiredCost,
+                  discountInput: _form.discount,
+                ),
+                TaxSelectorWidget(form: _form),
+                CalculationsResultWidget(form: _form),
+              ],
             ),
           ),
         ),
