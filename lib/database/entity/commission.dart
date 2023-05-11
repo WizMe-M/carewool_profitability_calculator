@@ -1,12 +1,11 @@
 import 'package:isar/isar.dart';
 
+import 'upload_base.dart';
+
 part 'commission.g.dart';
 
 @collection
-class CommissionUpload {
-  Id? id;
-  DateTime? uploadTime;
-  List<Commission> commissions = [];
+class CommissionUpload extends UploadBase<Commission> {
 }
 
 @embedded

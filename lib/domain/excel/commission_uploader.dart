@@ -1,5 +1,6 @@
 import 'package:excel/excel.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
@@ -62,7 +63,7 @@ abstract class CommissionUploaderBase with Store {
     _logger.i('Picked file. Path: "${file.path}"');
 
     status = ImportExcelStatus.importing;
-    var excel = Excel.decodeBytes(file.bytes!);
+    var excel = await compute((bytes) => Excel.decodeBytes(bytes), file.bytes!);
 
     var sheetName = excel.getDefaultSheet();
     if (sheetName == null) {
@@ -81,7 +82,7 @@ abstract class CommissionUploaderBase with Store {
 
     var upload = CommissionUpload()
       ..uploadTime = DateTime.now()
-      ..commissions = commissions;
+      ..uploadedItems = commissions;
     _isar.writeTxn(() async {
       await _isar.commissionUploads.put(upload);
     }).onError((error, stackTrace) {

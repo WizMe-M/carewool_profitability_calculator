@@ -4,12 +4,12 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 
-import '../../../domain/excel/excel_uploader.dart';
+import '../../../domain/excel/commission_uploader.dart';
 import '../side_bar.dart';
 
 @RoutePage()
 class ExcelUploadPage extends StatelessWidget {
-  final _uploader = ExcelUploader();
+  final _commissionUploader = CommissionUploader();
 
   ExcelUploadPage({super.key});
 
@@ -38,15 +38,15 @@ class ExcelUploadPage extends StatelessWidget {
               Observer(
                 builder: (context) {
                   return ElevatedButton(
-                    onPressed: _uploader.isExecuting
+                    onPressed: _commissionUploader.isExecuting
                         ? null
-                        : () async => await _uploader.uploadExcel(),
+                        : () async => await _commissionUploader.uploadExcel(),
                     child: const Text('Загрузить Excel-файл'),
                   );
                 },
               ),
               FutureBuilder(
-                future: _uploader.tryUpdateLastUpload(),
+                future: _commissionUploader.fetchLastUpload(),
                 builder: (_, snapshot) {
                   return snapshot.hasData
                       ? const SizedBox.shrink()
@@ -57,7 +57,7 @@ class ExcelUploadPage extends StatelessWidget {
                 },
               ),
               Observer(builder: (context) {
-                var upload = _uploader.lastUpload;
+                var upload = _commissionUploader.lastUpload;
                 if (upload != null) {
                   var uploadedAt = DateFormat('dd.MM.yy HH:mm:ss')
                       .format(upload.uploadTime!);
@@ -71,7 +71,7 @@ class ExcelUploadPage extends StatelessWidget {
               const Spacer(),
               Observer(
                 builder: (_) {
-                  return _uploader.isExecuting
+                  return _commissionUploader.isExecuting
                       ? const CircularProgressIndicator()
                       : const SizedBox.shrink();
                 },
@@ -79,7 +79,7 @@ class ExcelUploadPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8),
                 child: Observer(
-                  builder: (_) => Text(_uploader.status.message),
+                  builder: (_) => Text(_commissionUploader.status.message),
                 ),
               ),
               const Spacer(),
