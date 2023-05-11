@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'entity/category.dart';
+import 'entity/commission.dart';
 import 'entity/storage.dart';
 import 'entity/upload.dart';
 import 'package:isar/isar.dart';
@@ -19,6 +20,7 @@ Future<Isar> openIsarDatabase() async {
       CostPriceSchema,
       StorageListSchema,
       CategoryListSchema,
+      CommissionUploadSchema,
       UploadSchema,
     ],
     directory: path,
