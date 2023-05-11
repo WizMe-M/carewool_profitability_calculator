@@ -70,7 +70,7 @@ abstract class StorageUploaderBase with Store {
     var sheet = excel.sheets[sheetName]!;
 
     var storages = _parser.parse(sheet);
-    if (storages == null || storages.isEmpty) {
+    if (storages.isEmpty) {
       _logger.e('Unable to parse storages!');
       status = ImportExcelStatus.error;
       return;
@@ -78,9 +78,11 @@ abstract class StorageUploaderBase with Store {
 
     var upload = StorageUpload()
       ..uploadTime = DateTime.now()
-      ..uploadedItems = storages;
+      ..storages.addAll(storages);
     _isar.writeTxn(() async {
+      await _isar.storages.putAll(storages);
       await _isar.storageUploads.put(upload);
+      await upload.storages.save();
     }).onError((error, stackTrace) {
       _logger.e('Unable to save storages upload!', error, stackTrace);
       status = ImportExcelStatus.error;

@@ -21,12 +21,6 @@ const CommissionUploadSchema = CollectionSchema(
       id: 0,
       name: r'uploadTime',
       type: IsarType.dateTime,
-    ),
-    r'uploadedItems': PropertySchema(
-      id: 1,
-      name: r'uploadedItems',
-      type: IsarType.objectList,
-      target: r'Commission',
     )
   },
   estimateSize: _commissionUploadEstimateSize,
@@ -34,9 +28,30 @@ const CommissionUploadSchema = CollectionSchema(
   deserialize: _commissionUploadDeserialize,
   deserializeProp: _commissionUploadDeserializeProp,
   idName: r'id',
-  indexes: {},
-  links: {},
-  embeddedSchemas: {r'Commission': CommissionSchema},
+  indexes: {
+    r'uploadTime': IndexSchema(
+      id: -1308871467908879180,
+      name: r'uploadTime',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'uploadTime',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
+  links: {
+    r'commissions': LinkSchema(
+      id: 5405984960771299448,
+      name: r'commissions',
+      target: r'Commission',
+      single: false,
+    )
+  },
+  embeddedSchemas: {},
   getId: _commissionUploadGetId,
   getLinks: _commissionUploadGetLinks,
   attach: _commissionUploadAttach,
@@ -49,14 +64,6 @@ int _commissionUploadEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.uploadedItems.length * 3;
-  {
-    final offsets = allOffsets[Commission]!;
-    for (var i = 0; i < object.uploadedItems.length; i++) {
-      final value = object.uploadedItems[i];
-      bytesCount += CommissionSchema.estimateSize(value, offsets, allOffsets);
-    }
-  }
   return bytesCount;
 }
 
@@ -67,12 +74,6 @@ void _commissionUploadSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.uploadTime);
-  writer.writeObjectList<Commission>(
-    offsets[1],
-    allOffsets,
-    CommissionSchema.serialize,
-    object.uploadedItems,
-  );
 }
 
 CommissionUpload _commissionUploadDeserialize(
@@ -83,14 +84,7 @@ CommissionUpload _commissionUploadDeserialize(
 ) {
   final object = CommissionUpload();
   object.id = id;
-  object.uploadTime = reader.readDateTimeOrNull(offsets[0]);
-  object.uploadedItems = reader.readObjectList<Commission>(
-        offsets[1],
-        CommissionSchema.deserialize,
-        allOffsets,
-        Commission(),
-      ) ??
-      [];
+  object.uploadTime = reader.readDateTime(offsets[0]);
   return object;
 }
 
@@ -102,15 +96,7 @@ P _commissionUploadDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDateTimeOrNull(offset)) as P;
-    case 1:
-      return (reader.readObjectList<Commission>(
-            offset,
-            CommissionSchema.deserialize,
-            allOffsets,
-            Commission(),
-          ) ??
-          []) as P;
+      return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -121,12 +107,71 @@ Id _commissionUploadGetId(CommissionUpload object) {
 }
 
 List<IsarLinkBase<dynamic>> _commissionUploadGetLinks(CommissionUpload object) {
-  return [];
+  return [object.commissions];
 }
 
 void _commissionUploadAttach(
     IsarCollection<dynamic> col, Id id, CommissionUpload object) {
   object.id = id;
+  object.commissions
+      .attach(col, col.isar.collection<Commission>(), r'commissions', id);
+}
+
+extension CommissionUploadByIndex on IsarCollection<CommissionUpload> {
+  Future<CommissionUpload?> getByUploadTime(DateTime uploadTime) {
+    return getByIndex(r'uploadTime', [uploadTime]);
+  }
+
+  CommissionUpload? getByUploadTimeSync(DateTime uploadTime) {
+    return getByIndexSync(r'uploadTime', [uploadTime]);
+  }
+
+  Future<bool> deleteByUploadTime(DateTime uploadTime) {
+    return deleteByIndex(r'uploadTime', [uploadTime]);
+  }
+
+  bool deleteByUploadTimeSync(DateTime uploadTime) {
+    return deleteByIndexSync(r'uploadTime', [uploadTime]);
+  }
+
+  Future<List<CommissionUpload?>> getAllByUploadTime(
+      List<DateTime> uploadTimeValues) {
+    final values = uploadTimeValues.map((e) => [e]).toList();
+    return getAllByIndex(r'uploadTime', values);
+  }
+
+  List<CommissionUpload?> getAllByUploadTimeSync(
+      List<DateTime> uploadTimeValues) {
+    final values = uploadTimeValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'uploadTime', values);
+  }
+
+  Future<int> deleteAllByUploadTime(List<DateTime> uploadTimeValues) {
+    final values = uploadTimeValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'uploadTime', values);
+  }
+
+  int deleteAllByUploadTimeSync(List<DateTime> uploadTimeValues) {
+    final values = uploadTimeValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'uploadTime', values);
+  }
+
+  Future<Id> putByUploadTime(CommissionUpload object) {
+    return putByIndex(r'uploadTime', object);
+  }
+
+  Id putByUploadTimeSync(CommissionUpload object, {bool saveLinks = true}) {
+    return putByIndexSync(r'uploadTime', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByUploadTime(List<CommissionUpload> objects) {
+    return putAllByIndex(r'uploadTime', objects);
+  }
+
+  List<Id> putAllByUploadTimeSync(List<CommissionUpload> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'uploadTime', objects, saveLinks: saveLinks);
+  }
 }
 
 extension CommissionUploadQueryWhereSort
@@ -134,6 +179,15 @@ extension CommissionUploadQueryWhereSort
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterWhere>
+      anyUploadTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'uploadTime'),
+      );
     });
   }
 }
@@ -202,6 +256,99 @@ extension CommissionUploadQueryWhere
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterWhereClause>
+      uploadTimeEqualTo(DateTime uploadTime) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'uploadTime',
+        value: [uploadTime],
+      ));
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterWhereClause>
+      uploadTimeNotEqualTo(DateTime uploadTime) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uploadTime',
+              lower: [],
+              upper: [uploadTime],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uploadTime',
+              lower: [uploadTime],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uploadTime',
+              lower: [uploadTime],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uploadTime',
+              lower: [],
+              upper: [uploadTime],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterWhereClause>
+      uploadTimeGreaterThan(
+    DateTime uploadTime, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'uploadTime',
+        lower: [uploadTime],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterWhereClause>
+      uploadTimeLessThan(
+    DateTime uploadTime, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'uploadTime',
+        lower: [],
+        upper: [uploadTime],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterWhereClause>
+      uploadTimeBetween(
+    DateTime lowerUploadTime,
+    DateTime upperUploadTime, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'uploadTime',
+        lower: [lowerUploadTime],
+        includeLower: includeLower,
+        upper: [upperUploadTime],
         includeUpper: includeUpper,
       ));
     });
@@ -285,25 +432,7 @@ extension CommissionUploadQueryFilter
   }
 
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      uploadTimeIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'uploadTime',
-      ));
-    });
-  }
-
-  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      uploadTimeIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'uploadTime',
-      ));
-    });
-  }
-
-  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      uploadTimeEqualTo(DateTime? value) {
+      uploadTimeEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'uploadTime',
@@ -314,7 +443,7 @@ extension CommissionUploadQueryFilter
 
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
       uploadTimeGreaterThan(
-    DateTime? value, {
+    DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -328,7 +457,7 @@ extension CommissionUploadQueryFilter
 
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
       uploadTimeLessThan(
-    DateTime? value, {
+    DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -342,8 +471,8 @@ extension CommissionUploadQueryFilter
 
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
       uploadTimeBetween(
-    DateTime? lower,
-    DateTime? upper, {
+    DateTime lower,
+    DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -357,109 +486,74 @@ extension CommissionUploadQueryFilter
       ));
     });
   }
+}
 
+extension CommissionUploadQueryObject
+    on QueryBuilder<CommissionUpload, CommissionUpload, QFilterCondition> {}
+
+extension CommissionUploadQueryLinks
+    on QueryBuilder<CommissionUpload, CommissionUpload, QFilterCondition> {
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      uploadedItemsLengthEqualTo(int length) {
+      commissions(FilterQuery<Commission> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'uploadedItems',
-        length,
-        true,
-        length,
-        true,
-      );
+      return query.link(q, r'commissions');
     });
   }
 
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      uploadedItemsIsEmpty() {
+      commissionsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'uploadedItems',
-        0,
-        true,
-        0,
-        true,
-      );
+      return query.linkLength(r'commissions', length, true, length, true);
     });
   }
 
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      uploadedItemsIsNotEmpty() {
+      commissionsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'uploadedItems',
-        0,
-        false,
-        999999,
-        true,
-      );
+      return query.linkLength(r'commissions', 0, true, 0, true);
     });
   }
 
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      uploadedItemsLengthLessThan(
+      commissionsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'commissions', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      commissionsLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'uploadedItems',
-        0,
-        true,
-        length,
-        include,
-      );
+      return query.linkLength(r'commissions', 0, true, length, include);
     });
   }
 
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      uploadedItemsLengthGreaterThan(
+      commissionsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'uploadedItems',
-        length,
-        include,
-        999999,
-        true,
-      );
+      return query.linkLength(r'commissions', length, include, 999999, true);
     });
   }
 
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      uploadedItemsLengthBetween(
+      commissionsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'uploadedItems',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
+      return query.linkLength(
+          r'commissions', lower, includeLower, upper, includeUpper);
     });
   }
 }
-
-extension CommissionUploadQueryObject
-    on QueryBuilder<CommissionUpload, CommissionUpload, QFilterCondition> {
-  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
-      uploadedItemsElement(FilterQuery<Commission> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'uploadedItems');
-    });
-  }
-}
-
-extension CommissionUploadQueryLinks
-    on QueryBuilder<CommissionUpload, CommissionUpload, QFilterCondition> {}
 
 extension CommissionUploadQuerySortBy
     on QueryBuilder<CommissionUpload, CommissionUpload, QSortBy> {
@@ -526,29 +620,22 @@ extension CommissionUploadQueryProperty
     });
   }
 
-  QueryBuilder<CommissionUpload, DateTime?, QQueryOperations>
+  QueryBuilder<CommissionUpload, DateTime, QQueryOperations>
       uploadTimeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'uploadTime');
     });
   }
-
-  QueryBuilder<CommissionUpload, List<Commission>, QQueryOperations>
-      uploadedItemsProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'uploadedItems');
-    });
-  }
 }
-
-// **************************************************************************
-// IsarEmbeddedGenerator
-// **************************************************************************
 
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-const CommissionSchema = Schema(
+extension GetCommissionCollection on Isar {
+  IsarCollection<Commission> get commissions => this.collection();
+}
+
+const CommissionSchema = CollectionSchema(
   name: r'Commission',
   id: 4921080087218696213,
   properties: {
@@ -571,12 +658,73 @@ const CommissionSchema = Schema(
       id: 3,
       name: r'itemName',
       type: IsarType.string,
+    ),
+    r'tagWords': PropertySchema(
+      id: 4,
+      name: r'tagWords',
+      type: IsarType.stringList,
     )
   },
   estimateSize: _commissionEstimateSize,
   serialize: _commissionSerialize,
   deserialize: _commissionDeserialize,
   deserializeProp: _commissionDeserializeProp,
+  idName: r'id',
+  indexes: {
+    r'category': IndexSchema(
+      id: -7560358558326323820,
+      name: r'category',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'category',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'itemName': IndexSchema(
+      id: 2219846343528216480,
+      name: r'itemName',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'itemName',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    ),
+    r'tagWords': IndexSchema(
+      id: -2382746471204615764,
+      name: r'tagWords',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'tagWords',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
+  links: {
+    r'upload': LinkSchema(
+      id: -5475899690517561306,
+      name: r'upload',
+      target: r'CommissionUpload',
+      single: true,
+      linkName: r'commissions',
+    )
+  },
+  embeddedSchemas: {},
+  getId: _commissionGetId,
+  getLinks: _commissionGetLinks,
+  attach: _commissionAttach,
+  version: '3.1.0+1',
 );
 
 int _commissionEstimateSize(
@@ -597,6 +745,13 @@ int _commissionEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.tagWords.length * 3;
+  {
+    for (var i = 0; i < object.tagWords.length; i++) {
+      final value = object.tagWords[i];
+      bytesCount += value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -610,6 +765,7 @@ void _commissionSerialize(
   writer.writeDouble(offsets[1], object.fbo);
   writer.writeDouble(offsets[2], object.fbs);
   writer.writeString(offsets[3], object.itemName);
+  writer.writeStringList(offsets[4], object.tagWords);
 }
 
 Commission _commissionDeserialize(
@@ -622,6 +778,7 @@ Commission _commissionDeserialize(
   object.category = reader.readStringOrNull(offsets[0]);
   object.fbo = reader.readDoubleOrNull(offsets[1]);
   object.fbs = reader.readDoubleOrNull(offsets[2]);
+  object.id = id;
   object.itemName = reader.readStringOrNull(offsets[3]);
   return object;
 }
@@ -641,8 +798,578 @@ P _commissionDeserializeProp<P>(
       return (reader.readDoubleOrNull(offset)) as P;
     case 3:
       return (reader.readStringOrNull(offset)) as P;
+    case 4:
+      return (reader.readStringList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+Id _commissionGetId(Commission object) {
+  return object.id ?? Isar.autoIncrement;
+}
+
+List<IsarLinkBase<dynamic>> _commissionGetLinks(Commission object) {
+  return [object.upload];
+}
+
+void _commissionAttach(IsarCollection<dynamic> col, Id id, Commission object) {
+  object.id = id;
+  object.upload
+      .attach(col, col.isar.collection<CommissionUpload>(), r'upload', id);
+}
+
+extension CommissionQueryWhereSort
+    on QueryBuilder<Commission, Commission, QWhere> {
+  QueryBuilder<Commission, Commission, QAfterWhere> anyId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhere> anyCategory() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'category'),
+      );
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhere> anyItemName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'itemName'),
+      );
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhere> anyTagWordsElement() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'tagWords'),
+      );
+    });
+  }
+}
+
+extension CommissionQueryWhere
+    on QueryBuilder<Commission, Commission, QWhereClause> {
+  QueryBuilder<Commission, Commission, QAfterWhereClause> idEqualTo(Id id) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: id,
+        upper: id,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> idNotEqualTo(Id id) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            )
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            );
+      } else {
+        return query
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            )
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            );
+      }
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> idGreaterThan(Id id,
+      {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.greaterThan(lower: id, includeLower: include),
+      );
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> idLessThan(Id id,
+      {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.lessThan(upper: id, includeUpper: include),
+      );
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> idBetween(
+    Id lowerId,
+    Id upperId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: lowerId,
+        includeLower: includeLower,
+        upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> categoryIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'category',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> categoryIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'category',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> categoryEqualTo(
+      String? category) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'category',
+        value: [category],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> categoryNotEqualTo(
+      String? category) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [],
+              upper: [category],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [category],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [category],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'category',
+              lower: [],
+              upper: [category],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> categoryGreaterThan(
+    String? category, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'category',
+        lower: [category],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> categoryLessThan(
+    String? category, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'category',
+        lower: [],
+        upper: [category],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> categoryBetween(
+    String? lowerCategory,
+    String? upperCategory, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'category',
+        lower: [lowerCategory],
+        includeLower: includeLower,
+        upper: [upperCategory],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> categoryStartsWith(
+      String CategoryPrefix) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'category',
+        lower: [CategoryPrefix],
+        upper: ['$CategoryPrefix\u{FFFFF}'],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> categoryIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'category',
+        value: [''],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> categoryIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'category',
+              upper: [''],
+            ))
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'category',
+              lower: [''],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'category',
+              lower: [''],
+            ))
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'category',
+              upper: [''],
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> itemNameIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'itemName',
+        value: [null],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> itemNameIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'itemName',
+        lower: [null],
+        includeLower: false,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> itemNameEqualTo(
+      String? itemName) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'itemName',
+        value: [itemName],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> itemNameNotEqualTo(
+      String? itemName) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'itemName',
+              lower: [],
+              upper: [itemName],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'itemName',
+              lower: [itemName],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'itemName',
+              lower: [itemName],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'itemName',
+              lower: [],
+              upper: [itemName],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> itemNameGreaterThan(
+    String? itemName, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'itemName',
+        lower: [itemName],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> itemNameLessThan(
+    String? itemName, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'itemName',
+        lower: [],
+        upper: [itemName],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> itemNameBetween(
+    String? lowerItemName,
+    String? upperItemName, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'itemName',
+        lower: [lowerItemName],
+        includeLower: includeLower,
+        upper: [upperItemName],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> itemNameStartsWith(
+      String ItemNamePrefix) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'itemName',
+        lower: [ItemNamePrefix],
+        upper: ['$ItemNamePrefix\u{FFFFF}'],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> itemNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'itemName',
+        value: [''],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause> itemNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'itemName',
+              upper: [''],
+            ))
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'itemName',
+              lower: [''],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'itemName',
+              lower: [''],
+            ))
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'itemName',
+              upper: [''],
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause>
+      tagWordsElementEqualTo(String tagWordsElement) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'tagWords',
+        value: [tagWordsElement],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause>
+      tagWordsElementNotEqualTo(String tagWordsElement) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'tagWords',
+              lower: [],
+              upper: [tagWordsElement],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'tagWords',
+              lower: [tagWordsElement],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'tagWords',
+              lower: [tagWordsElement],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'tagWords',
+              lower: [],
+              upper: [tagWordsElement],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause>
+      tagWordsElementGreaterThan(
+    String tagWordsElement, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'tagWords',
+        lower: [tagWordsElement],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause>
+      tagWordsElementLessThan(
+    String tagWordsElement, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'tagWords',
+        lower: [],
+        upper: [tagWordsElement],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause>
+      tagWordsElementBetween(
+    String lowerTagWordsElement,
+    String upperTagWordsElement, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'tagWords',
+        lower: [lowerTagWordsElement],
+        includeLower: includeLower,
+        upper: [upperTagWordsElement],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause>
+      tagWordsElementStartsWith(String TagWordsElementPrefix) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'tagWords',
+        lower: [TagWordsElementPrefix],
+        upper: ['$TagWordsElementPrefix\u{FFFFF}'],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause>
+      tagWordsElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'tagWords',
+        value: [''],
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterWhereClause>
+      tagWordsElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'tagWords',
+              upper: [''],
+            ))
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'tagWords',
+              lower: [''],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'tagWords',
+              lower: [''],
+            ))
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'tagWords',
+              upper: [''],
+            ));
+      }
+    });
   }
 }
 
@@ -955,6 +1682,75 @@ extension CommissionQueryFilter
     });
   }
 
+  QueryBuilder<Commission, Commission, QAfterFilterCondition> idIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition> idIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition> idEqualTo(
+      Id? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition> idGreaterThan(
+    Id? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition> idLessThan(
+    Id? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition> idBetween(
+    Id? lower,
+    Id? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Commission, Commission, QAfterFilterCondition> itemNameIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1105,7 +1901,436 @@ extension CommissionQueryFilter
       ));
     });
   }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'tagWords',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'tagWords',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'tagWords',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'tagWords',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'tagWords',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'tagWords',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsElementContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'tagWords',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsElementMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'tagWords',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'tagWords',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'tagWords',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tagWords',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tagWords',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tagWords',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tagWords',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tagWords',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition>
+      tagWordsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'tagWords',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
 }
 
 extension CommissionQueryObject
     on QueryBuilder<Commission, Commission, QFilterCondition> {}
+
+extension CommissionQueryLinks
+    on QueryBuilder<Commission, Commission, QFilterCondition> {
+  QueryBuilder<Commission, Commission, QAfterFilterCondition> upload(
+      FilterQuery<CommissionUpload> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'upload');
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterFilterCondition> uploadIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'upload', 0, true, 0, true);
+    });
+  }
+}
+
+extension CommissionQuerySortBy
+    on QueryBuilder<Commission, Commission, QSortBy> {
+  QueryBuilder<Commission, Commission, QAfterSortBy> sortByCategory() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'category', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> sortByCategoryDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'category', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> sortByFbo() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fbo', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> sortByFboDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fbo', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> sortByFbs() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fbs', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> sortByFbsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fbs', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> sortByItemName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'itemName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> sortByItemNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'itemName', Sort.desc);
+    });
+  }
+}
+
+extension CommissionQuerySortThenBy
+    on QueryBuilder<Commission, Commission, QSortThenBy> {
+  QueryBuilder<Commission, Commission, QAfterSortBy> thenByCategory() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'category', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> thenByCategoryDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'category', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> thenByFbo() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fbo', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> thenByFboDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fbo', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> thenByFbs() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fbs', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> thenByFbsDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fbs', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> thenById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> thenByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> thenByItemName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'itemName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QAfterSortBy> thenByItemNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'itemName', Sort.desc);
+    });
+  }
+}
+
+extension CommissionQueryWhereDistinct
+    on QueryBuilder<Commission, Commission, QDistinct> {
+  QueryBuilder<Commission, Commission, QDistinct> distinctByCategory(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'category', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QDistinct> distinctByFbo() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'fbo');
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QDistinct> distinctByFbs() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'fbs');
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QDistinct> distinctByItemName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'itemName', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Commission, Commission, QDistinct> distinctByTagWords() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'tagWords');
+    });
+  }
+}
+
+extension CommissionQueryProperty
+    on QueryBuilder<Commission, Commission, QQueryProperty> {
+  QueryBuilder<Commission, int, QQueryOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Commission, String?, QQueryOperations> categoryProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'category');
+    });
+  }
+
+  QueryBuilder<Commission, double?, QQueryOperations> fboProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'fbo');
+    });
+  }
+
+  QueryBuilder<Commission, double?, QQueryOperations> fbsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'fbs');
+    });
+  }
+
+  QueryBuilder<Commission, String?, QQueryOperations> itemNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'itemName');
+    });
+  }
+
+  QueryBuilder<Commission, List<String>, QQueryOperations> tagWordsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'tagWords');
+    });
+  }
+}

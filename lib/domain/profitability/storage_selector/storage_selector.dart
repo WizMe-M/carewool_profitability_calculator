@@ -16,5 +16,5 @@ abstract class StorageSelectorBase with Store {
   Storage? selected;
 
   StorageSelectorBase({required StorageUpload upload})
-      : storages = upload.uploadedItems;
+      : storages = upload.storages.toList();
 }

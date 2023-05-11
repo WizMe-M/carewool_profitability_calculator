@@ -1,16 +1,25 @@
 import 'package:isar/isar.dart';
 
-import 'upload_base.dart';
-
 part 'storage.g.dart';
 
 @collection
-class StorageUpload extends UploadBase<Storage> {}
+class StorageUpload {
+  Id? id;
 
-@embedded
+  @Index(unique: true)
+  late DateTime uploadTime;
+
+  final IsarLinks<Storage> storages = IsarLinks();
+}
+
+@collection
 class Storage {
+  Id? id;
   String? name;
   List<Tariff> tariffs = [];
+
+  @Backlink(to: 'storages')
+  final IsarLinks<StorageUpload> upload = IsarLinks();
 }
 
 @embedded

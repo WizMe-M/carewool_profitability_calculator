@@ -21,12 +21,6 @@ const StorageUploadSchema = CollectionSchema(
       id: 0,
       name: r'uploadTime',
       type: IsarType.dateTime,
-    ),
-    r'uploadedItems': PropertySchema(
-      id: 1,
-      name: r'uploadedItems',
-      type: IsarType.objectList,
-      target: r'Storage',
     )
   },
   estimateSize: _storageUploadEstimateSize,
@@ -34,9 +28,30 @@ const StorageUploadSchema = CollectionSchema(
   deserialize: _storageUploadDeserialize,
   deserializeProp: _storageUploadDeserializeProp,
   idName: r'id',
-  indexes: {},
-  links: {},
-  embeddedSchemas: {r'Storage': StorageSchema, r'Tariff': TariffSchema},
+  indexes: {
+    r'uploadTime': IndexSchema(
+      id: -1308871467908879180,
+      name: r'uploadTime',
+      unique: true,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'uploadTime',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
+  links: {
+    r'storages': LinkSchema(
+      id: 3753665804502481360,
+      name: r'storages',
+      target: r'Storage',
+      single: false,
+    )
+  },
+  embeddedSchemas: {},
   getId: _storageUploadGetId,
   getLinks: _storageUploadGetLinks,
   attach: _storageUploadAttach,
@@ -49,14 +64,6 @@ int _storageUploadEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.uploadedItems.length * 3;
-  {
-    final offsets = allOffsets[Storage]!;
-    for (var i = 0; i < object.uploadedItems.length; i++) {
-      final value = object.uploadedItems[i];
-      bytesCount += StorageSchema.estimateSize(value, offsets, allOffsets);
-    }
-  }
   return bytesCount;
 }
 
@@ -67,12 +74,6 @@ void _storageUploadSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeDateTime(offsets[0], object.uploadTime);
-  writer.writeObjectList<Storage>(
-    offsets[1],
-    allOffsets,
-    StorageSchema.serialize,
-    object.uploadedItems,
-  );
 }
 
 StorageUpload _storageUploadDeserialize(
@@ -83,14 +84,7 @@ StorageUpload _storageUploadDeserialize(
 ) {
   final object = StorageUpload();
   object.id = id;
-  object.uploadTime = reader.readDateTimeOrNull(offsets[0]);
-  object.uploadedItems = reader.readObjectList<Storage>(
-        offsets[1],
-        StorageSchema.deserialize,
-        allOffsets,
-        Storage(),
-      ) ??
-      [];
+  object.uploadTime = reader.readDateTime(offsets[0]);
   return object;
 }
 
@@ -102,15 +96,7 @@ P _storageUploadDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDateTimeOrNull(offset)) as P;
-    case 1:
-      return (reader.readObjectList<Storage>(
-            offset,
-            StorageSchema.deserialize,
-            allOffsets,
-            Storage(),
-          ) ??
-          []) as P;
+      return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -121,12 +107,69 @@ Id _storageUploadGetId(StorageUpload object) {
 }
 
 List<IsarLinkBase<dynamic>> _storageUploadGetLinks(StorageUpload object) {
-  return [];
+  return [object.storages];
 }
 
 void _storageUploadAttach(
     IsarCollection<dynamic> col, Id id, StorageUpload object) {
   object.id = id;
+  object.storages.attach(col, col.isar.collection<Storage>(), r'storages', id);
+}
+
+extension StorageUploadByIndex on IsarCollection<StorageUpload> {
+  Future<StorageUpload?> getByUploadTime(DateTime uploadTime) {
+    return getByIndex(r'uploadTime', [uploadTime]);
+  }
+
+  StorageUpload? getByUploadTimeSync(DateTime uploadTime) {
+    return getByIndexSync(r'uploadTime', [uploadTime]);
+  }
+
+  Future<bool> deleteByUploadTime(DateTime uploadTime) {
+    return deleteByIndex(r'uploadTime', [uploadTime]);
+  }
+
+  bool deleteByUploadTimeSync(DateTime uploadTime) {
+    return deleteByIndexSync(r'uploadTime', [uploadTime]);
+  }
+
+  Future<List<StorageUpload?>> getAllByUploadTime(
+      List<DateTime> uploadTimeValues) {
+    final values = uploadTimeValues.map((e) => [e]).toList();
+    return getAllByIndex(r'uploadTime', values);
+  }
+
+  List<StorageUpload?> getAllByUploadTimeSync(List<DateTime> uploadTimeValues) {
+    final values = uploadTimeValues.map((e) => [e]).toList();
+    return getAllByIndexSync(r'uploadTime', values);
+  }
+
+  Future<int> deleteAllByUploadTime(List<DateTime> uploadTimeValues) {
+    final values = uploadTimeValues.map((e) => [e]).toList();
+    return deleteAllByIndex(r'uploadTime', values);
+  }
+
+  int deleteAllByUploadTimeSync(List<DateTime> uploadTimeValues) {
+    final values = uploadTimeValues.map((e) => [e]).toList();
+    return deleteAllByIndexSync(r'uploadTime', values);
+  }
+
+  Future<Id> putByUploadTime(StorageUpload object) {
+    return putByIndex(r'uploadTime', object);
+  }
+
+  Id putByUploadTimeSync(StorageUpload object, {bool saveLinks = true}) {
+    return putByIndexSync(r'uploadTime', object, saveLinks: saveLinks);
+  }
+
+  Future<List<Id>> putAllByUploadTime(List<StorageUpload> objects) {
+    return putAllByIndex(r'uploadTime', objects);
+  }
+
+  List<Id> putAllByUploadTimeSync(List<StorageUpload> objects,
+      {bool saveLinks = true}) {
+    return putAllByIndexSync(r'uploadTime', objects, saveLinks: saveLinks);
+  }
 }
 
 extension StorageUploadQueryWhereSort
@@ -134,6 +177,14 @@ extension StorageUploadQueryWhereSort
   QueryBuilder<StorageUpload, StorageUpload, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterWhere> anyUploadTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'uploadTime'),
+      );
     });
   }
 }
@@ -204,6 +255,99 @@ extension StorageUploadQueryWhere
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterWhereClause>
+      uploadTimeEqualTo(DateTime uploadTime) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'uploadTime',
+        value: [uploadTime],
+      ));
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterWhereClause>
+      uploadTimeNotEqualTo(DateTime uploadTime) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uploadTime',
+              lower: [],
+              upper: [uploadTime],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uploadTime',
+              lower: [uploadTime],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uploadTime',
+              lower: [uploadTime],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'uploadTime',
+              lower: [],
+              upper: [uploadTime],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterWhereClause>
+      uploadTimeGreaterThan(
+    DateTime uploadTime, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'uploadTime',
+        lower: [uploadTime],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterWhereClause>
+      uploadTimeLessThan(
+    DateTime uploadTime, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'uploadTime',
+        lower: [],
+        upper: [uploadTime],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterWhereClause>
+      uploadTimeBetween(
+    DateTime lowerUploadTime,
+    DateTime upperUploadTime, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'uploadTime',
+        lower: [lowerUploadTime],
+        includeLower: includeLower,
+        upper: [upperUploadTime],
         includeUpper: includeUpper,
       ));
     });
@@ -284,25 +428,7 @@ extension StorageUploadQueryFilter
   }
 
   QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
-      uploadTimeIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'uploadTime',
-      ));
-    });
-  }
-
-  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
-      uploadTimeIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'uploadTime',
-      ));
-    });
-  }
-
-  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
-      uploadTimeEqualTo(DateTime? value) {
+      uploadTimeEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'uploadTime',
@@ -313,7 +439,7 @@ extension StorageUploadQueryFilter
 
   QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
       uploadTimeGreaterThan(
-    DateTime? value, {
+    DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -327,7 +453,7 @@ extension StorageUploadQueryFilter
 
   QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
       uploadTimeLessThan(
-    DateTime? value, {
+    DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -341,8 +467,8 @@ extension StorageUploadQueryFilter
 
   QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
       uploadTimeBetween(
-    DateTime? lower,
-    DateTime? upper, {
+    DateTime lower,
+    DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -356,109 +482,74 @@ extension StorageUploadQueryFilter
       ));
     });
   }
+}
 
-  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
-      uploadedItemsLengthEqualTo(int length) {
+extension StorageUploadQueryObject
+    on QueryBuilder<StorageUpload, StorageUpload, QFilterCondition> {}
+
+extension StorageUploadQueryLinks
+    on QueryBuilder<StorageUpload, StorageUpload, QFilterCondition> {
+  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition> storages(
+      FilterQuery<Storage> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'uploadedItems',
-        length,
-        true,
-        length,
-        true,
-      );
+      return query.link(q, r'storages');
     });
   }
 
   QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
-      uploadedItemsIsEmpty() {
+      storagesLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'uploadedItems',
-        0,
-        true,
-        0,
-        true,
-      );
+      return query.linkLength(r'storages', length, true, length, true);
     });
   }
 
   QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
-      uploadedItemsIsNotEmpty() {
+      storagesIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'uploadedItems',
-        0,
-        false,
-        999999,
-        true,
-      );
+      return query.linkLength(r'storages', 0, true, 0, true);
     });
   }
 
   QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
-      uploadedItemsLengthLessThan(
+      storagesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'storages', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
+      storagesLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'uploadedItems',
-        0,
-        true,
-        length,
-        include,
-      );
+      return query.linkLength(r'storages', 0, true, length, include);
     });
   }
 
   QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
-      uploadedItemsLengthGreaterThan(
+      storagesLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'uploadedItems',
-        length,
-        include,
-        999999,
-        true,
-      );
+      return query.linkLength(r'storages', length, include, 999999, true);
     });
   }
 
   QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
-      uploadedItemsLengthBetween(
+      storagesLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'uploadedItems',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
+      return query.linkLength(
+          r'storages', lower, includeLower, upper, includeUpper);
     });
   }
 }
-
-extension StorageUploadQueryObject
-    on QueryBuilder<StorageUpload, StorageUpload, QFilterCondition> {
-  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
-      uploadedItemsElement(FilterQuery<Storage> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'uploadedItems');
-    });
-  }
-}
-
-extension StorageUploadQueryLinks
-    on QueryBuilder<StorageUpload, StorageUpload, QFilterCondition> {}
 
 extension StorageUploadQuerySortBy
     on QueryBuilder<StorageUpload, StorageUpload, QSortBy> {
@@ -521,29 +612,21 @@ extension StorageUploadQueryProperty
     });
   }
 
-  QueryBuilder<StorageUpload, DateTime?, QQueryOperations>
-      uploadTimeProperty() {
+  QueryBuilder<StorageUpload, DateTime, QQueryOperations> uploadTimeProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'uploadTime');
     });
   }
-
-  QueryBuilder<StorageUpload, List<Storage>, QQueryOperations>
-      uploadedItemsProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'uploadedItems');
-    });
-  }
 }
-
-// **************************************************************************
-// IsarEmbeddedGenerator
-// **************************************************************************
 
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-const StorageSchema = Schema(
+extension GetStorageCollection on Isar {
+  IsarCollection<Storage> get storages => this.collection();
+}
+
+const StorageSchema = CollectionSchema(
   name: r'Storage',
   id: 1211984339887552882,
   properties: {
@@ -563,6 +646,22 @@ const StorageSchema = Schema(
   serialize: _storageSerialize,
   deserialize: _storageDeserialize,
   deserializeProp: _storageDeserializeProp,
+  idName: r'id',
+  indexes: {},
+  links: {
+    r'upload': LinkSchema(
+      id: 7925296032143477193,
+      name: r'upload',
+      target: r'StorageUpload',
+      single: false,
+      linkName: r'storages',
+    )
+  },
+  embeddedSchemas: {r'Tariff': TariffSchema},
+  getId: _storageGetId,
+  getLinks: _storageGetLinks,
+  attach: _storageAttach,
+  version: '3.1.0+1',
 );
 
 int _storageEstimateSize(
@@ -610,6 +709,7 @@ Storage _storageDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Storage();
+  object.id = id;
   object.name = reader.readStringOrNull(offsets[0]);
   object.tariffs = reader.readObjectList<Tariff>(
         offsets[1],
@@ -643,8 +743,165 @@ P _storageDeserializeProp<P>(
   }
 }
 
+Id _storageGetId(Storage object) {
+  return object.id ?? Isar.autoIncrement;
+}
+
+List<IsarLinkBase<dynamic>> _storageGetLinks(Storage object) {
+  return [object.upload];
+}
+
+void _storageAttach(IsarCollection<dynamic> col, Id id, Storage object) {
+  object.id = id;
+  object.upload
+      .attach(col, col.isar.collection<StorageUpload>(), r'upload', id);
+}
+
+extension StorageQueryWhereSort on QueryBuilder<Storage, Storage, QWhere> {
+  QueryBuilder<Storage, Storage, QAfterWhere> anyId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+}
+
+extension StorageQueryWhere on QueryBuilder<Storage, Storage, QWhereClause> {
+  QueryBuilder<Storage, Storage, QAfterWhereClause> idEqualTo(Id id) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: id,
+        upper: id,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterWhereClause> idNotEqualTo(Id id) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            )
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            );
+      } else {
+        return query
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            )
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            );
+      }
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterWhereClause> idGreaterThan(Id id,
+      {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.greaterThan(lower: id, includeLower: include),
+      );
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterWhereClause> idLessThan(Id id,
+      {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.lessThan(upper: id, includeUpper: include),
+      );
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterWhereClause> idBetween(
+    Id lowerId,
+    Id upperId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: lowerId,
+        includeLower: includeLower,
+        upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+}
+
 extension StorageQueryFilter
     on QueryBuilder<Storage, Storage, QFilterCondition> {
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> idIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> idIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'id',
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> idEqualTo(Id? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> idGreaterThan(
+    Id? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> idLessThan(
+    Id? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> idBetween(
+    Id? lower,
+    Id? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
   QueryBuilder<Storage, Storage, QAfterFilterCondition> nameIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -886,6 +1143,141 @@ extension StorageQueryObject
     });
   }
 }
+
+extension StorageQueryLinks
+    on QueryBuilder<Storage, Storage, QFilterCondition> {
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> upload(
+      FilterQuery<StorageUpload> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'upload');
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> uploadLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'upload', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> uploadIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'upload', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> uploadIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'upload', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> uploadLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'upload', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> uploadLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'upload', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> uploadLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'upload', lower, includeLower, upper, includeUpper);
+    });
+  }
+}
+
+extension StorageQuerySortBy on QueryBuilder<Storage, Storage, QSortBy> {
+  QueryBuilder<Storage, Storage, QAfterSortBy> sortByName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterSortBy> sortByNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+}
+
+extension StorageQuerySortThenBy
+    on QueryBuilder<Storage, Storage, QSortThenBy> {
+  QueryBuilder<Storage, Storage, QAfterSortBy> thenById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterSortBy> thenByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterSortBy> thenByName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterSortBy> thenByNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+}
+
+extension StorageQueryWhereDistinct
+    on QueryBuilder<Storage, Storage, QDistinct> {
+  QueryBuilder<Storage, Storage, QDistinct> distinctByName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+}
+
+extension StorageQueryProperty
+    on QueryBuilder<Storage, Storage, QQueryProperty> {
+  QueryBuilder<Storage, int, QQueryOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Storage, String?, QQueryOperations> nameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<Storage, List<Tariff>, QQueryOperations> tariffsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'tariffs');
+    });
+  }
+}
+
+// **************************************************************************
+// IsarEmbeddedGenerator
+// **************************************************************************
 
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types

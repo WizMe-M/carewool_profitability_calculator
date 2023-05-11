@@ -72,7 +72,7 @@ abstract class CommissionUploaderBase with Store {
     var sheet = excel.sheets[sheetName]!;
 
     var commissions = _parser.parse(sheet);
-    if (commissions == null || commissions.isEmpty) {
+    if (commissions.isEmpty) {
       _logger.e('Unable to parse commissions!');
       status = ImportExcelStatus.error;
       return;
@@ -80,9 +80,11 @@ abstract class CommissionUploaderBase with Store {
 
     var upload = CommissionUpload()
       ..uploadTime = DateTime.now()
-      ..uploadedItems = commissions;
+      ..commissions.addAll(commissions);
     _isar.writeTxn(() async {
+      await _isar.commissions.putAll(commissions);
       await _isar.commissionUploads.put(upload);
+      await upload.commissions.save();
     }).onError((error, stackTrace) {
       _logger.e('Unable to save commissions upload!', error, stackTrace);
       status = ImportExcelStatus.error;
