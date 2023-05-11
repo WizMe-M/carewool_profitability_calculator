@@ -78,7 +78,7 @@ class CommissionSelectorWidget extends StatelessWidget {
               builder: (_) {
                 return Text(
                   'Категория: ${selector.categoryName}\n'
-                  'Коммиссия FBS = ${selector.fbsCommission}%',
+                  'Коммиссия FBO = ${selector.fboCommission}%',
                   textAlign: TextAlign.center,
                 );
               },
