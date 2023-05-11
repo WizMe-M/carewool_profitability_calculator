@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-import '../../../../../database/entity/category.dart';
-import '../../../../../domain/profitability/category_selector/category_selector.dart';
+import '../../../../../database/entity/commission.dart';
+import '../../../../../domain/profitability/commission_selector/commission_selector.dart';
 
 class CategorySelectorWidget extends StatelessWidget {
-  final CategorySelector selector;
+  final CommissionSelector selector;
 
   const CategorySelectorWidget({required this.selector, super.key});
 
@@ -19,33 +19,15 @@ class CategorySelectorWidget extends StatelessWidget {
         children: [
           Observer(
             builder: (context) {
-              return DropdownButton<Category>(
-                value: selector.category,
-                onChanged: (selected) => selector.setSelectedCategory(selected),
-                items: selector.list.map((category) {
-                  return DropdownMenuItem<Category>(
-                    value: category,
+              return DropdownButton<Commission>(
+                value: selector.selected,
+                onChanged: (selected) => selector.selected =selected,
+                items: selector.list.map((commission) {
+                  return DropdownMenuItem<Commission>(
+                    value: commission,
                     child: Text(
-                      category.name!,
+                      '${commission.itemName} / ${commission.category}',
                       style: const TextStyle(fontSize: 14),
-                    ),
-                  );
-                }).toList(),
-              );
-            },
-          ),
-          Observer(
-            builder: (_) {
-              if (selector.category == null) return const SizedBox.shrink();
-              return DropdownButton<Subcategory>(
-                value: selector.subcategory,
-                onChanged: (selected) => selector.subcategory = selected,
-                items: selector.category?.subcategories.map((subcategory) {
-                  return DropdownMenuItem<Subcategory>(
-                    value: subcategory,
-                    child: Text(
-                      subcategory.name!,
-                      style: const TextStyle(fontSize: 13),
                     ),
                   );
                 }).toList(),

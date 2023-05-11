@@ -6,21 +6,21 @@ import 'package:isar/isar.dart';
 import 'package:logger/logger.dart';
 import 'package:mobx/mobx.dart';
 
-import '../../database/entity/commission.dart';
+import '../../database/entity/storage.dart';
 import 'import_excel_status_enum.dart';
-import 'parsing/commission_parser.dart';
+import 'parsing/storage_parser.dart';
 
-part 'commission_uploader.g.dart';
+part 'storage_uploader.g.dart';
 
-class CommissionUploader = CommissionUploaderBase with _$CommissionUploader;
+class StorageUploader = StorageUploaderBase with _$StorageUploader;
 
-abstract class CommissionUploaderBase with Store {
+abstract class StorageUploaderBase with Store {
   final Logger _logger = GetIt.I.get();
   final Isar _isar = GetIt.I.get();
-  final CommissionParser _parser = CommissionParser();
+  final StorageParser _parser = StorageParser();
 
   @observable
-  CommissionUpload? lastUpload;
+  StorageUpload? lastUpload;
 
   @observable
   ImportExcelStatus status = ImportExcelStatus.notExecuting;
@@ -36,10 +36,8 @@ abstract class CommissionUploaderBase with Store {
 
   @action
   Future<void> fetch() async {
-    lastUpload = await _isar.commissionUploads
-        .where()
-        .sortByUploadTimeDesc()
-        .findFirst();
+    lastUpload =
+        await _isar.storageUploads.where().sortByUploadTimeDesc().findFirst();
   }
 
   @action
@@ -71,20 +69,20 @@ abstract class CommissionUploaderBase with Store {
     }
     var sheet = excel.sheets[sheetName]!;
 
-    var commissions = _parser.parse(sheet);
-    if (commissions == null || commissions.isEmpty) {
-      _logger.e('Unable to parse commissions!');
+    var storages = _parser.parse(sheet);
+    if (storages == null || storages.isEmpty) {
+      _logger.e('Unable to parse storages!');
       status = ImportExcelStatus.error;
       return;
     }
 
-    var upload = CommissionUpload()
+    var upload = StorageUpload()
       ..uploadTime = DateTime.now()
-      ..uploadedItems = commissions;
+      ..uploadedItems = storages;
     _isar.writeTxn(() async {
-      await _isar.commissionUploads.put(upload);
+      await _isar.storageUploads.put(upload);
     }).onError((error, stackTrace) {
-      _logger.e('Unable to save commissions upload!', error, stackTrace);
+      _logger.e('Unable to save storages upload!', error, stackTrace);
       status = ImportExcelStatus.error;
     });
 

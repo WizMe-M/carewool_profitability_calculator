@@ -2,14 +2,15 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
 
-import '../../../domain/excel/commission_uploader.dart';
+import '../../../domain/excel/excel_uploader.dart';
 import '../side_bar.dart';
+import 'excel_upload/start_upload_widget.dart';
+import 'excel_upload/uploading_widget.dart';
 
 @RoutePage()
 class ExcelUploadPage extends StatelessWidget {
-  final _commissionUploader = CommissionUploader();
+  final _uploader = ExcelUploader()..fetch();
 
   ExcelUploadPage({super.key});
 
@@ -25,64 +26,29 @@ class ExcelUploadPage extends StatelessWidget {
         child: Center(
           child: Column(
             children: [
+              Observer(
+                builder: (context) {
+                  return _uploader.isFetching
+                      ? const LinearProgressIndicator()
+                      : const SizedBox.shrink();
+                },
+              ),
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 32),
                 child: Text(
-                  'Загрузите Excel-файл с комиссиями по категориям и тарифами '
-                  'складов, чтобы мы могли выгрузить из них данные и '
-                  'использовать их для расчётов рентабельности',
+                  'Импортируйте данные из Excel-файлов для использования '
+                  'их в расчетах рентабельности',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16),
                 ),
               ),
-              Observer(
-                builder: (context) {
-                  return ElevatedButton(
-                    onPressed: _commissionUploader.isExecuting
-                        ? null
-                        : () async => await _commissionUploader.uploadExcel(),
-                    child: const Text('Загрузить Excel-файл'),
-                  );
-                },
-              ),
-              FutureBuilder(
-                future: _commissionUploader.fetchLastUpload(),
-                builder: (_, snapshot) {
-                  return snapshot.hasData
-                      ? const SizedBox.shrink()
-                      : const SizedBox(
-                          width: 200,
-                          child: LinearProgressIndicator(),
-                        );
-                },
-              ),
-              Observer(builder: (context) {
-                var upload = _commissionUploader.lastUpload;
-                if (upload != null) {
-                  var uploadedAt = DateFormat('dd.MM.yy HH:mm:ss')
-                      .format(upload.uploadTime!);
-                  return Text(
-                    'Дата последнего обновления:\n$uploadedAt',
-                    textAlign: TextAlign.center,
-                  );
-                }
-                return const SizedBox.shrink();
-              }),
-              const Spacer(),
-              Observer(
-                builder: (_) {
-                  return _commissionUploader.isExecuting
-                      ? const CircularProgressIndicator()
-                      : const SizedBox.shrink();
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8),
+              Expanded(
                 child: Observer(
-                  builder: (_) => Text(_commissionUploader.status.message),
+                  builder: (context) => _uploader.isExecuting
+                      ? UploadingWidget(uploader: _uploader)
+                      : StartUploadWidget(uploader: _uploader),
                 ),
               ),
-              const Spacer(),
             ],
           ),
         ),

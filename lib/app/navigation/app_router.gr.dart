@@ -63,7 +63,8 @@ abstract class _$AppRouter extends RootStackRouter {
         routeData: routeData,
         child: ProfitabilityPage(
           costPrice: args.costPrice,
-          lastUpload: args.lastUpload,
+          lastCommissionUpload: args.lastCommissionUpload,
+          lastStorageUpload: args.lastStorageUpload,
           key: args.key,
         ),
       );
@@ -232,14 +233,16 @@ class ExcelUploadRouteArgs {
 class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
   ProfitabilityRoute({
     required CostPrice costPrice,
-    required Upload lastUpload,
+    required CommissionUpload lastCommissionUpload,
+    required StorageUpload lastStorageUpload,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           ProfitabilityRoute.name,
           args: ProfitabilityRouteArgs(
             costPrice: costPrice,
-            lastUpload: lastUpload,
+            lastCommissionUpload: lastCommissionUpload,
+            lastStorageUpload: lastStorageUpload,
             key: key,
           ),
           initialChildren: children,
@@ -254,19 +257,22 @@ class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
 class ProfitabilityRouteArgs {
   const ProfitabilityRouteArgs({
     required this.costPrice,
-    required this.lastUpload,
+    required this.lastCommissionUpload,
+    required this.lastStorageUpload,
     this.key,
   });
 
   final CostPrice costPrice;
 
-  final Upload lastUpload;
+  final CommissionUpload lastCommissionUpload;
+
+  final StorageUpload lastStorageUpload;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'ProfitabilityRouteArgs{costPrice: $costPrice, lastUpload: $lastUpload, key: $key}';
+    return 'ProfitabilityRouteArgs{costPrice: $costPrice, lastCommissionUpload: $lastCommissionUpload, lastStorageUpload: $lastStorageUpload, key: $key}';
   }
 }
 

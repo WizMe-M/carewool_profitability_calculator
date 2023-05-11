@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:mobx/mobx.dart';
 
+import '../../database/entity/commission.dart';
 import '../../database/entity/storage.dart';
-import '../../database/entity/upload.dart';
 import '../../database/entity/cost_price.dart';
-import 'category_selector/category_selector.dart';
+import 'commission_selector/commission_selector.dart';
 import 'inputs/cost_input.dart';
 import 'inputs/discount_input.dart';
 import 'simple_taxation_system_enum.dart';
@@ -18,9 +18,8 @@ class ProfitabilityForm = ProfitabilityFormBase with _$ProfitabilityForm;
 
 abstract class ProfitabilityFormBase with Store {
   final CostPrice costPrice;
-  final Upload upload;
   final StorageSelector storageSelector;
-  final CategorySelector categorySelector;
+  final CommissionSelector categorySelector;
 
   final sizeForm = SizeForm();
   final desiredCost = CostInput();
@@ -35,13 +34,12 @@ abstract class ProfitabilityFormBase with Store {
   @observable
   SimpleTaxationSystem selectedTax = SimpleTaxationSystem.perIncome;
 
-  ProfitabilityFormBase({required this.costPrice, required this.upload})
-      : storageSelector = StorageSelector(
-          list: upload.storages.value!,
-        ),
-        categorySelector = CategorySelector(
-          categoryList: upload.categories.value!,
-        ) {
+  ProfitabilityFormBase({
+    required this.costPrice,
+    required CommissionUpload commissions,
+    required StorageUpload storages,
+  })  : storageSelector = StorageSelector(upload: storages),
+        categorySelector = CommissionSelector(upload: commissions) {
     addListeners();
   }
 

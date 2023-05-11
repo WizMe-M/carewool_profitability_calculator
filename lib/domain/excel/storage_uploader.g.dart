@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'commission_uploader.dart';
+part of 'storage_uploader.dart';
 
 // **************************************************************************
 // StoreGenerator
@@ -8,40 +8,40 @@ part of 'commission_uploader.dart';
 
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
-mixin _$CommissionUploader on CommissionUploaderBase, Store {
+mixin _$StorageUploader on StorageUploaderBase, Store {
   Computed<DateTime?>? _$lastUpdatedComputed;
 
   @override
   DateTime? get lastUpdated =>
       (_$lastUpdatedComputed ??= Computed<DateTime?>(() => super.lastUpdated,
-              name: 'CommissionUploaderBase.lastUpdated'))
+              name: 'StorageUploaderBase.lastUpdated'))
           .value;
   Computed<bool>? _$isExecutingComputed;
 
   @override
   bool get isExecuting =>
       (_$isExecutingComputed ??= Computed<bool>(() => super.isExecuting,
-              name: 'CommissionUploaderBase.isExecuting'))
+              name: 'StorageUploaderBase.isExecuting'))
           .value;
 
   late final _$lastUploadAtom =
-      Atom(name: 'CommissionUploaderBase.lastUpload', context: context);
+      Atom(name: 'StorageUploaderBase.lastUpload', context: context);
 
   @override
-  CommissionUpload? get lastUpload {
+  StorageUpload? get lastUpload {
     _$lastUploadAtom.reportRead();
     return super.lastUpload;
   }
 
   @override
-  set lastUpload(CommissionUpload? value) {
+  set lastUpload(StorageUpload? value) {
     _$lastUploadAtom.reportWrite(value, super.lastUpload, () {
       super.lastUpload = value;
     });
   }
 
   late final _$statusAtom =
-      Atom(name: 'CommissionUploaderBase.status', context: context);
+      Atom(name: 'StorageUploaderBase.status', context: context);
 
   @override
   ImportExcelStatus get status {
@@ -57,7 +57,7 @@ mixin _$CommissionUploader on CommissionUploaderBase, Store {
   }
 
   late final _$fetchAsyncAction =
-      AsyncAction('CommissionUploaderBase.fetch', context: context);
+      AsyncAction('StorageUploaderBase.fetch', context: context);
 
   @override
   Future<void> fetch() {
@@ -65,7 +65,7 @@ mixin _$CommissionUploader on CommissionUploaderBase, Store {
   }
 
   late final _$uploadAsyncAction =
-      AsyncAction('CommissionUploaderBase.upload', context: context);
+      AsyncAction('StorageUploaderBase.upload', context: context);
 
   @override
   Future<void> upload() {

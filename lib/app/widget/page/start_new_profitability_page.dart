@@ -38,7 +38,8 @@ class StartNewProfitabilityPage extends StatelessWidget {
             } else {
               return CostPriceSelectorWidget(
                 costPrices: _loader.costPrices,
-                lastUpload: _loader.lastUpload!,
+                lastCommissionUpload: _loader.lastCommissionUpload!,
+                lastStorageUpload: _loader.lastStorageUpload!,
               );
             }
           },

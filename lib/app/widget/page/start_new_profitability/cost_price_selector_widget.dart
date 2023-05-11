@@ -2,19 +2,22 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../database/entity/commission.dart';
 import '../../../../database/entity/cost_price.dart';
-import '../../../../database/entity/upload.dart';
+import '../../../../database/entity/storage.dart';
 import '../../../../domain/util/symbols.dart';
 import '../../../navigation/app_router.dart';
 
 class CostPriceSelectorWidget extends StatelessWidget {
   final DateFormat _dateFormat = DateFormat('dd.MM.yyyy HH:mm');
   final List<CostPrice> costPrices;
-  final Upload lastUpload;
+  final CommissionUpload lastCommissionUpload;
+  final StorageUpload lastStorageUpload;
 
   CostPriceSelectorWidget({
     required this.costPrices,
-    required this.lastUpload,
+    required this.lastCommissionUpload,
+    required this.lastStorageUpload,
     super.key,
   });
 
@@ -48,12 +51,15 @@ class CostPriceSelectorWidget extends StatelessWidget {
                 subtitle: Text(_dateFormat.format(costPrice.savedDate!)),
                 trailing: IconButton.outlined(
                   icon: const Icon(Icons.navigate_next),
-                  onPressed: () => context.router.push(
+                  onPressed: () {
+                    context.router.push(
                     ProfitabilityRoute(
                       costPrice: costPrice,
-                      lastUpload: lastUpload,
+                      lastCommissionUpload: lastCommissionUpload,
+                      lastStorageUpload: lastStorageUpload,
                     ),
-                  ),
+                  );
+                  },
                 ),
               );
             },

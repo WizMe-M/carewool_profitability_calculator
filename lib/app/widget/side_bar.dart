@@ -21,8 +21,8 @@ class SideBar extends StatelessWidget {
 
   Future get lastUpdateFuture {
     return Future(() async {
-      await _uploader.updateLastUpload();
-      return _uploader.lastUpload?.uploadTime;
+      await _uploader.fetch();
+      return _uploader.lastUpdateTime;
     });
   }
 

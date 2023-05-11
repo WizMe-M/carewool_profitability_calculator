@@ -1,12 +1,11 @@
 import 'package:isar/isar.dart';
 
+import 'upload_base.dart';
+
 part 'storage.g.dart';
 
 @collection
-class StorageList {
-  Id? id;
-  List<Storage> storages = [];
-}
+class StorageUpload extends UploadBase<Storage> {}
 
 @embedded
 class Storage {

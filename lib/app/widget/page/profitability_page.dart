@@ -2,8 +2,9 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
+import '../../../database/entity/commission.dart';
 import '../../../database/entity/cost_price.dart';
-import '../../../database/entity/upload.dart';
+import '../../../database/entity/storage.dart';
 import '../../../domain/profitability/profitability_form.dart';
 import '../side_bar.dart';
 import 'profitability/result/logistic_result_widget.dart';
@@ -21,9 +22,14 @@ class ProfitabilityPage extends StatelessWidget {
 
   ProfitabilityPage({
     required this.costPrice,
-    required Upload lastUpload,
+    required CommissionUpload lastCommissionUpload,
+    required StorageUpload lastStorageUpload,
     super.key,
-  }) : _form = ProfitabilityForm(costPrice: costPrice, upload: lastUpload);
+  }) : _form = ProfitabilityForm(
+          costPrice: costPrice,
+          commissions: lastCommissionUpload,
+          storages: lastStorageUpload,
+        );
 
   @override
   Widget build(BuildContext context) {
