@@ -29,7 +29,9 @@ abstract class CommissionSelectorBase with Store {
     var words = Isar.splitWords(pattern);
     var searchResults = await upload.commissions
         .filter()
-        .allOf(words, (q, word) => q.tagWordsElementContains(word))
+        .allOf(words, (q, word) {
+          return q.tagWordsElementStartsWith(word, caseSensitive: false);
+        })
         .sortByItemName()
         .findAll();
     return searchResults;

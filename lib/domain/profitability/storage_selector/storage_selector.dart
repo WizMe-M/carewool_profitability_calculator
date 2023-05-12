@@ -1,3 +1,4 @@
+import 'package:isar/isar.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../../../database/entity/storage.dart';
@@ -7,14 +8,22 @@ part 'storage_selector.g.dart';
 class StorageSelector = StorageSelectorBase with _$StorageSelector;
 
 abstract class StorageSelectorBase with Store {
-  final List<Storage> storages;
-
-  @observable
-  bool isInfoExpanded = false;
+  final StorageUpload upload;
 
   @observable
   Storage? selected;
 
-  StorageSelectorBase({required StorageUpload upload})
-      : storages = upload.storages.toList();
+  StorageSelectorBase({required this.upload});
+
+  Future<List<Storage>> search(String pattern) async {
+    var words = Isar.splitWords(pattern);
+    var searchResults = await upload.storages
+        .filter()
+        .allOf(words, (q, word) {
+          return q.nameWordsElementStartsWith(word, caseSensitive: false);
+        })
+        .sortByName()
+        .findAll();
+    return searchResults;
+  }
 }

@@ -635,8 +635,13 @@ const StorageSchema = CollectionSchema(
       name: r'name',
       type: IsarType.string,
     ),
-    r'tariffs': PropertySchema(
+    r'nameWords': PropertySchema(
       id: 1,
+      name: r'nameWords',
+      type: IsarType.stringList,
+    ),
+    r'tariffs': PropertySchema(
+      id: 2,
       name: r'tariffs',
       type: IsarType.objectList,
       target: r'Tariff',
@@ -647,7 +652,21 @@ const StorageSchema = CollectionSchema(
   deserialize: _storageDeserialize,
   deserializeProp: _storageDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'nameWords': IndexSchema(
+      id: 8960882405442787957,
+      name: r'nameWords',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'nameWords',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {
     r'upload': LinkSchema(
       id: 7925296032143477193,
@@ -676,6 +695,13 @@ int _storageEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
+  bytesCount += 3 + object.nameWords.length * 3;
+  {
+    for (var i = 0; i < object.nameWords.length; i++) {
+      final value = object.nameWords[i];
+      bytesCount += value.length * 3;
+    }
+  }
   bytesCount += 3 + object.tariffs.length * 3;
   {
     final offsets = allOffsets[Tariff]!;
@@ -694,8 +720,9 @@ void _storageSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.name);
+  writer.writeStringList(offsets[1], object.nameWords);
   writer.writeObjectList<Tariff>(
-    offsets[1],
+    offsets[2],
     allOffsets,
     TariffSchema.serialize,
     object.tariffs,
@@ -712,7 +739,7 @@ Storage _storageDeserialize(
   object.id = id;
   object.name = reader.readStringOrNull(offsets[0]);
   object.tariffs = reader.readObjectList<Tariff>(
-        offsets[1],
+        offsets[2],
         TariffSchema.deserialize,
         allOffsets,
         Tariff(),
@@ -731,6 +758,8 @@ P _storageDeserializeProp<P>(
     case 0:
       return (reader.readStringOrNull(offset)) as P;
     case 1:
+      return (reader.readStringList(offset) ?? []) as P;
+    case 2:
       return (reader.readObjectList<Tariff>(
             offset,
             TariffSchema.deserialize,
@@ -761,6 +790,14 @@ extension StorageQueryWhereSort on QueryBuilder<Storage, Storage, QWhere> {
   QueryBuilder<Storage, Storage, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterWhere> anyNameWordsElement() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'nameWords'),
+      );
     });
   }
 }
@@ -828,6 +865,143 @@ extension StorageQueryWhere on QueryBuilder<Storage, Storage, QWhereClause> {
         upper: upperId,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterWhereClause> nameWordsElementEqualTo(
+      String nameWordsElement) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'nameWords',
+        value: [nameWordsElement],
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterWhereClause> nameWordsElementNotEqualTo(
+      String nameWordsElement) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'nameWords',
+              lower: [],
+              upper: [nameWordsElement],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'nameWords',
+              lower: [nameWordsElement],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'nameWords',
+              lower: [nameWordsElement],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'nameWords',
+              lower: [],
+              upper: [nameWordsElement],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterWhereClause> nameWordsElementGreaterThan(
+    String nameWordsElement, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'nameWords',
+        lower: [nameWordsElement],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterWhereClause> nameWordsElementLessThan(
+    String nameWordsElement, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'nameWords',
+        lower: [],
+        upper: [nameWordsElement],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterWhereClause> nameWordsElementBetween(
+    String lowerNameWordsElement,
+    String upperNameWordsElement, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'nameWords',
+        lower: [lowerNameWordsElement],
+        includeLower: includeLower,
+        upper: [upperNameWordsElement],
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterWhereClause> nameWordsElementStartsWith(
+      String NameWordsElementPrefix) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'nameWords',
+        lower: [NameWordsElementPrefix],
+        upper: ['$NameWordsElementPrefix\u{FFFFF}'],
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterWhereClause> nameWordsElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'nameWords',
+        value: [''],
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterWhereClause>
+      nameWordsElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'nameWords',
+              upper: [''],
+            ))
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'nameWords',
+              lower: [''],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.greaterThan(
+              indexName: r'nameWords',
+              lower: [''],
+            ))
+            .addWhereClause(IndexWhereClause.lessThan(
+              indexName: r'nameWords',
+              upper: [''],
+            ));
+      }
     });
   }
 }
@@ -1048,6 +1222,226 @@ extension StorageQueryFilter
     });
   }
 
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> nameWordsElementEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'nameWords',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition>
+      nameWordsElementGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'nameWords',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition>
+      nameWordsElementLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'nameWords',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> nameWordsElementBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'nameWords',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition>
+      nameWordsElementStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'nameWords',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition>
+      nameWordsElementEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'nameWords',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition>
+      nameWordsElementContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'nameWords',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> nameWordsElementMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'nameWords',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition>
+      nameWordsElementIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'nameWords',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition>
+      nameWordsElementIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'nameWords',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> nameWordsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameWords',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> nameWordsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameWords',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> nameWordsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameWords',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> nameWordsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameWords',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition>
+      nameWordsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameWords',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> nameWordsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'nameWords',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
   QueryBuilder<Storage, Storage, QAfterFilterCondition> tariffsLengthEqualTo(
       int length) {
     return QueryBuilder.apply(this, (query) {
@@ -1252,6 +1646,12 @@ extension StorageQueryWhereDistinct
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
     });
   }
+
+  QueryBuilder<Storage, Storage, QDistinct> distinctByNameWords() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'nameWords');
+    });
+  }
 }
 
 extension StorageQueryProperty
@@ -1265,6 +1665,12 @@ extension StorageQueryProperty
   QueryBuilder<Storage, String?, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<Storage, List<String>, QQueryOperations> nameWordsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'nameWords');
     });
   }
 

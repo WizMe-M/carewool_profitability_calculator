@@ -20,6 +20,9 @@ class Storage {
 
   @Backlink(to: 'storages')
   final IsarLinks<StorageUpload> upload = IsarLinks();
+
+  @Index(type: IndexType.value, caseSensitive: false)
+  List<String> get nameWords => Isar.splitWords(name!);
 }
 
 @embedded
