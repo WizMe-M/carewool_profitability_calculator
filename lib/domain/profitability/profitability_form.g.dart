@@ -59,13 +59,12 @@ mixin _$ProfitabilityForm on ProfitabilityFormBase, Store {
           Computed<double>(() => super.paidAcceptanceCost,
               name: 'ProfitabilityFormBase.paidAcceptanceCost'))
       .value;
-  Computed<double>? _$discountedCostComputed;
+  Computed<double>? _$priceComputed;
 
   @override
-  double get discountedCost =>
-      (_$discountedCostComputed ??= Computed<double>(() => super.discountedCost,
-              name: 'ProfitabilityFormBase.discountedCost'))
-          .value;
+  double get price => (_$priceComputed ??= Computed<double>(() => super.price,
+          name: 'ProfitabilityFormBase.price'))
+      .value;
   Computed<double>? _$commissionForCostComputed;
 
   @override
@@ -109,38 +108,6 @@ mixin _$ProfitabilityForm on ProfitabilityFormBase, Store {
               name: 'ProfitabilityFormBase.profitability'))
           .value;
 
-  late final _$desiredCostValueAtom =
-      Atom(name: 'ProfitabilityFormBase.desiredCostValue', context: context);
-
-  @override
-  double get desiredCostValue {
-    _$desiredCostValueAtom.reportRead();
-    return super.desiredCostValue;
-  }
-
-  @override
-  set desiredCostValue(double value) {
-    _$desiredCostValueAtom.reportWrite(value, super.desiredCostValue, () {
-      super.desiredCostValue = value;
-    });
-  }
-
-  late final _$discountValueAtom =
-      Atom(name: 'ProfitabilityFormBase.discountValue', context: context);
-
-  @override
-  int get discountValue {
-    _$discountValueAtom.reportRead();
-    return super.discountValue;
-  }
-
-  @override
-  set discountValue(int value) {
-    _$discountValueAtom.reportWrite(value, super.discountValue, () {
-      super.discountValue = value;
-    });
-  }
-
   late final _$selectedTaxAtom =
       Atom(name: 'ProfitabilityFormBase.selectedTax', context: context);
 
@@ -160,8 +127,6 @@ mixin _$ProfitabilityForm on ProfitabilityFormBase, Store {
   @override
   String toString() {
     return '''
-desiredCostValue: ${desiredCostValue},
-discountValue: ${discountValue},
 selectedTax: ${selectedTax},
 logisticTariff: ${logisticTariff},
 logisticBaseCost: ${logisticBaseCost},
@@ -170,7 +135,7 @@ logisticCostForSize: ${logisticCostForSize},
 logisticCostForExtraLarge: ${logisticCostForExtraLarge},
 logisticTotalCost: ${logisticTotalCost},
 paidAcceptanceCost: ${paidAcceptanceCost},
-discountedCost: ${discountedCost},
+price: ${price},
 commissionForCost: ${commissionForCost},
 expenses: ${expenses},
 taxSize: ${taxSize},
