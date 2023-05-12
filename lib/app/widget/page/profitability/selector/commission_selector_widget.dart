@@ -69,8 +69,6 @@ class CommissionSelectorWidget extends StatelessWidget {
                 ),
               );
             },
-            hideKeyboardOnDrag: true,
-            hideSuggestionsOnKeyboardHide: false,
           ),
           Padding(
             padding: const EdgeInsets.all(8),

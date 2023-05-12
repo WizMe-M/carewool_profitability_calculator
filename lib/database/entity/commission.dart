@@ -15,13 +15,8 @@ class CommissionUpload {
 @collection
 class Commission {
   Id? id;
-
-  @Index(type: IndexType.value, caseSensitive: false)
   String? category;
-
-  @Index(type: IndexType.value, caseSensitive: false)
   String? itemName;
-
   double? fbo;
   double? fbs;
 

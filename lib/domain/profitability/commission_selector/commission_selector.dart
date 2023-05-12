@@ -26,14 +26,10 @@ abstract class CommissionSelectorBase with Store {
   }
 
   Future<List<Commission>> search(String pattern) async {
-    var word = pattern.trim();
+    var words = Isar.splitWords(pattern);
     var searchResults = await upload.commissions
         .filter()
-        .tagWordsElementStartsWith(word, caseSensitive: false)
-        .or()
-        .itemNameStartsWith(word, caseSensitive: false)
-        .or()
-        .categoryStartsWith(word, caseSensitive: false)
+        .allOf(words, (q, word) => q.tagWordsElementContains(word))
         .sortByItemName()
         .findAll();
     return searchResults;
