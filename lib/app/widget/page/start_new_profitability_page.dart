@@ -18,7 +18,7 @@ class StartNewProfitabilityPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Новый расчёт рентабельности'),
+        title: const Text('Рентабельность', style: TextStyle(fontSize: 18)),
       ),
       drawer: GetIt.I.get<SideBar>(),
       body: SafeArea(
@@ -38,7 +38,8 @@ class StartNewProfitabilityPage extends StatelessWidget {
             } else {
               return CostPriceSelectorWidget(
                 costPrices: _loader.costPrices,
-                lastUpload: _loader.lastUpload!,
+                lastCommissionUpload: _loader.lastCommissionUpload!,
+                lastStorageUpload: _loader.lastStorageUpload!,
               );
             }
           },

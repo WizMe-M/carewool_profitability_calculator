@@ -2,12 +2,11 @@ import 'dart:math';
 
 import 'package:mobx/mobx.dart';
 
+import '../../database/entity/commission.dart';
 import '../../database/entity/storage.dart';
-import '../../database/entity/upload.dart';
 import '../../database/entity/cost_price.dart';
-import 'category_selector/category_selector.dart';
-import 'inputs/cost_input.dart';
-import 'inputs/discount_input.dart';
+import 'commission_selector/commission_selector.dart';
+import 'pricing/pricing_form.dart';
 import 'simple_taxation_system_enum.dart';
 import 'size_form/size_form.dart';
 import 'storage_selector/storage_selector.dart';
@@ -18,32 +17,21 @@ class ProfitabilityForm = ProfitabilityFormBase with _$ProfitabilityForm;
 
 abstract class ProfitabilityFormBase with Store {
   final CostPrice costPrice;
-  final Upload upload;
   final StorageSelector storageSelector;
-  final CategorySelector categorySelector;
+  final CommissionSelector categorySelector;
 
   final sizeForm = SizeForm();
-  final desiredCost = CostInput();
-  final discount = DiscountInput();
-
-  @observable
-  double desiredCostValue = 0;
-
-  @observable
-  int discountValue = 0;
+  final pricingForm = PricingForm();
 
   @observable
   SimpleTaxationSystem selectedTax = SimpleTaxationSystem.perIncome;
 
-  ProfitabilityFormBase({required this.costPrice, required this.upload})
-      : storageSelector = StorageSelector(
-          list: upload.storages.value!,
-        ),
-        categorySelector = CategorySelector(
-          categoryList: upload.categories.value!,
-        ) {
-    addListeners();
-  }
+  ProfitabilityFormBase({
+    required this.costPrice,
+    required CommissionUpload commissions,
+    required StorageUpload storages,
+  })  : storageSelector = StorageSelector(upload: storages),
+        categorySelector = CommissionSelector(upload: commissions);
 
   @computed
   Tariff? get logisticTariff => storageSelector.selected?.tariffs
@@ -81,12 +69,12 @@ abstract class ProfitabilityFormBase with Store {
 
   // Income for one saled production
   @computed
-  double get discountedCost => desiredCostValue * (100 - discountValue) / 100;
+  double get price => pricingForm.priceBeforeRCD;
 
-  /// Commission on sale for set [discountedCost]
+  /// Commission on sale for set [price]
   @computed
   double get commissionForCost =>
-      discountedCost * categorySelector.fbsCommission;
+      price * categorySelector.fbsCommission;
 
   @computed
   double get expenses =>
@@ -100,9 +88,9 @@ abstract class ProfitabilityFormBase with Store {
     var tax = selectedTax.taxSize / 100;
     switch (selectedTax) {
       case SimpleTaxationSystem.perIncome:
-        return discountedCost * tax;
+        return price * tax;
       case SimpleTaxationSystem.perProfit:
-        return max<double>(0, discountedCost - expenses) * tax;
+        return max<double>(0, price - expenses) * tax;
     }
   }
 
@@ -110,17 +98,8 @@ abstract class ProfitabilityFormBase with Store {
   double get expensesWithTax => expenses + taxSize;
 
   @computed
-  double get profit => discountedCost - expensesWithTax;
+  double get profit => price - expensesWithTax;
 
   @computed
-  double get profitability => profit / discountedCost;
-
-  void addListeners() {
-    desiredCost.controller.addListener(() {
-      desiredCostValue = desiredCost.value;
-    });
-    discount.controller.addListener(() {
-      discountValue = discount.value;
-    });
-  }
+  double get profitability => profit / price;
 }

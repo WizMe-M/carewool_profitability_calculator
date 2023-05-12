@@ -16,61 +16,52 @@ mixin _$ExcelUploader on ExcelUploaderBase, Store {
       (_$isExecutingComputed ??= Computed<bool>(() => super.isExecuting,
               name: 'ExcelUploaderBase.isExecuting'))
           .value;
-
-  late final _$lastUploadAtom =
-      Atom(name: 'ExcelUploaderBase.lastUpload', context: context);
+  Computed<ImportExcelStatus>? _$currentStatusComputed;
 
   @override
-  Upload? get lastUpload {
-    _$lastUploadAtom.reportRead();
-    return super.lastUpload;
+  ImportExcelStatus get currentStatus => (_$currentStatusComputed ??=
+          Computed<ImportExcelStatus>(() => super.currentStatus,
+              name: 'ExcelUploaderBase.currentStatus'))
+      .value;
+  Computed<DateTime?>? _$lastUpdateTimeComputed;
+
+  @override
+  DateTime? get lastUpdateTime => (_$lastUpdateTimeComputed ??=
+          Computed<DateTime?>(() => super.lastUpdateTime,
+              name: 'ExcelUploaderBase.lastUpdateTime'))
+      .value;
+
+  late final _$isFetchingAtom =
+      Atom(name: 'ExcelUploaderBase.isFetching', context: context);
+
+  @override
+  bool get isFetching {
+    _$isFetchingAtom.reportRead();
+    return super.isFetching;
   }
 
   @override
-  set lastUpload(Upload? value) {
-    _$lastUploadAtom.reportWrite(value, super.lastUpload, () {
-      super.lastUpload = value;
+  set isFetching(bool value) {
+    _$isFetchingAtom.reportWrite(value, super.isFetching, () {
+      super.isFetching = value;
     });
   }
 
-  late final _$statusAtom =
-      Atom(name: 'ExcelUploaderBase.status', context: context);
+  late final _$fetchAsyncAction =
+      AsyncAction('ExcelUploaderBase.fetch', context: context);
 
   @override
-  ImportExcelStatus get status {
-    _$statusAtom.reportRead();
-    return super.status;
-  }
-
-  @override
-  set status(ImportExcelStatus value) {
-    _$statusAtom.reportWrite(value, super.status, () {
-      super.status = value;
-    });
-  }
-
-  late final _$updateLastUploadAsyncAction =
-      AsyncAction('ExcelUploaderBase.updateLastUpload', context: context);
-
-  @override
-  Future<void> updateLastUpload() {
-    return _$updateLastUploadAsyncAction.run(() => super.updateLastUpload());
-  }
-
-  late final _$uploadExcelAsyncAction =
-      AsyncAction('ExcelUploaderBase.uploadExcel', context: context);
-
-  @override
-  Future<void> uploadExcel() {
-    return _$uploadExcelAsyncAction.run(() => super.uploadExcel());
+  Future<void> fetch() {
+    return _$fetchAsyncAction.run(() => super.fetch());
   }
 
   @override
   String toString() {
     return '''
-lastUpload: ${lastUpload},
-status: ${status},
-isExecuting: ${isExecuting}
+isFetching: ${isFetching},
+isExecuting: ${isExecuting},
+currentStatus: ${currentStatus},
+lastUpdateTime: ${lastUpdateTime}
     ''';
   }
 }

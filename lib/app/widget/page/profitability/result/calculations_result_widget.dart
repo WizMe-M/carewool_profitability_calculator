@@ -13,7 +13,7 @@ class CalculationsResultWidget extends StatelessWidget {
 
   CalculationsResultWidget({required this.form, super.key});
 
-  String get income => _format.format(form.discountedCost);
+  String get income => _format.format(form.price);
 
   String get expenseProduction => _format.format(form.costPrice.total);
 

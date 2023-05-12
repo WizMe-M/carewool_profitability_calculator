@@ -1,3 +1,7 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:carewool_profitability_calculator/app/navigation/app_router.dart';
+import 'package:carewool_profitability_calculator/database/entity/commission.dart';
+import 'package:carewool_profitability_calculator/database/entity/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
@@ -96,26 +100,61 @@ class BottomTotalBar extends StatelessWidget {
       return;
     }
 
+    var messenger = ScaffoldMessenger.of(context);
     FocusManager.instance.primaryFocus?.unfocus();
     var costPrice = form.toEntity();
     _isar.writeTxn(() async {
       _isar.costPrices.put(costPrice);
     }).then((_) {
       _logger.i('Cost price was saved');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Расчёт сохранён'),
-          duration: Duration(seconds: 1),
+      messenger.showMaterialBanner(
+        MaterialBanner(
+          content: const Text('Расчёт себестоимости сохранён'),
+          actions: [
+            TextButton(
+              onPressed: () => onProfitabilityTap(context, costPrice),
+              child: const Text('Расчитать рентабельность'),
+            ),
+            TextButton(
+              onPressed: () {
+                messenger.hideCurrentMaterialBanner();
+              },
+              child: const Text('Скрыть'),
+            ),
+          ],
         ),
       );
     }).onError((e, s) {
       _logger.e('Caught an error while was saving cost calculation', e, s);
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         const SnackBar(
           content: Text('Не удалось сохранить расчет'),
           duration: Duration(seconds: 1),
         ),
       );
     });
+  }
+
+  void onProfitabilityTap(
+    BuildContext context,
+    CostPrice costPrice,
+  ) {
+    var commissionUpload =
+        _isar.commissionUploads.where().sortByUploadTimeDesc().findFirstSync();
+    var storageUpload =
+        _isar.storageUploads.where().sortByUploadTimeDesc().findFirstSync();
+
+    if (commissionUpload == null || storageUpload == null) {
+      context.router.push(ExcelUploadRoute());
+    } else {
+      context.router.push(
+        ProfitabilityRoute(
+          costPrice: costPrice,
+          lastCommissionUpload: commissionUpload,
+          lastStorageUpload: storageUpload,
+        ),
+      );
+    }
+    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
   }
 }

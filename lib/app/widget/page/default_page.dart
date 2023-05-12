@@ -17,11 +17,9 @@ class DefaultPage extends StatelessWidget {
       builder: (_, snapshot) {
         if (snapshot.hasData) {
           FlutterNativeSplash.remove();
-          return CostCalculatorPage(
-            form: CostPriceForm.defaultTemplate(),
-          );
+          return CostCalculatorPage(form: CostPriceForm.defaultTemplate());
         } else {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );

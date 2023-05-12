@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-import '../../../../../../domain/profitability/storage_selector/storage_selector.dart';
-import 'storage_info_widget.dart';
+import '../../../../../domain/profitability/commission_selector/commission_selector.dart';
 
-class StorageSelectorWidget extends StatelessWidget {
+class CommissionSelectorWidget extends StatelessWidget {
   final _searchController = TextEditingController();
-  final StorageSelector selector;
+  final CommissionSelector selector;
 
-  StorageSelectorWidget({super.key, required this.selector});
+  CommissionSelectorWidget({required this.selector, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +16,7 @@ class StorageSelectorWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           TypeAheadField(
             textFieldConfiguration: TextFieldConfiguration(
@@ -26,8 +26,8 @@ class StorageSelectorWidget extends StatelessWidget {
                   .copyWith(fontStyle: FontStyle.italic),
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
-                labelText: 'Склады',
-                hintText: 'Введите название склада',
+                labelText: 'Категории',
+                hintText: 'Введите название категории',
                 suffixIcon: IconButton(
                   onPressed: () {
                     selector.selected = null;
@@ -41,11 +41,14 @@ class StorageSelectorWidget extends StatelessWidget {
               return await selector.search(pattern);
             },
             itemBuilder: (context, suggestion) {
-              return ListTile(title: Text(suggestion.name!));
+              return ListTile(
+                title: Text(suggestion.itemName!),
+                subtitle: Text(suggestion.category!),
+              );
             },
             onSuggestionSelected: (suggestion) {
               selector.selected = suggestion;
-              _searchController.text = suggestion.name!;
+              _searchController.text = suggestion.itemName!;
             },
             loadingBuilder: (_) {
               return const Center(child: CircularProgressIndicator());
@@ -58,7 +61,7 @@ class StorageSelectorWidget extends StatelessWidget {
             noItemsFoundBuilder: (context) {
               return const Center(
                 child: Text(
-                  'Не найдено складов',
+                  'Не найдено категорий',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -67,20 +70,17 @@ class StorageSelectorWidget extends StatelessWidget {
               );
             },
           ),
-          Observer(
-            builder: (context) {
-              return selector.selected != null
-                  ? StorageInfoWidget(storage: selector.selected!)
-                  : const Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Center(
-                        child: Text(
-                          'Выберите склад',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    );
-            },
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Observer(
+              builder: (_) {
+                return Text(
+                  'Категория: ${selector.categoryName}\n'
+                  'Коммиссия FBO = ${selector.fboCommission}%',
+                  textAlign: TextAlign.center,
+                );
+              },
+            ),
           ),
         ],
       ),

@@ -1,13 +1,12 @@
 import 'dart:io';
 
-import 'entity/category.dart';
-import 'entity/storage.dart';
-import 'entity/upload.dart';
 import 'package:isar/isar.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'entity/commission.dart';
 import 'entity/cost_price.dart';
+import 'entity/storage.dart';
 
 Future<Isar> openIsarDatabase() async {
   final appDocuments = await getApplicationDocumentsDirectory();
@@ -17,9 +16,10 @@ Future<Isar> openIsarDatabase() async {
   final isar = await Isar.open(
     [
       CostPriceSchema,
-      StorageListSchema,
-      CategoryListSchema,
-      UploadSchema,
+      CommissionUploadSchema,
+      CommissionSchema,
+      StorageUploadSchema,
+      StorageSchema,
     ],
     directory: path,
   );
