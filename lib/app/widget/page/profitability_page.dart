@@ -36,7 +36,7 @@ class ProfitabilityPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Калькулятор рентабельности'),
+        title: const Text('Рентабельность', style: TextStyle(fontSize: 18)),
       ),
       drawer: GetIt.I.get<SideBar>(),
       body: SafeArea(
