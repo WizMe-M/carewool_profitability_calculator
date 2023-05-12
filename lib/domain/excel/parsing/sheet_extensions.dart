@@ -8,20 +8,20 @@ extension SheetParser on Sheet {
 
     if (c.isFormula) {
       // TODO: check on @__xludf.dummyfunction
-    } else if (T == String) {
-      if (value is SharedString) return value.toString() as T;
-      return value as T;
-    } else if (value is T) {
-      return value;
-    } else if (value is num) {
+    } else if (value is SharedString || value is num) {
+      var string = value.toString();
       switch (T) {
         case double:
-          return value.toDouble() as T;
+          return double.tryParse(string.replaceAll(',', '.')) as T?;
         case int:
-          return value.toInt() as T;
+          return int.tryParse(string) as T?;
         case num:
-          return value as T;
+          return num.tryParse(string) as T?;
+        case String:
+          return string as T;
       }
+    } else if (value is T) {
+      return value;
     }
 
     return null;
