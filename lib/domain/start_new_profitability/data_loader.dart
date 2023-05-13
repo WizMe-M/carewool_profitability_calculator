@@ -20,7 +20,7 @@ class DataLoader {
   /// Fetches data from database asynchronously.
   /// Returns set of errors happened during fetching. Possible errors:
   /// - [LoadError.noSavedCostPrices] - list of cost prices is empty
-  /// - [LoadError.missingStorageUpload] - there is no upload of storages
+  /// - [LoadError.missingUploads] - there is no upload of storages
   /// - [LoadError.missingCommissionUpload] - there is no upload of commissions
   Future<Set<LoadError>> fetchData() async {
     var errors = <LoadError>{};
@@ -35,7 +35,7 @@ class DataLoader {
         await _isar.storageUploads.where().sortByUploadTimeDesc().findFirst();
     if (lastStorageUpload == null) {
       _logger.w('No storage upload was found');
-      errors.add(LoadError.missingStorageUpload);
+      errors.add(LoadError.missingUploads);
     }
 
     lastCommissionUpload = await _isar.commissionUploads
@@ -44,7 +44,7 @@ class DataLoader {
         .findFirst();
     if (lastCommissionUpload == null) {
       _logger.w('No commission upload was found');
-      errors.add(LoadError.missingCommissionUpload);
+      errors.add(LoadError.missingUploads);
     }
 
     return errors;

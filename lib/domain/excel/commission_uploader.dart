@@ -79,6 +79,7 @@ abstract class CommissionUploaderBase with Store {
     }
 
     var upload = CommissionUpload()
+      ..fileName = file.name
       ..uploadTime = DateTime.now()
       ..commissions.addAll(commissions);
     _isar.writeTxn(() async {

@@ -28,14 +28,15 @@ class StartUploadWidget extends StatelessWidget {
           ),
           Observer(
             builder: (context) {
-              var upload = uploader.storageUploader.lastUpdated;
+              var upload = uploader.storageUploader.lastUpload;
               if (upload != null) {
                 return Text(
-                  'Загружено: ${_formatter.format(upload)}',
+                  'Файл: ${upload.fileName}\n'
+                  'Загружено: ${_formatter.format(upload.uploadTime)}',
                   textAlign: TextAlign.center,
                 );
               }
-              return const Spacer();
+              return const SizedBox.shrink();
             },
           ),
           const SizedBox(height: 40),
@@ -51,14 +52,15 @@ class StartUploadWidget extends StatelessWidget {
           ),
           Observer(
             builder: (context) {
-              var upload = uploader.commissionUploader.lastUpdated;
+              var upload = uploader.commissionUploader.lastUpload;
               if (upload != null) {
                 return Text(
-                  'Загружено: ${_formatter.format(upload)}',
+                  'Файл: ${upload.fileName}\n'
+                  'Загружено: ${_formatter.format(upload.uploadTime)}',
                   textAlign: TextAlign.center,
                 );
               }
-              return const Spacer();
+              return const SizedBox.shrink();
             },
           ),
           const Spacer(),

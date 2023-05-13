@@ -5,6 +5,7 @@ part 'commission.g.dart';
 @collection
 class CommissionUpload {
   Id? id;
+  late String fileName;
 
   @Index(unique: true)
   late DateTime uploadTime;

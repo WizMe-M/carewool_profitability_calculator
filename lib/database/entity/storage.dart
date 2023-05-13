@@ -5,6 +5,7 @@ part 'storage.g.dart';
 @collection
 class StorageUpload {
   Id? id;
+  late String fileName;
 
   @Index(unique: true)
   late DateTime uploadTime;
