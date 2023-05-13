@@ -77,6 +77,7 @@ abstract class StorageUploaderBase with Store {
     }
 
     var upload = StorageUpload()
+      ..fileName = file.name
       ..uploadTime = DateTime.now()
       ..storages.addAll(storages);
     _isar.writeTxn(() async {

@@ -17,8 +17,13 @@ const CommissionUploadSchema = CollectionSchema(
   name: r'CommissionUpload',
   id: 5709928892684947988,
   properties: {
-    r'uploadTime': PropertySchema(
+    r'fileName': PropertySchema(
       id: 0,
+      name: r'fileName',
+      type: IsarType.string,
+    ),
+    r'uploadTime': PropertySchema(
+      id: 1,
       name: r'uploadTime',
       type: IsarType.dateTime,
     )
@@ -64,6 +69,7 @@ int _commissionUploadEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.fileName.length * 3;
   return bytesCount;
 }
 
@@ -73,7 +79,8 @@ void _commissionUploadSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDateTime(offsets[0], object.uploadTime);
+  writer.writeString(offsets[0], object.fileName);
+  writer.writeDateTime(offsets[1], object.uploadTime);
 }
 
 CommissionUpload _commissionUploadDeserialize(
@@ -83,8 +90,9 @@ CommissionUpload _commissionUploadDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = CommissionUpload();
+  object.fileName = reader.readString(offsets[0]);
   object.id = id;
-  object.uploadTime = reader.readDateTime(offsets[0]);
+  object.uploadTime = reader.readDateTime(offsets[1]);
   return object;
 }
 
@@ -96,6 +104,8 @@ P _commissionUploadDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readString(offset)) as P;
+    case 1:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -358,6 +368,142 @@ extension CommissionUploadQueryWhere
 extension CommissionUploadQueryFilter
     on QueryBuilder<CommissionUpload, CommissionUpload, QFilterCondition> {
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      fileNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      fileNameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      fileNameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      fileNameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'fileName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      fileNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      fileNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      fileNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      fileNameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'fileName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      fileNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fileName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
+      fileNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'fileName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterFilterCondition>
       idIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -558,6 +704,20 @@ extension CommissionUploadQueryLinks
 extension CommissionUploadQuerySortBy
     on QueryBuilder<CommissionUpload, CommissionUpload, QSortBy> {
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterSortBy>
+      sortByFileName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterSortBy>
+      sortByFileNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileName', Sort.desc);
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterSortBy>
       sortByUploadTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'uploadTime', Sort.asc);
@@ -574,6 +734,20 @@ extension CommissionUploadQuerySortBy
 
 extension CommissionUploadQuerySortThenBy
     on QueryBuilder<CommissionUpload, CommissionUpload, QSortThenBy> {
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterSortBy>
+      thenByFileName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QAfterSortBy>
+      thenByFileNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileName', Sort.desc);
+    });
+  }
+
   QueryBuilder<CommissionUpload, CommissionUpload, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -605,6 +779,13 @@ extension CommissionUploadQuerySortThenBy
 extension CommissionUploadQueryWhereDistinct
     on QueryBuilder<CommissionUpload, CommissionUpload, QDistinct> {
   QueryBuilder<CommissionUpload, CommissionUpload, QDistinct>
+      distinctByFileName({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'fileName', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<CommissionUpload, CommissionUpload, QDistinct>
       distinctByUploadTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'uploadTime');
@@ -617,6 +798,12 @@ extension CommissionUploadQueryProperty
   QueryBuilder<CommissionUpload, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<CommissionUpload, String, QQueryOperations> fileNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'fileName');
     });
   }
 

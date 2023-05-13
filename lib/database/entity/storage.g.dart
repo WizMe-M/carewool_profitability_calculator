@@ -17,8 +17,13 @@ const StorageUploadSchema = CollectionSchema(
   name: r'StorageUpload',
   id: 9173515174592646890,
   properties: {
-    r'uploadTime': PropertySchema(
+    r'fileName': PropertySchema(
       id: 0,
+      name: r'fileName',
+      type: IsarType.string,
+    ),
+    r'uploadTime': PropertySchema(
+      id: 1,
       name: r'uploadTime',
       type: IsarType.dateTime,
     )
@@ -64,6 +69,7 @@ int _storageUploadEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.fileName.length * 3;
   return bytesCount;
 }
 
@@ -73,7 +79,8 @@ void _storageUploadSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeDateTime(offsets[0], object.uploadTime);
+  writer.writeString(offsets[0], object.fileName);
+  writer.writeDateTime(offsets[1], object.uploadTime);
 }
 
 StorageUpload _storageUploadDeserialize(
@@ -83,8 +90,9 @@ StorageUpload _storageUploadDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = StorageUpload();
+  object.fileName = reader.readString(offsets[0]);
   object.id = id;
-  object.uploadTime = reader.readDateTime(offsets[0]);
+  object.uploadTime = reader.readDateTime(offsets[1]);
   return object;
 }
 
@@ -96,6 +104,8 @@ P _storageUploadDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readString(offset)) as P;
+    case 1:
       return (reader.readDateTime(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -356,6 +366,142 @@ extension StorageUploadQueryWhere
 
 extension StorageUploadQueryFilter
     on QueryBuilder<StorageUpload, StorageUpload, QFilterCondition> {
+  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
+      fileNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
+      fileNameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
+      fileNameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
+      fileNameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'fileName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
+      fileNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
+      fileNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
+      fileNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'fileName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
+      fileNameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'fileName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
+      fileNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'fileName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition>
+      fileNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'fileName',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<StorageUpload, StorageUpload, QAfterFilterCondition> idIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -553,6 +699,19 @@ extension StorageUploadQueryLinks
 
 extension StorageUploadQuerySortBy
     on QueryBuilder<StorageUpload, StorageUpload, QSortBy> {
+  QueryBuilder<StorageUpload, StorageUpload, QAfterSortBy> sortByFileName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterSortBy>
+      sortByFileNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileName', Sort.desc);
+    });
+  }
+
   QueryBuilder<StorageUpload, StorageUpload, QAfterSortBy> sortByUploadTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'uploadTime', Sort.asc);
@@ -569,6 +728,19 @@ extension StorageUploadQuerySortBy
 
 extension StorageUploadQuerySortThenBy
     on QueryBuilder<StorageUpload, StorageUpload, QSortThenBy> {
+  QueryBuilder<StorageUpload, StorageUpload, QAfterSortBy> thenByFileName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<StorageUpload, StorageUpload, QAfterSortBy>
+      thenByFileNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'fileName', Sort.desc);
+    });
+  }
+
   QueryBuilder<StorageUpload, StorageUpload, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -597,6 +769,13 @@ extension StorageUploadQuerySortThenBy
 
 extension StorageUploadQueryWhereDistinct
     on QueryBuilder<StorageUpload, StorageUpload, QDistinct> {
+  QueryBuilder<StorageUpload, StorageUpload, QDistinct> distinctByFileName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'fileName', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<StorageUpload, StorageUpload, QDistinct> distinctByUploadTime() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'uploadTime');
@@ -609,6 +788,12 @@ extension StorageUploadQueryProperty
   QueryBuilder<StorageUpload, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<StorageUpload, String, QQueryOperations> fileNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'fileName');
     });
   }
 
