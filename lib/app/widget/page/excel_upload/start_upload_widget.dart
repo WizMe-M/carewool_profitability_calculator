@@ -35,7 +35,7 @@ class StartUploadWidget extends StatelessWidget {
                   textAlign: TextAlign.center,
                 );
               }
-              return const Spacer();
+              return const SizedBox.shrink();
             },
           ),
           const SizedBox(height: 40),
@@ -58,7 +58,7 @@ class StartUploadWidget extends StatelessWidget {
                   textAlign: TextAlign.center,
                 );
               }
-              return const Spacer();
+              return const SizedBox.shrink();
             },
           ),
           const Spacer(),
