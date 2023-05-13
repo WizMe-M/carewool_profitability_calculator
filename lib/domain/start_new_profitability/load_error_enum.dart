@@ -5,12 +5,8 @@ import '../../app/navigation/app_router.dart';
 import '../cost_price/form/cost_price_form.dart';
 
 enum LoadError {
-  missingCommissionUpload(
-    'Не были загружены данные о комиссиях категорий',
-    'Перейти на страницу загрузки',
-  ),
-  missingStorageUpload(
-    'Не были загружены данные о тарифах складов',
+  missingUploads(
+    'Не были импортированы необходимые для расчётов данные',
     'Перейти на страницу загрузки',
   ),
   noSavedCostPrices(
@@ -30,8 +26,7 @@ enum LoadError {
           var form = CostPriceForm.defaultTemplate();
           ctx.router.push(CostCalculatorRoute(form: form));
         };
-      case LoadError.missingCommissionUpload:
-      case LoadError.missingStorageUpload:
+      case LoadError.missingUploads:
         return (BuildContext ctx) => ctx.router.push(ExcelUploadRoute());
     }
   }

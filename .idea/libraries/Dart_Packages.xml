@@ -338,6 +338,13 @@
             </list>
           </value>
         </entry>
+        <entry key="flutter_typeahead">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_typeahead-4.3.8/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="flutter_web_plugins">
           <value>
             <list>
