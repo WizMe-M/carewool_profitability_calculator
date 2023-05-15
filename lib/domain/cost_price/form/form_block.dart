@@ -6,7 +6,7 @@ class FormBlock {
   final String title;
 
   /// Список полей блока
-  final List<Input> inputs;
+  final List<CostPriceInput> inputs;
 
   FormBlock({required this.title, required this.inputs});
 }

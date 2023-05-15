@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../domain/cost_price/form/form_block.dart';
-import 'input_widget.dart';
+import 'cost_price_input_widget.dart';
 import 'position_enum.dart';
 
 class FormBlockWidget extends StatelessWidget {
@@ -44,7 +44,7 @@ class FormBlockWidget extends StatelessWidget {
 
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: InputWidget(input: input, position: inputPosition),
+                    child: CostPriceInputWidget(input: input, position: inputPosition),
                   );
                 },
               )

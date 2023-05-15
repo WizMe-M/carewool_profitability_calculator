@@ -36,7 +36,7 @@ abstract class CostPriceFormBase with Store {
   List<FormBlock> blocks = [];
 
   /// All form's inputs
-  List<Input> allInputs = [];
+  List<CostPriceInput> allInputs = [];
 
   /// [TextEditingController] of product name
   final TextEditingController productNameController = TextEditingController();
@@ -46,7 +46,7 @@ abstract class CostPriceFormBase with Store {
       return FormBlock(
         title: entry.key,
         inputs: entry.value.map((inputLabel) {
-          return Input(label: inputLabel);
+          return CostPriceInput(label: inputLabel);
         }).toList(),
       );
     }).toList();
@@ -68,7 +68,7 @@ abstract class CostPriceFormBase with Store {
         FormBlock(
           title: block.name!,
           inputs: block.parts!
-              .map((part) => Input.withText(
+              .map((part) => CostPriceInput.withText(
                     label: part.name!,
                     text: part.cost! > 0 ? formatter.format(part.cost) : '',
                   ))

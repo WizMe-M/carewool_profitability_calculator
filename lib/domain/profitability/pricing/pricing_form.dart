@@ -1,8 +1,8 @@
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
-import 'cost_input.dart';
-import 'discount_input.dart';
+import '../../inputs/double_input.dart';
+import '../../inputs/discount_input.dart';
 
 part 'pricing_form.g.dart';
 
@@ -12,9 +12,9 @@ abstract class PricingFormBase with Store {
   final _formatter = NumberFormat()
     ..minimumFractionDigits = 0
     ..maximumFractionDigits = 2;
-  CostInput customerPriceInput = CostInput();
-  DiscountInput regularCustomerDiscountInput = DiscountInput();
-  DiscountInput sellerDiscountInput = DiscountInput();
+  final customerPriceInput = DoubleInput();
+  final regularCustomerDiscountInput = DiscountInput();
+  final sellerDiscountInput = DiscountInput();
 
   PricingFormBase() {
     initListeners();

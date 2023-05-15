@@ -16,6 +16,7 @@ class PricingFormWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: form.customerPriceInput.controller,
           validator: form.customerPriceInput.validate,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -30,6 +31,7 @@ class PricingFormWidget extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: form.regularCustomerDiscountInput.controller,
           validator: form.regularCustomerDiscountInput.validate,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -53,6 +55,7 @@ class PricingFormWidget extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         TextFormField(
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: form.sellerDiscountInput.controller,
           validator: form.sellerDiscountInput.validate,
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
