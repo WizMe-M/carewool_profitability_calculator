@@ -18,31 +18,38 @@ class StartUploadWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: 'Загрузите файл с названием типа '
-                      '"Логистика, хранение, приёмка гггг-мм-дд" с ',
-                    style: Theme.of(context).textTheme.bodyMedium
-                ),
-                TextSpan(
-                  text: 'сайта WB (раздел "Логистика, хранение, приёмка")',
-                  style: const TextStyle(
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Скачайте файл с ',
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      var url = Uri(
-                        scheme: 'https',
-                        host: 'seller.wildberries.ru',
-                        path: '/dynamic-product-categories/delivery',
-                      );
-                      launchUrl(url, mode: LaunchMode.externalApplication);
-                    },
-                ),
-              ],
+                  TextSpan(
+                    text: 'сайта WB\n',
+                    style: const TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        var url = Uri(
+                          scheme: 'https',
+                          host: 'seller.wildberries.ru',
+                          path: '/dynamic-product-categories/delivery',
+                        );
+                        launchUrl(url, mode: LaunchMode.externalApplication);
+                      },
+                  ),
+                  TextSpan(
+                    text: '(раздел "Логистика, хранение, приёмка")',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
             ),
           ),
           Observer(
@@ -51,7 +58,11 @@ class StartUploadWidget extends StatelessWidget {
                 onPressed: uploader.isExecuting
                     ? null
                     : () async => await uploader.storageUploader.upload(),
-                child: const Text('Загрузить склады'),
+                child: const Text(
+                  'Импортировать файл\n'
+                  '"Логистика, хранение, приёмка гггг-мм-дд"',
+                  textAlign: TextAlign.center,
+                ),
               );
             },
           ),
@@ -68,31 +79,38 @@ class StartUploadWidget extends StatelessWidget {
               return const SizedBox.shrink();
             },
           ),
-          const SizedBox(height: 40),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  text: 'Загрузите файл с названием типа "Комиссия" с ',
-                  style: Theme.of(context).textTheme.bodyMedium
-                ),
-                TextSpan(
-                  text: 'сайта WB (раздел "Коммиссия")',
-                  style: const TextStyle(
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
+          const SizedBox(height: 80),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                      text: 'Скачайте файл с ',
+                      style: Theme.of(context).textTheme.bodyMedium,),
+                  TextSpan(
+                    text: 'сайта WB\n',
+                    style: const TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        var url = Uri(
+                          scheme: 'https',
+                          host: 'seller.wildberries.ru',
+                          path: '/dynamic-product-categories/commission',
+                        );
+                        launchUrl(url, mode: LaunchMode.externalApplication);
+                      },
                   ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () {
-                      var url = Uri(
-                        scheme: 'https',
-                        host: 'seller.wildberries.ru',
-                        path: '/dynamic-product-categories/commission',
-                      );
-                      launchUrl(url, mode: LaunchMode.externalApplication);
-                    },
-                ),
-              ],
+                  TextSpan(
+                    text: '(раздел "Коммиссия")',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
             ),
           ),
           Observer(
@@ -101,7 +119,7 @@ class StartUploadWidget extends StatelessWidget {
                 onPressed: uploader.isExecuting
                     ? null
                     : () async => await uploader.commissionUploader.upload(),
-                child: const Text('Загрузить комиссии'),
+                child: const Text('Импортировать файл "Комиссия"'),
               );
             },
           ),
