@@ -25,12 +25,8 @@ class LogisticResultWidget extends StatelessWidget {
                 fontSize: 16,
               ),
             ),
-            Text('Стоимость за размеры продукции: '
-                '${profitabilityForm.logisticCostForSize} (${profitabilityForm.logisticBaseCost} + '
-                '${profitabilityForm.logisticCostPerLiter}*'
-                '${profitabilityForm.sizeForm.overLiterCap})$rubleCurrency'),
             if (profitabilityForm.sizeForm.isExtraLargeProduct)
-              const Text('Минимальная стоимость для СКГТ: 1000$rubleCurrency'),
+              const Text('*Минимальная стоимость для СКГТ: 1000$rubleCurrency'),
           ],
         ),
       ),
