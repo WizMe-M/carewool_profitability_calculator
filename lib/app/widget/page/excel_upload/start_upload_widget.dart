@@ -1,6 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../domain/excel/excel_uploader.dart';
 
@@ -16,6 +18,33 @@ class StartUploadWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: 'Загрузите файл с названием типа '
+                      '"Логистика, хранение, приёмка гггг-мм-дд" с ',
+                    style: Theme.of(context).textTheme.bodyMedium
+                ),
+                TextSpan(
+                  text: 'сайта WB (раздел "Логистика, хранение, приёмка")',
+                  style: const TextStyle(
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      var url = Uri(
+                        scheme: 'https',
+                        host: 'seller.wildberries.ru',
+                        path: '/dynamic-product-categories/delivery',
+                      );
+                      launchUrl(url, mode: LaunchMode.externalApplication);
+                    },
+                ),
+              ],
+            ),
+          ),
           Observer(
             builder: (context) {
               return ElevatedButton(
@@ -40,6 +69,32 @@ class StartUploadWidget extends StatelessWidget {
             },
           ),
           const SizedBox(height: 40),
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: 'Загрузите файл с названием типа "Комиссия" с ',
+                  style: Theme.of(context).textTheme.bodyMedium
+                ),
+                TextSpan(
+                  text: 'сайта WB (раздел "Коммиссия")',
+                  style: const TextStyle(
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      var url = Uri(
+                        scheme: 'https',
+                        host: 'seller.wildberries.ru',
+                        path: '/dynamic-product-categories/commission',
+                      );
+                      launchUrl(url, mode: LaunchMode.externalApplication);
+                    },
+                ),
+              ],
+            ),
+          ),
           Observer(
             builder: (context) {
               return ElevatedButton(
