@@ -73,16 +73,17 @@ abstract class ProfitabilityFormBase with Store {
 
   /// Commission on sale for set [price]
   @computed
-  double get commissionForCost =>
-      price * categorySelector.fbsCommission;
+  double get commissionForCost => price * categorySelector.fbsCommission / 100;
 
+  /// Expenses on sale
   @computed
   double get expenses =>
       costPrice.total! +
-      categorySelector.fbsCommission +
+      commissionForCost +
       logisticTotalCost +
       paidAcceptanceCost;
 
+  /// Amount of tax to pay
   @computed
   double get taxSize {
     var tax = selectedTax.taxSize / 100;
@@ -94,12 +95,15 @@ abstract class ProfitabilityFormBase with Store {
     }
   }
 
+  /// Total expenses after tax payment
   @computed
   double get expensesWithTax => expenses + taxSize;
 
+  /// Profit from production sale
   @computed
   double get profit => price - expensesWithTax;
 
+  /// Profitability of sale (from 0 to 1)
   @computed
   double get profitability => profit / price;
 }
