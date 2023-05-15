@@ -1,16 +1,18 @@
 import 'validator.dart';
 
-class DiscountValidator implements Validator<String?> {
+class DiscountValidator extends Validator<String?> {
   @override
-  String? validate(String? s) {
-    if (s == null || s.isEmpty) return null;
+  Set<String> validate(String? object) {
+    var errors = <String>{};
+    if (object == null || object.isEmpty) return errors;
 
-    var num = int.tryParse(s);
-    if (num == null) return 'Введите целое число';
-    if (num < 0 || num >= 100) {
-      return 'Процентное значение должно быть в диапазоне от 0 до 99';
+    var num = int.tryParse(object);
+    if (num == null) {
+      errors.add('Введите целое число');
+    } else if (num < 0 || num >= 100) {
+      errors.add('Процентное значение должно быть в диапазоне от 0 до 99');
     }
 
-    return null;
+    return errors;
   }
 }

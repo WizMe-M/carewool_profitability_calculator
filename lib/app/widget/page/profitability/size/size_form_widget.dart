@@ -61,9 +61,9 @@ class SizeFormWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${form.width.formatted}см '
-                      '* ${form.height.formatted}см '
-                      '* ${form.length.formatted}см '
+                      '${form.widthFormatted}см '
+                      '* ${form.heightFormatted}см '
+                      '* ${form.lengthFormatted}см '
                       '= ${form.volume}мл',
                     ),
                     Text('(будет округлен до ${form.volumeInLiters}л)'),

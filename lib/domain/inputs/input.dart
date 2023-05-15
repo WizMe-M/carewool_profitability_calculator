@@ -31,7 +31,7 @@ abstract class Input<T extends num> {
   }
 
   /// Validates text with validator's method
-  String? validate(String? s) => validator.validate(text);
+  String? validate(String? s) => validator.validateOnce(text);
 
   /// Returns parsed input's text
   T? parseInput();
