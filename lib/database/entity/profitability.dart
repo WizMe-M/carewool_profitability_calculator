@@ -11,6 +11,8 @@ part 'profitability.g.dart';
 class ProfitabilityCalc {
   Id? id;
 
+  late DateTime savedDate;
+  late double profitability;
   late Size size;
   late Pricing pricing;
 

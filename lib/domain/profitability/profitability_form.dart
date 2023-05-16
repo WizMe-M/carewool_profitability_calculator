@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:mobx/mobx.dart';
 
 import '../../database/entity/commission.dart';
- import '../../database/entity/profitability.dart';
+import '../../database/entity/profitability.dart';
 import '../../database/entity/storage.dart';
 import '../../database/entity/cost_price.dart';
 import 'commission_selector/commission_selector.dart';
@@ -118,6 +118,8 @@ abstract class ProfitabilityFormBase with Store {
       ..regularCustomerDiscount = pricingForm.regularCustomerDiscount
       ..sellerDiscount = pricingForm.sellerDiscount;
     var entity = ProfitabilityCalc()
+      ..savedDate = DateTime.now()
+      ..profitability = profitability
       ..pricing = pricing
       ..size = size
       ..tax = selectedTax

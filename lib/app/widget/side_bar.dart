@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 
 import '../../database/entity/cost_price.dart';
+import '../../database/entity/profitability.dart';
 import '../../domain/cost_price/form/cost_price_form.dart';
 import '../../domain/excel/excel_uploader.dart';
 import '../navigation/app_router.dart';
@@ -24,6 +25,10 @@ class SideBar extends StatelessWidget {
       await _uploader.fetch();
       return _uploader.lastUpdateTime;
     });
+  }
+
+  Future get profitabilityCalcFuture {
+    return Future(() async => await _isar.profitabilityCalcs.count());
   }
 
   @override
@@ -116,6 +121,24 @@ class SideBar extends StatelessWidget {
             leading: const Icon(Icons.add),
             title: const Text('Добавить новый расчёт'),
             onTap: () => context.router.push(StartNewProfitabilityRoute()),
+          ),
+          ListTile(
+            leading: const Icon(Icons.list),
+            title: const Text('Сохраненные'),
+            trailing: FutureBuilder(
+              future: profitabilityCalcFuture,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  var count = snapshot.data!;
+                  return count > 0
+                      ? Counter(count: count)
+                      : const SizedBox.shrink();
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
+            ),
+            onTap: () => context.router.push(ProfitabilityCalcHistoryRoute()),
           ),
         ],
       ),
