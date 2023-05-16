@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../../domain/cost_price/form/input.dart';
 import 'position_enum.dart';
 
-class InputWidget extends StatelessWidget {
+class CostPriceInputWidget extends StatelessWidget {
   final Position position;
-  final Input input;
+  final CostPriceInput input;
 
-  const InputWidget({required this.position, required this.input, super.key});
+  const CostPriceInputWidget({required this.position, required this.input, super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -3,11 +3,12 @@ import 'dart:math';
 import 'package:mobx/mobx.dart';
 
 import '../../database/entity/commission.dart';
+import '../../database/entity/profitability.dart';
 import '../../database/entity/storage.dart';
 import '../../database/entity/cost_price.dart';
 import 'commission_selector/commission_selector.dart';
 import 'pricing/pricing_form.dart';
-import 'simple_taxation_system_enum.dart';
+import '../../database/simple_taxation_system_enum.dart';
 import 'size_form/size_form.dart';
 import 'storage_selector/storage_selector.dart';
 
@@ -73,16 +74,17 @@ abstract class ProfitabilityFormBase with Store {
 
   /// Commission on sale for set [price]
   @computed
-  double get commissionForCost =>
-      price * categorySelector.fbsCommission;
+  double get commissionForCost => price * categorySelector.fbsCommission / 100;
 
+  /// Expenses on sale
   @computed
   double get expenses =>
       costPrice.total! +
-      categorySelector.fbsCommission +
+      commissionForCost +
       logisticTotalCost +
       paidAcceptanceCost;
 
+  /// Amount of tax to pay
   @computed
   double get taxSize {
     var tax = selectedTax.taxSize / 100;
@@ -94,12 +96,36 @@ abstract class ProfitabilityFormBase with Store {
     }
   }
 
+  /// Total expenses after tax payment
   @computed
   double get expensesWithTax => expenses + taxSize;
 
+  /// Profit from production sale
   @computed
   double get profit => price - expensesWithTax;
 
+  /// Profitability of sale (from 0 to 1)
   @computed
   double get profitability => profit / price;
+
+  ProfitabilityCalc toEntity() {
+    var size = Size()
+      ..width = sizeForm.width.value
+      ..length = sizeForm.length.value
+      ..height = sizeForm.height.value;
+    var pricing = Pricing()
+      ..customerPrice = pricingForm.customerPrice
+      ..regularCustomerDiscount = pricingForm.regularCustomerDiscount
+      ..sellerDiscount = pricingForm.sellerDiscount;
+    var entity = ProfitabilityCalc()
+      ..savedDate = DateTime.now()
+      ..profitability = profitability
+      ..pricing = pricing
+      ..size = size
+      ..tax = selectedTax
+      ..commission.value = categorySelector.selected
+      ..storage.value = storageSelector.selected
+      ..costPrice.value = costPrice;
+    return entity;
+  }
 }

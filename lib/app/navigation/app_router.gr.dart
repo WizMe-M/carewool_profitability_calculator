@@ -77,6 +77,14 @@ abstract class _$AppRouter extends RootStackRouter {
         child: StartNewProfitabilityPage(key: args.key),
       );
     },
+    ProfitabilityCalcHistoryRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfitabilityCalcHistoryRouteArgs>(
+          orElse: () => const ProfitabilityCalcHistoryRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ProfitabilityCalcHistoryPage(key: args.key),
+      );
+    },
   };
 }
 
@@ -303,5 +311,35 @@ class StartNewProfitabilityRouteArgs {
   @override
   String toString() {
     return 'StartNewProfitabilityRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
+/// [ProfitabilityCalcHistoryPage]
+class ProfitabilityCalcHistoryRoute
+    extends PageRouteInfo<ProfitabilityCalcHistoryRouteArgs> {
+  ProfitabilityCalcHistoryRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ProfitabilityCalcHistoryRoute.name,
+          args: ProfitabilityCalcHistoryRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfitabilityCalcHistoryRoute';
+
+  static const PageInfo<ProfitabilityCalcHistoryRouteArgs> page =
+      PageInfo<ProfitabilityCalcHistoryRouteArgs>(name);
+}
+
+class ProfitabilityCalcHistoryRouteArgs {
+  const ProfitabilityCalcHistoryRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfitabilityCalcHistoryRouteArgs{key: $key}';
   }
 }

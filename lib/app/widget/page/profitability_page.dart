@@ -12,6 +12,7 @@ import 'profitability/result/logistic_result_widget.dart';
 import 'profitability/size/size_form_widget.dart';
 import 'profitability/selector/storage/storage_selector_widget.dart';
 import 'profitability/result/calculations_result_widget.dart';
+import 'profitability/save_button.dart';
 import 'profitability/selector/commission_selector_widget.dart';
 import 'profitability/selector/tax_selector_widget.dart';
 
@@ -53,6 +54,7 @@ class ProfitabilityPage extends StatelessWidget {
                 PricingFormWidget(form: _form.pricingForm),
                 TaxSelectorWidget(form: _form),
                 CalculationsResultWidget(form: _form),
+                SaveButton(form: _form),
               ],
             ),
           ),

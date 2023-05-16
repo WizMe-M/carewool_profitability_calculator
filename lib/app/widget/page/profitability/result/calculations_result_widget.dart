@@ -19,26 +19,52 @@ class CalculationsResultWidget extends StatelessWidget {
 
   String get expenseLogistics => _format.format(form.logisticTotalCost);
 
+  String get expenseCommission => _format.format(form.commissionForCost);
+
+  String get expenseAcceptance => _format.format(form.paidAcceptanceCost);
+
   String get expenseTax => _format.format(form.taxSize);
 
   String get expenseTotal => _format.format(form.expensesWithTax);
 
   String get profit => _format.format(form.profit);
 
-  String get profitability => _format.format(form.profitability);
+  String get profitability => _format.format(form.profitability * 100);
 
   @override
   Widget build(BuildContext context) {
     return Observer(
       builder: (context) => Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Доход от продажи: $income$rubleCurrency'),
-          Text('Расходы на производство: $expenseProduction$rubleCurrency'),
-          Text('Расходы на логистику: $expenseLogistics$rubleCurrency'),
-          Text('Расходы на налог УСН: $expenseTax$rubleCurrency'),
-          Text('Итоговые расходы: $expenseTotal$rubleCurrency'),
-          Text('Прибыль: $profit$rubleCurrency'),
+          Text(
+            'Доход от продажи: $income$rubleCurrency',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Text(
+            'Итоговые расходы: $expenseTotal$rubleCurrency',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Text(
+            '- Расходы на производство: $expenseProduction$rubleCurrency',
+          ),
+          Text(
+            '- Расходы на логистику: $expenseLogistics$rubleCurrency',
+          ),
+          Text(
+            '- Расходы на оплату комиссии: $expenseCommission$rubleCurrency',
+          ),
+          Text(
+            '- Расходы на платную приёмку: $expenseAcceptance$rubleCurrency',
+          ),
+          Text(
+            '- Расходы на налог УСН: $expenseTax$rubleCurrency',
+          ),
+          Text(
+            'Прибыль: $profit$rubleCurrency',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           Text(
             'Рентабельность: $profitability%',
             style: const TextStyle(fontWeight: FontWeight.bold),

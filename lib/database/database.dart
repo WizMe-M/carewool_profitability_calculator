@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'entity/commission.dart';
 import 'entity/cost_price.dart';
+import 'entity/profitability.dart';
 import 'entity/storage.dart';
 
 Future<Isar> openIsarDatabase() async {
@@ -20,6 +21,7 @@ Future<Isar> openIsarDatabase() async {
       CommissionSchema,
       StorageUploadSchema,
       StorageSchema,
+      ProfitabilityCalcSchema,
     ],
     directory: path,
   );
