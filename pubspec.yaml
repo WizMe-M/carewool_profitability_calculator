@@ -2,7 +2,7 @@ name: carewool_profitability_calculator
 description: Course and diploma project
 publish_to: 'none'
 
-version: 0.3.1+5
+version: 0.3.2+6
 
 environment:
   sdk: '>=3.0.0-286.0.dev <4.0.0'
