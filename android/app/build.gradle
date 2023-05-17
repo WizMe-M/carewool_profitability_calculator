@@ -55,6 +55,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    namespace 'com.carewool.carewool_profitability_calculator'
 }
 
 flutter {
