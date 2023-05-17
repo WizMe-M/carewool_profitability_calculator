@@ -83,7 +83,7 @@ class ProfitabilityCalcHistoryPage extends StatelessWidget {
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   var item = data[index];
-                  var name = item.costPrice.value!.productName;
+                  var name = item.productName;
                   var percent = _number.format(item.profitability * 100);
                   return ListTile(
                     title: Text('$name ($percent%)'),

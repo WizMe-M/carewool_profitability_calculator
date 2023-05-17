@@ -17,30 +17,40 @@ const ProfitabilityCalcSchema = CollectionSchema(
   name: r'ProfitabilityCalc',
   id: -1433036784303571420,
   properties: {
-    r'pricing': PropertySchema(
+    r'costPrice': PropertySchema(
       id: 0,
+      name: r'costPrice',
+      type: IsarType.double,
+    ),
+    r'pricing': PropertySchema(
+      id: 1,
       name: r'pricing',
       type: IsarType.object,
       target: r'Pricing',
     ),
+    r'productName': PropertySchema(
+      id: 2,
+      name: r'productName',
+      type: IsarType.string,
+    ),
     r'profitability': PropertySchema(
-      id: 1,
+      id: 3,
       name: r'profitability',
       type: IsarType.double,
     ),
     r'savedDate': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'savedDate',
       type: IsarType.dateTime,
     ),
     r'size': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'size',
       type: IsarType.object,
       target: r'Size',
     ),
     r'tax': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'tax',
       type: IsarType.string,
       enumMap: _ProfitabilityCalctaxEnumValueMap,
@@ -53,12 +63,6 @@ const ProfitabilityCalcSchema = CollectionSchema(
   idName: r'id',
   indexes: {},
   links: {
-    r'costPrice': LinkSchema(
-      id: -5770848950083124934,
-      name: r'costPrice',
-      target: r'CostPrice',
-      single: true,
-    ),
     r'storage': LinkSchema(
       id: -2795659081949365372,
       name: r'storage',
@@ -88,6 +92,7 @@ int _profitabilityCalcEstimateSize(
   bytesCount += 3 +
       PricingSchema.estimateSize(
           object.pricing, allOffsets[Pricing]!, allOffsets);
+  bytesCount += 3 + object.productName.length * 3;
   bytesCount +=
       3 + SizeSchema.estimateSize(object.size, allOffsets[Size]!, allOffsets);
   bytesCount += 3 + object.tax.name.length * 3;
@@ -100,21 +105,23 @@ void _profitabilityCalcSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
+  writer.writeDouble(offsets[0], object.costPrice);
   writer.writeObject<Pricing>(
-    offsets[0],
+    offsets[1],
     allOffsets,
     PricingSchema.serialize,
     object.pricing,
   );
-  writer.writeDouble(offsets[1], object.profitability);
-  writer.writeDateTime(offsets[2], object.savedDate);
+  writer.writeString(offsets[2], object.productName);
+  writer.writeDouble(offsets[3], object.profitability);
+  writer.writeDateTime(offsets[4], object.savedDate);
   writer.writeObject<Size>(
-    offsets[3],
+    offsets[5],
     allOffsets,
     SizeSchema.serialize,
     object.size,
   );
-  writer.writeString(offsets[4], object.tax.name);
+  writer.writeString(offsets[6], object.tax.name);
 }
 
 ProfitabilityCalc _profitabilityCalcDeserialize(
@@ -124,23 +131,25 @@ ProfitabilityCalc _profitabilityCalcDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = ProfitabilityCalc();
+  object.costPrice = reader.readDouble(offsets[0]);
   object.id = id;
   object.pricing = reader.readObjectOrNull<Pricing>(
-        offsets[0],
+        offsets[1],
         PricingSchema.deserialize,
         allOffsets,
       ) ??
       Pricing();
-  object.profitability = reader.readDouble(offsets[1]);
-  object.savedDate = reader.readDateTime(offsets[2]);
+  object.productName = reader.readString(offsets[2]);
+  object.profitability = reader.readDouble(offsets[3]);
+  object.savedDate = reader.readDateTime(offsets[4]);
   object.size = reader.readObjectOrNull<Size>(
-        offsets[3],
+        offsets[5],
         SizeSchema.deserialize,
         allOffsets,
       ) ??
       Size();
   object.tax =
-      _ProfitabilityCalctaxValueEnumMap[reader.readStringOrNull(offsets[4])] ??
+      _ProfitabilityCalctaxValueEnumMap[reader.readStringOrNull(offsets[6])] ??
           SimpleTaxationSystem.perIncome;
   return object;
 }
@@ -153,24 +162,28 @@ P _profitabilityCalcDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readDouble(offset)) as P;
+    case 1:
       return (reader.readObjectOrNull<Pricing>(
             offset,
             PricingSchema.deserialize,
             allOffsets,
           ) ??
           Pricing()) as P;
-    case 1:
-      return (reader.readDouble(offset)) as P;
     case 2:
-      return (reader.readDateTime(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 3:
+      return (reader.readDouble(offset)) as P;
+    case 4:
+      return (reader.readDateTime(offset)) as P;
+    case 5:
       return (reader.readObjectOrNull<Size>(
             offset,
             SizeSchema.deserialize,
             allOffsets,
           ) ??
           Size()) as P;
-    case 4:
+    case 6:
       return (_ProfitabilityCalctaxValueEnumMap[
               reader.readStringOrNull(offset)] ??
           SimpleTaxationSystem.perIncome) as P;
@@ -194,14 +207,12 @@ Id _profitabilityCalcGetId(ProfitabilityCalc object) {
 
 List<IsarLinkBase<dynamic>> _profitabilityCalcGetLinks(
     ProfitabilityCalc object) {
-  return [object.costPrice, object.storage, object.commission];
+  return [object.storage, object.commission];
 }
 
 void _profitabilityCalcAttach(
     IsarCollection<dynamic> col, Id id, ProfitabilityCalc object) {
   object.id = id;
-  object.costPrice
-      .attach(col, col.isar.collection<CostPrice>(), r'costPrice', id);
   object.storage.attach(col, col.isar.collection<Storage>(), r'storage', id);
   object.commission
       .attach(col, col.isar.collection<Commission>(), r'commission', id);
@@ -290,6 +301,72 @@ extension ProfitabilityCalcQueryWhere
 extension ProfitabilityCalcQueryFilter
     on QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QFilterCondition> {
   QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
+      costPriceEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'costPrice',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
+      costPriceGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'costPrice',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
+      costPriceLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'costPrice',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
+      costPriceBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'costPrice',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
       idIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -359,6 +436,142 @@ extension ProfitabilityCalcQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
+      productNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'productName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
+      productNameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'productName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
+      productNameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'productName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
+      productNameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'productName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
+      productNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'productName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
+      productNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'productName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
+      productNameContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'productName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
+      productNameMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'productName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
+      productNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'productName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
+      productNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'productName',
+        value: '',
       ));
     });
   }
@@ -642,20 +855,6 @@ extension ProfitabilityCalcQueryObject
 extension ProfitabilityCalcQueryLinks
     on QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QFilterCondition> {
   QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
-      costPrice(FilterQuery<CostPrice> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'costPrice');
-    });
-  }
-
-  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
-      costPriceIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'costPrice', 0, true, 0, true);
-    });
-  }
-
-  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterFilterCondition>
       storage(FilterQuery<Storage> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'storage');
@@ -686,6 +885,34 @@ extension ProfitabilityCalcQueryLinks
 
 extension ProfitabilityCalcQuerySortBy
     on QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QSortBy> {
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterSortBy>
+      sortByCostPrice() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'costPrice', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterSortBy>
+      sortByCostPriceDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'costPrice', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterSortBy>
+      sortByProductName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'productName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterSortBy>
+      sortByProductNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'productName', Sort.desc);
+    });
+  }
+
   QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterSortBy>
       sortByProfitability() {
     return QueryBuilder.apply(this, (query) {
@@ -730,6 +957,20 @@ extension ProfitabilityCalcQuerySortBy
 
 extension ProfitabilityCalcQuerySortThenBy
     on QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QSortThenBy> {
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterSortBy>
+      thenByCostPrice() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'costPrice', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterSortBy>
+      thenByCostPriceDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'costPrice', Sort.desc);
+    });
+  }
+
   QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -740,6 +981,20 @@ extension ProfitabilityCalcQuerySortThenBy
       thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterSortBy>
+      thenByProductName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'productName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QAfterSortBy>
+      thenByProductNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'productName', Sort.desc);
     });
   }
 
@@ -788,6 +1043,20 @@ extension ProfitabilityCalcQuerySortThenBy
 extension ProfitabilityCalcQueryWhereDistinct
     on QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QDistinct> {
   QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QDistinct>
+      distinctByCostPrice() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'costPrice');
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QDistinct>
+      distinctByProductName({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'productName', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, ProfitabilityCalc, QDistinct>
       distinctByProfitability() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'profitability');
@@ -817,9 +1086,23 @@ extension ProfitabilityCalcQueryProperty
     });
   }
 
+  QueryBuilder<ProfitabilityCalc, double, QQueryOperations>
+      costPriceProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'costPrice');
+    });
+  }
+
   QueryBuilder<ProfitabilityCalc, Pricing, QQueryOperations> pricingProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'pricing');
+    });
+  }
+
+  QueryBuilder<ProfitabilityCalc, String, QQueryOperations>
+      productNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'productName');
     });
   }
 

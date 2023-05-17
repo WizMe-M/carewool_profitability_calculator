@@ -43,7 +43,6 @@ class SaveButton extends StatelessWidget {
     var entity = form.toEntity();
     _isar.writeTxn(() async {
       await _isar.profitabilityCalcs.put(entity);
-      entity.costPrice.save();
       entity.commission.save();
       entity.storage.save();
     }).then((value) {

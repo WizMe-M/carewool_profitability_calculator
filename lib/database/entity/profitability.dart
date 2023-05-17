@@ -2,7 +2,6 @@ import 'package:isar/isar.dart';
 
 import '../simple_taxation_system_enum.dart';
 import 'commission.dart';
-import 'cost_price.dart';
 import 'storage.dart';
 
 part 'profitability.g.dart';
@@ -12,6 +11,8 @@ class ProfitabilityCalc {
   Id? id;
 
   late DateTime savedDate;
+  late String productName;
+  late double costPrice;
   late double profitability;
   late Size size;
   late Pricing pricing;
@@ -19,7 +20,6 @@ class ProfitabilityCalc {
   @Enumerated(EnumType.name)
   late SimpleTaxationSystem tax;
 
-  final IsarLink<CostPrice> costPrice = IsarLink();
   final IsarLink<Storage> storage = IsarLink();
   final IsarLink<Commission> commission = IsarLink();
 }

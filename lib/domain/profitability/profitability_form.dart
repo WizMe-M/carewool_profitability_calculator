@@ -119,13 +119,14 @@ abstract class ProfitabilityFormBase with Store {
       ..sellerDiscount = pricingForm.sellerDiscount;
     var entity = ProfitabilityCalc()
       ..savedDate = DateTime.now()
+      ..productName = costPrice.productName!
+      ..costPrice = costPrice.total!
       ..profitability = profitability
       ..pricing = pricing
       ..size = size
       ..tax = selectedTax
       ..commission.value = categorySelector.selected
-      ..storage.value = storageSelector.selected
-      ..costPrice.value = costPrice;
+      ..storage.value = storageSelector.selected;
     return entity;
   }
 }
