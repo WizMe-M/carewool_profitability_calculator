@@ -8,6 +8,7 @@ import 'app/widget/app.dart';
 import 'app/widget/side_bar.dart';
 import 'database/database.dart';
 import 'domain/excel/excel_uploader.dart';
+import 'domain/pdf/profitability_pdf_saver.dart';
 
 void main() async {
   var binding = WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,7 @@ Future<void> _registerDependencies() async {
 
   GetIt.instance
     ..registerSingleton(logger)
+    ..registerSingleton(ProfitabilityPdfSaver())
     ..registerSingletonAsync(() => openIsarDatabase())
     ..registerSingletonWithDependencies(
       () => ExcelUploader(),

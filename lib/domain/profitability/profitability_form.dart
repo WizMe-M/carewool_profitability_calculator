@@ -1,14 +1,15 @@
 import 'dart:math';
 
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../database/entity/commission.dart';
 import '../../database/entity/profitability.dart';
 import '../../database/entity/storage.dart';
 import '../../database/entity/cost_price.dart';
+import '../../database/simple_taxation_system_enum.dart';
 import 'commission_selector/commission_selector.dart';
 import 'pricing/pricing_form.dart';
-import '../../database/simple_taxation_system_enum.dart';
 import 'size_form/size_form.dart';
 import 'storage_selector/storage_selector.dart';
 
@@ -17,6 +18,9 @@ part 'profitability_form.g.dart';
 class ProfitabilityForm = ProfitabilityFormBase with _$ProfitabilityForm;
 
 abstract class ProfitabilityFormBase with Store {
+  final NumberFormat _format = NumberFormat()
+    ..minimumFractionDigits = 0
+    ..maximumFractionDigits = 2;
   final CostPrice costPrice;
   final StorageSelector storageSelector;
   final CommissionSelector categorySelector;
@@ -107,6 +111,10 @@ abstract class ProfitabilityFormBase with Store {
   /// Profitability of sale (from 0 to 1)
   @computed
   double get profitability => profit / price;
+
+  /// Profitability of sale (from 0 to 1)
+  @computed
+  String get profitabilityFormatted => _format.format(profitability * 100);
 
   ProfitabilityCalc toEntity() {
     var size = Size()

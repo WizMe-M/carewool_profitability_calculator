@@ -29,8 +29,6 @@ class CalculationsResultWidget extends StatelessWidget {
 
   String get profit => _format.format(form.profit);
 
-  String get profitability => _format.format(form.profitability * 100);
-
   @override
   Widget build(BuildContext context) {
     return Observer(
@@ -66,7 +64,7 @@ class CalculationsResultWidget extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           Text(
-            'Рентабельность: $profitability%',
+            'Рентабельность: ${form.profitabilityFormatted}%',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ],

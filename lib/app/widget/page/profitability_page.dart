@@ -1,10 +1,12 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:logger/logger.dart';
 
 import '../../../database/entity/commission.dart';
 import '../../../database/entity/cost_price.dart';
 import '../../../database/entity/storage.dart';
+import '../../../domain/pdf/profitability_pdf_saver.dart';
 import '../../../domain/profitability/profitability_form.dart';
 import '../side_bar.dart';
 import 'profitability/pricing/pricing_form_widget.dart';
@@ -18,6 +20,8 @@ import 'profitability/selector/tax_selector_widget.dart';
 
 @RoutePage()
 class ProfitabilityPage extends StatelessWidget {
+  final Logger _logger = GetIt.I.get();
+  final ProfitabilityPdfSaver _pdf = GetIt.I.get();
   final ProfitabilityForm _form;
   final CostPrice costPrice;
 
@@ -38,6 +42,13 @@ class ProfitabilityPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Рентабельность', style: TextStyle(fontSize: 18)),
+        actions: [
+          IconButton(
+            onPressed: () => exportPdf(context),
+            icon: const Icon(Icons.file_download),
+            tooltip: 'Экспортировать расчёт в PDF',
+          )
+        ],
       ),
       drawer: GetIt.I.get<SideBar>(),
       body: SafeArea(
@@ -61,5 +72,25 @@ class ProfitabilityPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void exportPdf(BuildContext context) {
+    var messenger = ScaffoldMessenger.of(context);
+    _pdf.save(_form).then((file) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text('Файл сохранен по пути ${file.path}'),
+          duration: const Duration(seconds: 6),
+        ),
+      );
+    }).onError((error, stackTrace) {
+      _logger.e('Unable to export PDF', error, stackTrace);
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Не удалось экспортировать PDF'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    });
   }
 }
