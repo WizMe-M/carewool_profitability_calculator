@@ -22,7 +22,7 @@ Future<void> _registerDependencies() async {
 
   GetIt.instance
     ..registerSingleton(logger)
-    ..registerSingletonAsync(() => ProfitabilityPdfSaver.create())
+    ..registerSingletonAsync(() => ProfitabilityPdfCreator.init())
     ..registerSingletonAsync(() => openIsarDatabase())
     ..registerSingletonWithDependencies(
       () => ExcelUploader(),

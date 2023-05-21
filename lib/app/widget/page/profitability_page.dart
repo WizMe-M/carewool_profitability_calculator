@@ -1,5 +1,6 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -22,7 +23,7 @@ import 'profitability/selector/tax_selector_widget.dart';
 @RoutePage()
 class ProfitabilityPage extends StatelessWidget {
   final Logger _logger = GetIt.I.get();
-  final ProfitabilityPdfSaver _pdf = GetIt.I.get();
+  final ProfitabilityPdfCreator _pdf = GetIt.I.get();
   final ProfitabilityForm _form;
   final CostPrice costPrice;
 
@@ -89,18 +90,43 @@ class ProfitabilityPage extends StatelessWidget {
       return;
     }
 
-    _pdf.save(_form).then((file) {
-      messenger.showSnackBar(
-        SnackBar(
-          content: Text('Файл сохранен по пути ${file.path}'),
-          duration: const Duration(seconds: 6),
-        ),
-      );
+    var fileName = _pdf.createFileName(_form);
+    _pdf.create(_form).then((bytes) async {
+      if (!await FlutterFileDialog.isPickDirectorySupported()) {
+        _logger.e('Picking directory not supported');
+        return;
+      }
+
+      final pickedDirectory = await FlutterFileDialog.pickDirectory();
+      if (pickedDirectory == null) return;
+
+      FlutterFileDialog.saveFileToDirectory(
+        directory: pickedDirectory,
+        data: bytes,
+        mimeType: 'application/pdf',
+        fileName: fileName,
+        replace: true,
+      ).then((path) {
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Файл успешно сохранен'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }).onError((error, stackTrace) {
+        _logger.e('Error happen on file saving', error, stackTrace);
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Не удалось сохранить PDF'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      });
     }).onError((error, stackTrace) {
-      _logger.e('Unable to export PDF', error, stackTrace);
+      _logger.e('Unable to create PDF', error, stackTrace);
       messenger.showSnackBar(
         const SnackBar(
-          content: Text('Не удалось экспортировать PDF'),
+          content: Text('Не удалось сформировать PDF'),
           duration: Duration(seconds: 1),
         ),
       );

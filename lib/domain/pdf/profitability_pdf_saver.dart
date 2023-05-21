@@ -1,16 +1,14 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:intl/intl.dart';
-import 'package:path/path.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:printing/printing.dart';
 
 import '../profitability/profitability_form.dart';
-import '../util/paths.dart';
 import '../util/strings.dart';
 
-class ProfitabilityPdfSaver {
+class ProfitabilityPdfCreator {
   final Font font;
   final ThemeData textTheme;
 
@@ -19,19 +17,19 @@ class ProfitabilityPdfSaver {
     color: PdfColors.blue200,
   );
 
-  ProfitabilityPdfSaver._(this.font)
+  ProfitabilityPdfCreator._(this.font)
       : textTheme = ThemeData(
           defaultTextStyle: TextStyle(font: font),
           tableHeader: TextStyle(font: font, fontWeight: FontWeight.bold),
         );
 
-  static Future<ProfitabilityPdfSaver> create() async {
+  static Future<ProfitabilityPdfCreator> init() async {
     var font = await PdfGoogleFonts.pTSansRegular();
-    var saver = ProfitabilityPdfSaver._(font);
+    var saver = ProfitabilityPdfCreator._(font);
     return saver;
   }
 
-  Future<File> save(ProfitabilityFormBase profitability) async {
+  Future<Uint8List> create(ProfitabilityFormBase profitability) async {
     final pdf = Document()
       ..addPage(
         Page(
@@ -187,15 +185,11 @@ class ProfitabilityPdfSaver {
         ),
       );
 
-    var name = '${createName(profitability)}.pdf';
-    var path = join(await getDownloadsPath(), name);
-    var bytes = await pdf.save();
-    var file = await File(path).writeAsBytes(bytes);
-    return file;
+    return await pdf.save();
   }
 
-  String createName(ProfitabilityFormBase profitability) {
+  String createFileName(ProfitabilityFormBase profitability) {
     var now = DateFormat('dd.MM.yy HH:mm:ss').format(DateTime.now());
-    return '${profitability.costPrice.productName} $now';
+    return '${profitability.costPrice.productName} $now.pdf';
   }
 }
