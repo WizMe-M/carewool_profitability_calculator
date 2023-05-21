@@ -31,9 +31,9 @@ dependencies:
   isar_flutter_libs: ^3.1.0+1
   flutter_typeahead: ^4.3.8
   url_launcher: ^6.1.11
-  syncfusion_flutter_pdf: ^21.2.5
   pdf: ^3.10.3
   printing: ^5.10.4
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:
