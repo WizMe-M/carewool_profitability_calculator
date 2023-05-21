@@ -2,6 +2,7 @@ import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../database/entity/commission.dart';
 import '../../../database/entity/cost_price.dart';
@@ -74,8 +75,20 @@ class ProfitabilityPage extends StatelessWidget {
     );
   }
 
-  void exportPdf(BuildContext context) {
+  Future<void> exportPdf(BuildContext context) async {
     var messenger = ScaffoldMessenger.of(context);
+
+    var status = await Permission.storage.request();
+    if (status.isDenied || status.isPermanentlyDenied) {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Требуется разрешение на запись'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
+
     _pdf.save(_form).then((file) {
       messenger.showSnackBar(
         SnackBar(

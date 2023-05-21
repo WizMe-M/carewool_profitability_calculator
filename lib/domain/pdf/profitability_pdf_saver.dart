@@ -6,8 +6,9 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:printing/printing.dart';
 
-import '../util/utility_strings.dart';
 import '../profitability/profitability_form.dart';
+import '../util/paths.dart';
+import '../util/strings.dart';
 
 class ProfitabilityPdfSaver {
   final Font font;
@@ -187,7 +188,7 @@ class ProfitabilityPdfSaver {
       );
 
     var name = '${createName(profitability)}.pdf';
-    var path = join(downloadsPath, name);
+    var path = join(await getDownloadsPath(), name);
     var bytes = await pdf.save();
     var file = await File(path).writeAsBytes(bytes);
     return file;

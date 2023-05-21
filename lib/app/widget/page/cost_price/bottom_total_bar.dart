@@ -9,7 +9,7 @@ import '../../../../database/entity/commission.dart';
 import '../../../../database/entity/storage.dart';
 import '../../../../database/entity/cost_price.dart';
 import '../../../../domain/cost_price/form/cost_price_form.dart';
-import '../../../../domain/util/utility_strings.dart';
+import '../../../../domain/util/strings.dart';
 import '../../../navigation/app_router.dart';
 
 class BottomTotalBar extends StatelessWidget {
