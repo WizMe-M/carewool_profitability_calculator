@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-import '../../../../../domain/util/symbols.dart';
+import '../../../../../domain/util/strings.dart';
 import '../../../../../domain/profitability/profitability_form.dart';
 
 class LogisticResultWidget extends StatelessWidget {

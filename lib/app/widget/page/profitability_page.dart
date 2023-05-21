@@ -1,10 +1,14 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:get_it/get_it.dart';
+import 'package:logger/logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../database/entity/commission.dart';
 import '../../../database/entity/cost_price.dart';
 import '../../../database/entity/storage.dart';
+import '../../../domain/pdf/profitability_pdf_saver.dart';
 import '../../../domain/profitability/profitability_form.dart';
 import '../side_bar.dart';
 import 'profitability/pricing/pricing_form_widget.dart';
@@ -18,6 +22,8 @@ import 'profitability/selector/tax_selector_widget.dart';
 
 @RoutePage()
 class ProfitabilityPage extends StatelessWidget {
+  final Logger _logger = GetIt.I.get();
+  final ProfitabilityPdfCreator _pdf = GetIt.I.get();
   final ProfitabilityForm _form;
   final CostPrice costPrice;
 
@@ -38,6 +44,13 @@ class ProfitabilityPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Рентабельность', style: TextStyle(fontSize: 18)),
+        actions: [
+          IconButton(
+            onPressed: () => exportPdf(context),
+            icon: const Icon(Icons.file_download),
+            tooltip: 'Экспортировать расчёт в PDF',
+          )
+        ],
       ),
       drawer: GetIt.I.get<SideBar>(),
       body: SafeArea(
@@ -61,5 +74,62 @@ class ProfitabilityPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> exportPdf(BuildContext context) async {
+    var messenger = ScaffoldMessenger.of(context);
+
+    var status = await Permission.storage.request();
+    if (status.isDenied || status.isPermanentlyDenied) {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Требуется разрешение на запись'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
+
+    var fileName = _pdf.createFileName(_form);
+    _pdf.create(_form).then((bytes) async {
+      if (!await FlutterFileDialog.isPickDirectorySupported()) {
+        _logger.e('Picking directory not supported');
+        return;
+      }
+
+      final pickedDirectory = await FlutterFileDialog.pickDirectory();
+      if (pickedDirectory == null) return;
+
+      FlutterFileDialog.saveFileToDirectory(
+        directory: pickedDirectory,
+        data: bytes,
+        mimeType: 'application/pdf',
+        fileName: fileName,
+        replace: true,
+      ).then((path) {
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Файл успешно сохранен'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }).onError((error, stackTrace) {
+        _logger.e('Error happen on file saving', error, stackTrace);
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Не удалось сохранить PDF'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      });
+    }).onError((error, stackTrace) {
+      _logger.e('Unable to create PDF', error, stackTrace);
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Не удалось сформировать PDF'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+    });
   }
 }

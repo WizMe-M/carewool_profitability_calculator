@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../domain/profitability/profitability_form.dart';
-import '../../../../../domain/util/symbols.dart';
+import '../../../../../domain/util/strings.dart';
 
 class CalculationsResultWidget extends StatelessWidget {
   final NumberFormat _format = NumberFormat()
@@ -28,8 +28,6 @@ class CalculationsResultWidget extends StatelessWidget {
   String get expenseTotal => _format.format(form.expensesWithTax);
 
   String get profit => _format.format(form.profit);
-
-  String get profitability => _format.format(form.profitability * 100);
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +64,7 @@ class CalculationsResultWidget extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           Text(
-            'Рентабельность: $profitability%',
+            'Рентабельность: ${form.profitabilityFormatted}%',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ],

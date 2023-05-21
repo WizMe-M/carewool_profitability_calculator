@@ -7,7 +7,7 @@ import 'package:logger/logger.dart';
 
 import '../../../../../database/entity/cost_price.dart';
 import '../../../../../domain/cost_price/form/edit/edit_wrap.dart';
-import '../../../../../domain/util/symbols.dart';
+import '../../../../../domain/util/strings.dart';
 import '../../../../navigation/app_router.dart';
 
 class EditBottomTotalBar extends StatelessWidget {
