@@ -7,7 +7,7 @@ import 'package:isar/isar.dart';
 import '../../../database/entity/cost_price.dart';
 import '../../../domain/cost_price/form/cost_price_form.dart';
 import '../../../domain/cost_price/form/edit/edit_wrap.dart';
-import '../../../domain/util/symbols.dart';
+import '../../../domain/util/utility_strings.dart';
 import '../../navigation/app_router.dart';
 import '../side_bar.dart';
 

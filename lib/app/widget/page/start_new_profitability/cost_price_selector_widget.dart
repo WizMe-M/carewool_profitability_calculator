@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../../database/entity/commission.dart';
 import '../../../../database/entity/cost_price.dart';
 import '../../../../database/entity/storage.dart';
-import '../../../../domain/util/symbols.dart';
+import '../../../../domain/util/utility_strings.dart';
 import '../../../navigation/app_router.dart';
 
 class CostPriceSelectorWidget extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../../../../domain/profitability/pricing/pricing_form.dart';
-import '../../../../../domain/util/symbols.dart';
+import '../../../../../domain/util/utility_strings.dart';
 
 class PricingFormWidget extends StatelessWidget {
   final PricingForm form;

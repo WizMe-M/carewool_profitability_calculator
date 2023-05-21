@@ -2,38 +2,49 @@ import 'dart:io';
 
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:printing/printing.dart';
 
-import '../util/symbols.dart';
+import '../util/utility_strings.dart';
 import '../profitability/profitability_form.dart';
 
 class ProfitabilityPdfSaver {
+  final Font font;
+  final ThemeData textTheme;
 
-  final boldDecoration = BoxDecoration(
+  final importantRowDecoration = BoxDecoration(
     border: Border.all(width: 2),
     color: PdfColors.blue200,
   );
 
+  ProfitabilityPdfSaver._(this.font)
+      : textTheme = ThemeData(
+          defaultTextStyle: TextStyle(font: font),
+          tableHeader: TextStyle(font: font, fontWeight: FontWeight.bold),
+        );
+
+  static Future<ProfitabilityPdfSaver> create() async {
+    var font = await PdfGoogleFonts.pTSansRegular();
+    var saver = ProfitabilityPdfSaver._(font);
+    return saver;
+  }
+
   Future<File> save(ProfitabilityFormBase profitability) async {
-    final boldStyle = TextStyle(
-      fontWeight: FontWeight.bold,
-      font: await PdfGoogleFonts.pTSansRegular(),
-    );
     final pdf = Document()
       ..addPage(
         Page(
+          pageFormat: PdfPageFormat.a4,
+          theme: textTheme,
           build: (context) {
             return Table(
               children: [
                 TableRow(
                   children: [
-                    Text('Параметр', style: boldStyle),
-                    Text('Значение', style: boldStyle),
+                    Text('Параметр'),
+                    Text('Значение'),
                   ],
-                  decoration: boldDecoration,
+                  decoration: importantRowDecoration,
                 ),
                 TableRow(
                   children: [
@@ -122,41 +133,52 @@ class ProfitabilityPdfSaver {
                 TableRow(
                   children: [
                     Text('Доходы'),
-                    Text('${profitability.price}', style: boldStyle),
+                    Text(
+                      '${profitability.price}',
+                      style: Theme.of(context).tableHeader,
+                    ),
                   ],
-                  decoration: boldDecoration,
+                  decoration: importantRowDecoration,
                 ),
                 TableRow(
                   children: [
                     Text('Расходы (без налога)'),
-                    Text('${profitability.expenses}', style: boldStyle),
+                    Text(
+                      '${profitability.expenses}',
+                      style: Theme.of(context).tableHeader,
+                    ),
                   ],
-                  decoration: boldDecoration,
+                  decoration: importantRowDecoration,
                 ),
                 TableRow(
                   children: [
                     Text('Расходы (с налогом)'),
-                    Text('${profitability.expensesWithTax}',
-                        style: boldStyle),
+                    Text(
+                      '${profitability.expensesWithTax}',
+                      style: Theme.of(context).tableHeader,
+                    ),
                   ],
-                  decoration: boldDecoration,
+                  decoration: importantRowDecoration,
                 ),
                 TableRow(
                   children: [
                     Text('Прибыль'),
-                    Text('${profitability.profit}', style: boldStyle),
+                    Text(
+                      '${profitability.profit}',
+                      style: Theme.of(context).tableHeader,
+                    ),
                   ],
-                  decoration: boldDecoration,
+                  decoration: importantRowDecoration,
                 ),
                 TableRow(
                   children: [
                     Text('Рентабельность'),
                     Text(
                       profitability.profitabilityFormatted,
-                      style: boldStyle,
+                      style: Theme.of(context).tableHeader,
                     ),
                   ],
-                  decoration: boldDecoration,
+                  decoration: importantRowDecoration,
                 ),
               ],
             );
@@ -165,15 +187,14 @@ class ProfitabilityPdfSaver {
       );
 
     var name = '${createName(profitability)}.pdf';
+    var path = join(downloadsPath, name);
     var bytes = await pdf.save();
-    var temp = await getApplicationDocumentsDirectory();
-    var path = join(temp.path, name);
     var file = await File(path).writeAsBytes(bytes);
     return file;
   }
 
   String createName(ProfitabilityFormBase profitability) {
-    var now = DateFormat('dd.MM.yy-HH:mm:ss').format(DateTime.now());
+    var now = DateFormat('dd.MM.yy HH:mm:ss').format(DateTime.now());
     return '${profitability.costPrice.productName} $now';
   }
 }

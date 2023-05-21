@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../domain/profitability/profitability_form.dart';
-import '../../../../../domain/util/symbols.dart';
+import '../../../../../domain/util/utility_strings.dart';
 
 class CalculationsResultWidget extends StatelessWidget {
   final NumberFormat _format = NumberFormat()
