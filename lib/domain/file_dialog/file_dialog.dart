@@ -1,3 +1,4 @@
+import 'dart:io' as io;
 import 'dart:async';
 
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
@@ -13,22 +14,33 @@ class FileDialog {
     return FlutterFileDialog.pickDirectory();
   }
 
-  Future<void> pickDirectoryAndSaveFile(
-    File file,
-    MimeType mimeType, {
-    required FutureOr<void> Function(String? path) onSuccess,
-    required FutureOr<void> Function(Object error, StackTrace stackTrace)
-        onError,
-  }) async {
+  /// Picks directory and save there file.
+  /// Requires [File] with data to save and [MimeType] of file.
+  ///
+  /// Returns path to saved file or null, if operation was cancelled
+  Future<String?> pickDirectoryAndSaveFile(File file, MimeType mimeType) async {
     final directory = await tryPickDirectory();
-    if (directory == null) return;
+    if (directory == null) return null;
 
-    FlutterFileDialog.saveFileToDirectory(
+    return FlutterFileDialog.saveFileToDirectory(
       directory: directory,
       data: file.fileData,
       mimeType: mimeType.name,
       fileName: file.fileName,
       replace: true,
-    ).then(onSuccess).onError(onError);
+    );
+  }
+
+  /// Picks file with [MimeType]s filter.
+  ///
+  /// Returns picked [io.File]
+  Future<io.File?> pickFile(Set<MimeType> mimeTypes) async {
+    var path = await FlutterFileDialog.pickFile(
+      params: OpenFileDialogParams(
+        copyFileToCacheDir: true,
+        mimeTypesFilter: mimeTypes.map((e) => e.name).toList(),
+      ),
+    );
+    return path != null ? io.File(path) : null;
   }
 }

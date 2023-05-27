@@ -18,10 +18,9 @@ class DatabaseExporter {
     var fileName = 'carewool-db $now';
     var bytes = Uint8List.fromList(utf8.encode(json.toString()));
     var file = File(json, fileName, bytes);
-    _fileDialog.pickDirectoryAndSaveFile(file, MimeType.json,
-        onSuccess: (path) {
+    _fileDialog.pickDirectoryAndSaveFile(file, MimeType.json).then((path) {
       _logger.i('JSON-file was saved: $path');
-    }, onError: (error, stackTrace) {
+    }).onError((error, stackTrace) {
       _logger.e('Unable to save JSON-file', error, stackTrace);
     });
   }

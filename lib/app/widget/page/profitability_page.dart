@@ -93,27 +93,23 @@ class ProfitabilityPage extends StatelessWidget {
     }
 
     _pdf.create(_form).then((pdf) {
-      _fileDialog.pickDirectoryAndSaveFile(
-        pdf,
-        MimeType.pdf,
-        onSuccess: (value) {
-          messenger.showSnackBar(
-            const SnackBar(
-              content: Text('Файл успешно сохранен'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-        },
-        onError: (error, stackTrace) {
-          _logger.e('Error happen on file saving', error, stackTrace);
-          messenger.showSnackBar(
-            const SnackBar(
-              content: Text('Не удалось сохранить PDF'),
-              duration: Duration(seconds: 1),
-            ),
-          );
-        },
-      );
+      _fileDialog.pickDirectoryAndSaveFile(pdf, MimeType.pdf).then((path) {
+        if (path == null) return;
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Файл успешно сохранен'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      }).onError((error, stackTrace) {
+        _logger.e('Error happen on file saving', error, stackTrace);
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Не удалось сохранить PDF'),
+            duration: Duration(seconds: 1),
+          ),
+        );
+      });
     }).onError((error, stackTrace) {
       _logger.e('Unable to create PDF', error, stackTrace);
       messenger.showSnackBar(
