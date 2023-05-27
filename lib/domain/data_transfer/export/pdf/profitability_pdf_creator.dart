@@ -1,12 +1,11 @@
-import 'dart:typed_data';
-
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:printing/printing.dart';
 
-import '../profitability/profitability_form.dart';
-import '../util/strings.dart';
+import '../../../profitability/profitability_form.dart';
+import '../../../util/strings.dart';
+import 'pdf_file.dart';
 
 class ProfitabilityPdfCreator {
   final Font font;
@@ -29,7 +28,15 @@ class ProfitabilityPdfCreator {
     return saver;
   }
 
-  Future<Uint8List> create(ProfitabilityFormBase profitability) async {
+  static String _createFileName(ProfitabilityForm profitability) {
+    var now = DateFormat('dd.MM.yy HH:mm:ss').format(DateTime.now());
+    return '${profitability.costPrice.productName} $now.pdf';
+  }
+
+  /// Creates PDF with table of profitability form's data.
+  ///
+  /// Returns PDF-file
+  Future<PdfFile> create(ProfitabilityForm profitability) async {
     final pdf = Document()
       ..addPage(
         Page(
@@ -185,11 +192,9 @@ class ProfitabilityPdfCreator {
         ),
       );
 
-    return await pdf.save();
-  }
-
-  String createFileName(ProfitabilityFormBase profitability) {
-    var now = DateFormat('dd.MM.yy HH:mm:ss').format(DateTime.now());
-    return '${profitability.costPrice.productName} $now.pdf';
+    var bytes = await pdf.save();
+    var name = _createFileName(profitability);
+    var file = PdfFile(profitability, name, bytes);
+    return file;
   }
 }

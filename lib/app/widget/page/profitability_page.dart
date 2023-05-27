@@ -8,7 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../database/entity/commission.dart';
 import '../../../database/entity/cost_price.dart';
 import '../../../database/entity/storage.dart';
-import '../../../domain/pdf/profitability_pdf_saver.dart';
+import '../../../domain/data_transfer/export/pdf/profitability_pdf_creator.dart';
 import '../../../domain/profitability/profitability_form.dart';
 import '../side_bar.dart';
 import 'profitability/pricing/pricing_form_widget.dart';
@@ -90,8 +90,7 @@ class ProfitabilityPage extends StatelessWidget {
       return;
     }
 
-    var fileName = _pdf.createFileName(_form);
-    _pdf.create(_form).then((bytes) async {
+    _pdf.create(_form).then((pdf) async {
       if (!await FlutterFileDialog.isPickDirectorySupported()) {
         _logger.e('Picking directory not supported');
         return;
@@ -102,9 +101,9 @@ class ProfitabilityPage extends StatelessWidget {
 
       FlutterFileDialog.saveFileToDirectory(
         directory: pickedDirectory,
-        data: bytes,
+        data: pdf.fileData,
         mimeType: 'application/pdf',
-        fileName: fileName,
+        fileName: pdf.fileName,
         replace: true,
       ).then((path) {
         messenger.showSnackBar(
