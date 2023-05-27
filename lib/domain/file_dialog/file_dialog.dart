@@ -1,18 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
-import 'package:get_it/get_it.dart';
-import 'package:logger/logger.dart';
 
 import '../data_transfer/file.dart';
 import '../data_transfer/mime_type_enum.dart';
 
 class FileDialog {
-  final Logger _logger = GetIt.I.get();
-
   Future<DirectoryLocation?> tryPickDirectory() async {
     if (!await FlutterFileDialog.isPickDirectorySupported()) {
-      _logger.e('Picking directory not supported');
       return null;
     }
     return FlutterFileDialog.pickDirectory();
@@ -21,7 +16,7 @@ class FileDialog {
   Future<void> pickDirectoryAndSaveFile(
     File file,
     MimeType mimeType, {
-    required FutureOr<void> Function(dynamic value) onSuccess,
+    required FutureOr<void> Function(String? path) onSuccess,
     required FutureOr<void> Function(Object error, StackTrace stackTrace)
         onError,
   }) async {
