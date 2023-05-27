@@ -12,9 +12,9 @@ import 'entity/storage.dart';
 Future<Isar> openIsarDatabase() async {
   final appDocuments = await getApplicationDocumentsDirectory();
   var path = join(appDocuments.path, 'db');
-  Directory(path).createSync(recursive: true);
+  await Directory(path).create(recursive: true);
 
-  final isar = await Isar.open(
+  return Isar.open(
     [
       CostPriceSchema,
       CommissionUploadSchema,
@@ -25,5 +25,4 @@ Future<Isar> openIsarDatabase() async {
     ],
     directory: path,
   );
-  return isar;
 }

@@ -5,7 +5,7 @@ import 'package:printing/printing.dart';
 
 import '../../../profitability/profitability_form.dart';
 import '../../../util/strings.dart';
-import 'pdf_file.dart';
+import '../../file.dart';
 
 class ProfitabilityPdfCreator {
   final Font font;
@@ -28,15 +28,13 @@ class ProfitabilityPdfCreator {
     return saver;
   }
 
-  static String _createFileName(ProfitabilityForm profitability) {
+  static String _createFileName(ProfitabilityForm form) {
     var now = DateFormat('dd.MM.yy HH:mm:ss').format(DateTime.now());
-    return '${profitability.costPrice.productName} $now.pdf';
+    return '${form.costPrice.productName} $now.pdf';
   }
 
-  /// Creates PDF with table of profitability form's data.
-  ///
-  /// Returns PDF-file
-  Future<PdfFile> create(ProfitabilityForm profitability) async {
+  /// Creates PDF-file with table of profitability form's data
+  Future<File<ProfitabilityForm>> create(ProfitabilityForm form) async {
     final pdf = Document()
       ..addPage(
         Page(
@@ -44,6 +42,7 @@ class ProfitabilityPdfCreator {
           theme: textTheme,
           build: (context) {
             return Table(
+              // TODO: add normal table bounds and borders
               children: [
                 TableRow(
                   children: [
@@ -55,92 +54,94 @@ class ProfitabilityPdfCreator {
                 TableRow(
                   children: [
                     Text('Продукция'),
-                    Text('${profitability.costPrice.productName}'),
+                    Text('${form.costPrice.productName}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Себестоимость'),
-                    Text('${profitability.costPrice.total}'),
+                    Text('${form.costPrice.total}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Длина'),
-                    Text('${profitability.sizeForm.lengthValue}'),
+                    Text('${form.sizeForm.lengthValue}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Ширина'),
-                    Text('${profitability.sizeForm.widthValue}'),
+                    Text('${form.sizeForm.widthValue}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Высота'),
-                    Text('${profitability.sizeForm.heightValue}'),
+                    Text('${form.sizeForm.heightValue}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Объём'),
-                    Text('${profitability.sizeForm.volumeInLiters}'),
+                    Text('${form.sizeForm.volumeInLiters}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Склад'),
-                    Text('${profitability.storageSelector.selected?.name}'),
+                    Text('${form.storageSelector.selected?.name}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Логистика $rubleCurrency'),
-                    Text('${profitability.logisticTotalCost}'),
+                    Text('${form.logisticTotalCost}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Цена продажи'),
-                    Text('${profitability.pricingForm.customerPrice}'),
+                    Text('${form.pricingForm.customerPrice}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Исходная цена'),
-                    Text(profitability.pricingForm.priceFormatted),
+                    Text(form.pricingForm.priceFormatted),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Комиссия %'),
-                    Text('${profitability.categorySelector.selected?.fbs}'),
+                    Text('${form.categorySelector.selected?.fbs}'),
+                    //TODO: add ru-currency and percent symbols
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Комиссия $rubleCurrency'),
-                    Text('${profitability.commissionForCost}'),
+                    Text('${form.commissionForCost}'),
+                    //TODO: add num formatting
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Налог %'),
-                    Text('${profitability.selectedTax.taxSize}'),
+                    Text('${form.selectedTax.taxSize}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Налог $rubleCurrency'),
-                    Text('${profitability.taxSize}'),
+                    Text('${form.taxSize}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Доходы'),
                     Text(
-                      '${profitability.price}',
+                      '${form.price}',
                       style: Theme.of(context).tableHeader,
                     ),
                   ],
@@ -150,7 +151,7 @@ class ProfitabilityPdfCreator {
                   children: [
                     Text('Расходы (без налога)'),
                     Text(
-                      '${profitability.expenses}',
+                      '${form.expenses}',
                       style: Theme.of(context).tableHeader,
                     ),
                   ],
@@ -160,7 +161,7 @@ class ProfitabilityPdfCreator {
                   children: [
                     Text('Расходы (с налогом)'),
                     Text(
-                      '${profitability.expensesWithTax}',
+                      '${form.expensesWithTax}',
                       style: Theme.of(context).tableHeader,
                     ),
                   ],
@@ -170,7 +171,7 @@ class ProfitabilityPdfCreator {
                   children: [
                     Text('Прибыль'),
                     Text(
-                      '${profitability.profit}',
+                      '${form.profit}',
                       style: Theme.of(context).tableHeader,
                     ),
                   ],
@@ -180,7 +181,7 @@ class ProfitabilityPdfCreator {
                   children: [
                     Text('Рентабельность'),
                     Text(
-                      profitability.profitabilityFormatted,
+                      form.profitabilityFormatted,
                       style: Theme.of(context).tableHeader,
                     ),
                   ],
@@ -193,8 +194,7 @@ class ProfitabilityPdfCreator {
       );
 
     var bytes = await pdf.save();
-    var name = _createFileName(profitability);
-    var file = PdfFile(profitability, name, bytes);
-    return file;
+    var name = _createFileName(form);
+    return File(form, name, bytes);
   }
 }

@@ -9,6 +9,7 @@ import 'app/widget/side_bar.dart';
 import 'database/database.dart';
 import 'domain/data_transfer/export/pdf/profitability_pdf_creator.dart';
 import 'domain/excel/excel_uploader.dart';
+import 'domain/file_dialog/file_dialog.dart';
 
 void main() async {
   var binding = WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +23,7 @@ Future<void> _registerDependencies() async {
 
   GetIt.instance
     ..registerSingleton(logger)
+    ..registerSingleton(FileDialog())
     ..registerSingletonAsync(() => ProfitabilityPdfCreator.init())
     ..registerSingletonAsync(() => openIsarDatabase())
     ..registerSingletonWithDependencies(
