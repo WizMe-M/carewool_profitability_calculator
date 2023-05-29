@@ -51,7 +51,7 @@ class DatabaseData {
 
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
-      dataToExportKey: toExport.map((e) => e.alias),
+      dataToExportKey: toExport.map((e) => e.alias).toList(),
       for (var block in blocks) block.name: block.data
     };
   }

@@ -1,5 +1,6 @@
 import 'package:carewool_profitability_calculator/domain/data_transfer/json/database_exporter.dart';
 import 'package:carewool_profitability_calculator/domain/data_transfer/json/database_importer.dart';
+import 'package:carewool_profitability_calculator/domain/data_transfer/json/db_json_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get_it/get_it.dart';
@@ -36,12 +37,16 @@ void _registerDependencies() {
       dependsOn: [Isar],
     )
     ..registerSingletonWithDependencies(
+      () => DbJsonLoader(),
+      dependsOn: [Isar],
+    )
+    ..registerSingletonWithDependencies(
       () => DatabaseExporter(),
       dependsOn: [DbJsonFactory],
     )
     ..registerSingletonWithDependencies(
       () => DatabaseImporter(),
-      dependsOn: [Isar],
+      dependsOn: [DbJsonLoader],
     )
     ..registerSingletonWithDependencies(
       () => ExcelUploader(),
