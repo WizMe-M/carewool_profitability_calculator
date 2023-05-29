@@ -5,12 +5,20 @@ part 'template.g.dart';
 @collection
 class Template {
   Id? id;
-  String? name;
-  List<TemplateBlock> blocks = [];
+  late String name;
+  late List<TemplateBlock> blocks = [];
+
+  Template();
+
+  Template.withValues(this.name, this.blocks);
 }
 
 @embedded
 class TemplateBlock {
-  String? name;
-  List<String> partNames = [];
+  late String name;
+  late List<String> partNames = [];
+
+  TemplateBlock();
+
+  TemplateBlock.withValues(this.name, this.partNames);
 }

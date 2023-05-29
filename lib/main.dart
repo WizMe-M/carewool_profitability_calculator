@@ -17,16 +17,18 @@ import 'domain/file_dialog/file_dialog.dart';
 void main() async {
   var binding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: binding);
-  await _registerDependencies();
+  _registerDependencies();
   runApp(App());
 }
 
-Future<void> _registerDependencies() async {
+void _registerDependencies() {
   var logger = Logger(printer: PrettyPrinter(printEmojis: false));
 
   GetIt.instance
-    ..registerSingletonAsync(() => ProfitabilityPdfCreator.init())
-    ..registerSingletonAsync(() => openIsarDatabase())
+    ..registerSingletonAsync<ProfitabilityPdfCreator>(
+      () => ProfitabilityPdfCreator.init(),
+    )
+    ..registerSingletonAsync<Isar>(() => openIsarDatabase())
     ..registerSingleton(logger)
     ..registerSingleton(FileDialog())
     ..registerSingletonWithDependencies(
@@ -35,11 +37,11 @@ Future<void> _registerDependencies() async {
     )
     ..registerSingletonWithDependencies(
       () => DatabaseExporter(),
-      dependsOn: [DbJsonFactory, Logger, FileDialog],
+      dependsOn: [DbJsonFactory],
     )
     ..registerSingletonWithDependencies(
       () => DatabaseImporter(),
-      dependsOn: [Isar, Logger, FileDialog],
+      dependsOn: [Isar],
     )
     ..registerSingletonWithDependencies(
       () => ExcelUploader(),
@@ -47,7 +49,7 @@ Future<void> _registerDependencies() async {
     )
     ..registerSingletonWithDependencies(
       () => SideBar(),
-      dependsOn: [Isar, ExcelUploader],
+      dependsOn: [Isar],
     );
 
   logger.i('All dependencies registered');

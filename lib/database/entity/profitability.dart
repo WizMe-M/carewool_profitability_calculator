@@ -22,6 +22,18 @@ class ProfitabilityCalc {
 
   final IsarLink<Storage> storage = IsarLink();
   final IsarLink<Commission> commission = IsarLink();
+
+  ProfitabilityCalc();
+
+  ProfitabilityCalc.withValues(
+    this.savedDate,
+    this.productName,
+    this.costPrice,
+    this.profitability,
+    this.size,
+    this.pricing,
+    this.tax,
+  );
 }
 
 @embedded
@@ -29,6 +41,10 @@ class Size {
   late double width;
   late double height;
   late double length;
+
+  Size();
+
+  Size.withValues(this.width, this.height, this.length);
 }
 
 @embedded
@@ -36,4 +52,12 @@ class Pricing {
   late double customerPrice;
   late int regularCustomerDiscount;
   late int sellerDiscount;
+
+  Pricing();
+
+  Pricing.withValues(
+    this.customerPrice,
+    this.regularCustomerDiscount,
+    this.sellerDiscount,
+  );
 }

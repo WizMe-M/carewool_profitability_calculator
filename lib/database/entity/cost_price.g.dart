@@ -59,25 +59,15 @@ int _costPriceEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.blocks.length * 3;
   {
-    final list = object.blocks;
-    if (list != null) {
-      bytesCount += 3 + list.length * 3;
-      {
-        final offsets = allOffsets[Block]!;
-        for (var i = 0; i < list.length; i++) {
-          final value = list[i];
-          bytesCount += BlockSchema.estimateSize(value, offsets, allOffsets);
-        }
-      }
+    final offsets = allOffsets[Block]!;
+    for (var i = 0; i < object.blocks.length; i++) {
+      final value = object.blocks[i];
+      bytesCount += BlockSchema.estimateSize(value, offsets, allOffsets);
     }
   }
-  {
-    final value = object.productName;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.productName.length * 3;
   return bytesCount;
 }
 
@@ -105,15 +95,16 @@ CostPrice _costPriceDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = CostPrice(
-    reader.readStringOrNull(offsets[1]),
-    reader.readDateTimeOrNull(offsets[2]),
+    reader.readString(offsets[1]),
+    reader.readDateTime(offsets[2]),
     reader.readObjectList<Block>(
-      offsets[0],
-      BlockSchema.deserialize,
-      allOffsets,
-      Block(),
-    ),
-    reader.readDoubleOrNull(offsets[3]),
+          offsets[0],
+          BlockSchema.deserialize,
+          allOffsets,
+          Block(),
+        ) ??
+        [],
+    reader.readDouble(offsets[3]),
   );
   object.id = id;
   return object;
@@ -128,17 +119,18 @@ P _costPriceDeserializeProp<P>(
   switch (propertyId) {
     case 0:
       return (reader.readObjectList<Block>(
-        offset,
-        BlockSchema.deserialize,
-        allOffsets,
-        Block(),
-      )) as P;
+            offset,
+            BlockSchema.deserialize,
+            allOffsets,
+            Block(),
+          ) ??
+          []) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 3:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -235,22 +227,6 @@ extension CostPriceQueryWhere
 
 extension CostPriceQueryFilter
     on QueryBuilder<CostPrice, CostPrice, QFilterCondition> {
-  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> blocksIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'blocks',
-      ));
-    });
-  }
-
-  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> blocksIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'blocks',
-      ));
-    });
-  }
-
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> blocksLengthEqualTo(
       int length) {
     return QueryBuilder.apply(this, (query) {
@@ -406,26 +382,8 @@ extension CostPriceQueryFilter
     });
   }
 
-  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition>
-      productNameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'productName',
-      ));
-    });
-  }
-
-  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition>
-      productNameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'productName',
-      ));
-    });
-  }
-
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> productNameEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -439,7 +397,7 @@ extension CostPriceQueryFilter
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition>
       productNameGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -454,7 +412,7 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> productNameLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -469,8 +427,8 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> productNameBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -558,25 +516,8 @@ extension CostPriceQueryFilter
     });
   }
 
-  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> savedDateIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'savedDate',
-      ));
-    });
-  }
-
-  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition>
-      savedDateIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'savedDate',
-      ));
-    });
-  }
-
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> savedDateEqualTo(
-      DateTime? value) {
+      DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'savedDate',
@@ -587,7 +528,7 @@ extension CostPriceQueryFilter
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition>
       savedDateGreaterThan(
-    DateTime? value, {
+    DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -600,7 +541,7 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> savedDateLessThan(
-    DateTime? value, {
+    DateTime value, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -613,8 +554,8 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> savedDateBetween(
-    DateTime? lower,
-    DateTime? upper, {
+    DateTime lower,
+    DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
   }) {
@@ -629,24 +570,8 @@ extension CostPriceQueryFilter
     });
   }
 
-  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> totalIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'total',
-      ));
-    });
-  }
-
-  QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> totalIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'total',
-      ));
-    });
-  }
-
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> totalEqualTo(
-    double? value, {
+    double value, {
     double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -659,7 +584,7 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> totalGreaterThan(
-    double? value, {
+    double value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
@@ -674,7 +599,7 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> totalLessThan(
-    double? value, {
+    double value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
@@ -689,8 +614,8 @@ extension CostPriceQueryFilter
   }
 
   QueryBuilder<CostPrice, CostPrice, QAfterFilterCondition> totalBetween(
-    double? lower,
-    double? upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
     double epsilon = Query.epsilon,
@@ -840,25 +765,25 @@ extension CostPriceQueryProperty
     });
   }
 
-  QueryBuilder<CostPrice, List<Block>?, QQueryOperations> blocksProperty() {
+  QueryBuilder<CostPrice, List<Block>, QQueryOperations> blocksProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'blocks');
     });
   }
 
-  QueryBuilder<CostPrice, String?, QQueryOperations> productNameProperty() {
+  QueryBuilder<CostPrice, String, QQueryOperations> productNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'productName');
     });
   }
 
-  QueryBuilder<CostPrice, DateTime?, QQueryOperations> savedDateProperty() {
+  QueryBuilder<CostPrice, DateTime, QQueryOperations> savedDateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'savedDate');
     });
   }
 
-  QueryBuilder<CostPrice, double?, QQueryOperations> totalProperty() {
+  QueryBuilder<CostPrice, double, QQueryOperations> totalProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'total');
     });
@@ -900,23 +825,13 @@ int _blockEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.name.length * 3;
+  bytesCount += 3 + object.parts.length * 3;
   {
-    final value = object.name;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final list = object.parts;
-    if (list != null) {
-      bytesCount += 3 + list.length * 3;
-      {
-        final offsets = allOffsets[Part]!;
-        for (var i = 0; i < list.length; i++) {
-          final value = list[i];
-          bytesCount += PartSchema.estimateSize(value, offsets, allOffsets);
-        }
-      }
+    final offsets = allOffsets[Part]!;
+    for (var i = 0; i < object.parts.length; i++) {
+      final value = object.parts[i];
+      bytesCount += PartSchema.estimateSize(value, offsets, allOffsets);
     }
   }
   return bytesCount;
@@ -944,13 +859,14 @@ Block _blockDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Block();
-  object.name = reader.readStringOrNull(offsets[0]);
+  object.name = reader.readString(offsets[0]);
   object.parts = reader.readObjectList<Part>(
-    offsets[1],
-    PartSchema.deserialize,
-    allOffsets,
-    Part(),
-  );
+        offsets[1],
+        PartSchema.deserialize,
+        allOffsets,
+        Part(),
+      ) ??
+      [];
   return object;
 }
 
@@ -962,38 +878,23 @@ P _blockDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 1:
       return (reader.readObjectList<Part>(
-        offset,
-        PartSchema.deserialize,
-        allOffsets,
-        Part(),
-      )) as P;
+            offset,
+            PartSchema.deserialize,
+            allOffsets,
+            Part(),
+          ) ??
+          []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
 extension BlockQueryFilter on QueryBuilder<Block, Block, QFilterCondition> {
-  QueryBuilder<Block, Block, QAfterFilterCondition> nameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'name',
-      ));
-    });
-  }
-
-  QueryBuilder<Block, Block, QAfterFilterCondition> nameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'name',
-      ));
-    });
-  }
-
   QueryBuilder<Block, Block, QAfterFilterCondition> nameEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1006,7 +907,7 @@ extension BlockQueryFilter on QueryBuilder<Block, Block, QFilterCondition> {
   }
 
   QueryBuilder<Block, Block, QAfterFilterCondition> nameGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1021,7 +922,7 @@ extension BlockQueryFilter on QueryBuilder<Block, Block, QFilterCondition> {
   }
 
   QueryBuilder<Block, Block, QAfterFilterCondition> nameLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1036,8 +937,8 @@ extension BlockQueryFilter on QueryBuilder<Block, Block, QFilterCondition> {
   }
 
   QueryBuilder<Block, Block, QAfterFilterCondition> nameBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1116,22 +1017,6 @@ extension BlockQueryFilter on QueryBuilder<Block, Block, QFilterCondition> {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'name',
         value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Block, Block, QAfterFilterCondition> partsIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'parts',
-      ));
-    });
-  }
-
-  QueryBuilder<Block, Block, QAfterFilterCondition> partsIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'parts',
       ));
     });
   }
@@ -1260,12 +1145,7 @@ int _partEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  {
-    final value = object.name;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
 
@@ -1286,8 +1166,8 @@ Part _partDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Part();
-  object.cost = reader.readDoubleOrNull(offsets[0]);
-  object.name = reader.readStringOrNull(offsets[1]);
+  object.cost = reader.readDouble(offsets[0]);
+  object.name = reader.readString(offsets[1]);
   return object;
 }
 
@@ -1299,33 +1179,17 @@ P _partDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
 }
 
 extension PartQueryFilter on QueryBuilder<Part, Part, QFilterCondition> {
-  QueryBuilder<Part, Part, QAfterFilterCondition> costIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'cost',
-      ));
-    });
-  }
-
-  QueryBuilder<Part, Part, QAfterFilterCondition> costIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'cost',
-      ));
-    });
-  }
-
   QueryBuilder<Part, Part, QAfterFilterCondition> costEqualTo(
-    double? value, {
+    double value, {
     double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1338,7 +1202,7 @@ extension PartQueryFilter on QueryBuilder<Part, Part, QFilterCondition> {
   }
 
   QueryBuilder<Part, Part, QAfterFilterCondition> costGreaterThan(
-    double? value, {
+    double value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
@@ -1353,7 +1217,7 @@ extension PartQueryFilter on QueryBuilder<Part, Part, QFilterCondition> {
   }
 
   QueryBuilder<Part, Part, QAfterFilterCondition> costLessThan(
-    double? value, {
+    double value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
@@ -1368,8 +1232,8 @@ extension PartQueryFilter on QueryBuilder<Part, Part, QFilterCondition> {
   }
 
   QueryBuilder<Part, Part, QAfterFilterCondition> costBetween(
-    double? lower,
-    double? upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
     double epsilon = Query.epsilon,
@@ -1386,24 +1250,8 @@ extension PartQueryFilter on QueryBuilder<Part, Part, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Part, Part, QAfterFilterCondition> nameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'name',
-      ));
-    });
-  }
-
-  QueryBuilder<Part, Part, QAfterFilterCondition> nameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'name',
-      ));
-    });
-  }
-
   QueryBuilder<Part, Part, QAfterFilterCondition> nameEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1416,7 +1264,7 @@ extension PartQueryFilter on QueryBuilder<Part, Part, QFilterCondition> {
   }
 
   QueryBuilder<Part, Part, QAfterFilterCondition> nameGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1431,7 +1279,7 @@ extension PartQueryFilter on QueryBuilder<Part, Part, QFilterCondition> {
   }
 
   QueryBuilder<Part, Part, QAfterFilterCondition> nameLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1446,8 +1294,8 @@ extension PartQueryFilter on QueryBuilder<Part, Part, QFilterCondition> {
   }
 
   QueryBuilder<Part, Part, QAfterFilterCondition> nameBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,

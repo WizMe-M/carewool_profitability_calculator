@@ -107,6 +107,13 @@ mixin _$ProfitabilityForm on ProfitabilityFormBase, Store {
       (_$profitabilityComputed ??= Computed<double>(() => super.profitability,
               name: 'ProfitabilityFormBase.profitability'))
           .value;
+  Computed<String>? _$profitabilityFormattedComputed;
+
+  @override
+  String get profitabilityFormatted => (_$profitabilityFormattedComputed ??=
+          Computed<String>(() => super.profitabilityFormatted,
+              name: 'ProfitabilityFormBase.profitabilityFormatted'))
+      .value;
 
   late final _$selectedTaxAtom =
       Atom(name: 'ProfitabilityFormBase.selectedTax', context: context);
@@ -141,7 +148,8 @@ expenses: ${expenses},
 taxSize: ${taxSize},
 expensesWithTax: ${expensesWithTax},
 profit: ${profit},
-profitability: ${profitability}
+profitability: ${profitability},
+profitabilityFormatted: ${profitabilityFormatted}
     ''';
   }
 }

@@ -16,18 +16,22 @@ class CommissionUpload {
 @collection
 class Commission {
   Id? id;
-  String? category;
-  String? itemName;
-  double? fbo;
-  double? fbs;
+  late String category;
+  late String itemName;
+  late double fbo;
+  late double fbs;
 
   @Backlink(to: 'commissions')
   final IsarLink<CommissionUpload> upload = IsarLink();
 
+  Commission();
+
+  Commission.withValues(this.category, this.itemName, this.fbo, this.fbs);
+
   @Index(type: IndexType.value, caseSensitive: false)
   List<String> get tagWords {
-    var itemWords = Isar.splitWords(itemName!);
-    var categoryWords = Isar.splitWords(category!);
+    var itemWords = Isar.splitWords(itemName);
+    var categoryWords = Isar.splitWords(category);
     var words = categoryWords..addAll(itemWords);
     var lowercaseWords = words.map((e) => e.toLowerCase());
     var uniqueTags = [
