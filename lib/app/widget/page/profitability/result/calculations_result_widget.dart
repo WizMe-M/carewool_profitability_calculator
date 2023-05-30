@@ -22,7 +22,7 @@ class CalculationsResultWidget extends StatelessWidget {
         }),
         Observer(builder: (context) {
           return Text(
-            'Итоговые расходы: ${form.expensesFormatted}',
+            'Итоговые расходы: ${form.expensesWithTaxFormatted}',
             style: const TextStyle(fontWeight: FontWeight.bold),
           );
         }),

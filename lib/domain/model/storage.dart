@@ -12,6 +12,9 @@ class Storage {
 
   Storage(this.entity);
 
+  Storage.defaultValue()
+      : this(db.Storage.withValues('Тарифы по умолчанию', 100));
+
   String get name => entity.name;
 
   double get coefficient => entity.costCoefficient;
@@ -31,9 +34,4 @@ class Storage {
   String get additionalLogisticsFormatted {
     return Formatting.formatCostRu(additionalLogistics);
   }
-}
-
-/// Default storage tariffs
-final class DefaultStorage extends Storage {
-  DefaultStorage() : super(db.Storage.withValues('Тарифы по умолчанию', 100));
 }

@@ -9,19 +9,13 @@ part of 'profitability_form.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ProfitabilityForm on ProfitabilityFormBase, Store {
-  Computed<double>? _$priceComputed;
+  Computed<double>? _$incomeComputed;
 
   @override
-  double get price => (_$priceComputed ??= Computed<double>(() => super.price,
-          name: 'ProfitabilityFormBase.price'))
-      .value;
-  Computed<double>? _$commissionForCostComputed;
-
-  @override
-  double get commissionForCost => (_$commissionForCostComputed ??=
-          Computed<double>(() => super.commissionForCost,
-              name: 'ProfitabilityFormBase.commissionForCost'))
-      .value;
+  double get income =>
+      (_$incomeComputed ??= Computed<double>(() => super.income,
+              name: 'ProfitabilityFormBase.income'))
+          .value;
   Computed<double>? _$expensesComputed;
 
   @override
@@ -102,6 +96,13 @@ mixin _$ProfitabilityForm on ProfitabilityFormBase, Store {
           Computed<String>(() => super.expensesFormatted,
               name: 'ProfitabilityFormBase.expensesFormatted'))
       .value;
+  Computed<String>? _$expensesWithTaxFormattedComputed;
+
+  @override
+  String get expensesWithTaxFormatted => (_$expensesWithTaxFormattedComputed ??=
+          Computed<String>(() => super.expensesWithTaxFormatted,
+              name: 'ProfitabilityFormBase.expensesWithTaxFormatted'))
+      .value;
   Computed<String>? _$profitFormattedComputed;
 
   @override
@@ -137,8 +138,7 @@ mixin _$ProfitabilityForm on ProfitabilityFormBase, Store {
   String toString() {
     return '''
 selectedTax: ${selectedTax},
-price: ${price},
-commissionForCost: ${commissionForCost},
+income: ${income},
 expenses: ${expenses},
 taxSize: ${taxSize},
 expensesWithTax: ${expensesWithTax},
@@ -150,6 +150,7 @@ expensesCommissionFormatted: ${expensesCommissionFormatted},
 expensesLogisticsFormatted: ${expensesLogisticsFormatted},
 expensesTaxFormatted: ${expensesTaxFormatted},
 expensesFormatted: ${expensesFormatted},
+expensesWithTaxFormatted: ${expensesWithTaxFormatted},
 profitFormatted: ${profitFormatted},
 profitabilityFormatted: ${profitabilityFormatted}
     ''';

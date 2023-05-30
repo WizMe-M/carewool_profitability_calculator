@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../../../../domain/profitability/pricing/pricing_form.dart';
-import '../../../../../domain/util/strings.dart';
 
 class PricingFormWidget extends StatelessWidget {
   final PricingForm form;
@@ -48,7 +47,7 @@ class PricingFormWidget extends StatelessWidget {
         Center(
           child: Observer(
             builder: (context) => Text(
-              'Цена до СПП: ${form.priceBeforeRCDFormatted}$rubleCurrency',
+              'Цена до СПП: ${form.priceBeforeRCDFormatted}',
               style: const TextStyle(fontSize: 16),
             ),
           ),
@@ -72,7 +71,7 @@ class PricingFormWidget extends StatelessWidget {
         Center(
           child: Observer(
             builder: (context) => Text(
-              'Исходная цена (до скидок): ${form.priceFormatted}$rubleCurrency',
+              'Исходная цена (до скидок): ${form.priceFormatted}',
               style: const TextStyle(fontSize: 16),
             ),
           ),

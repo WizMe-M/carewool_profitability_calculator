@@ -26,10 +26,10 @@ abstract class LogisticsCalculatorBase with Store {
   @computed
   Storage get selected {
     if (storageSelector.selected != null) {
-      var storage = storageSelector.selected;
-      return Storage(storage!);
+      var entity = storageSelector.selected;
+      return Storage(entity!);
     }
-    return DefaultStorage();
+    return Storage.defaultValue();
   }
 
   @computed

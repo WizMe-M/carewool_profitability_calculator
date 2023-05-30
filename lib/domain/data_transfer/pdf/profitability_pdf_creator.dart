@@ -42,6 +42,7 @@ class ProfitabilityPdfCreator {
           theme: textTheme,
           build: (context) {
             return Table(
+              border: TableBorder.all(),
               // TODO: add normal table bounds and borders
               children: [
                 TableRow(
@@ -60,31 +61,31 @@ class ProfitabilityPdfCreator {
                 TableRow(
                   children: [
                     Text('Себестоимость'),
-                    Text('${form.costPrice.total}'),
+                    Text(form.expenseProductionFormatted),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Длина'),
-                    Text('${form.logistics.size.length}'),
+                    Text(form.logistics.size.lengthFormatted),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Ширина'),
-                    Text('${form.logistics.size.width}'),
+                    Text(form.logistics.size.widthFormatted),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Высота'),
-                    Text('${form.logistics.size.height}'),
+                    Text(form.logistics.size.heightFormatted),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Объём'),
-                    Text('${form.logistics.size.volumeInLiters}'),
+                    Text('${form.logistics.size.volumeInLiters}л'),
                   ],
                 ),
                 TableRow(
@@ -102,27 +103,25 @@ class ProfitabilityPdfCreator {
                 TableRow(
                   children: [
                     Text('Цена продажи'),
-                    Text('${form.pricingForm.customerPrice}'),
+                    Text(form.pricing.form.priceBeforeRCDFormatted),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Исходная цена'),
-                    Text(form.pricingForm.priceFormatted),
+                    Text(form.pricing.form.priceFormatted),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Комиссия %'),
-                    Text('${form.categorySelector.selected?.fbs}'),
-                    //TODO: add ru-currency and percent symbols
+                    Text(form.pricing.commissionFormatted),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Комиссия $rubleCurrency'),
-                    Text('${form.commissionForCost}'),
-                    //TODO: add num formatting
+                    Text(form.expensesCommissionFormatted),
                   ],
                 ),
                 TableRow(
@@ -141,7 +140,7 @@ class ProfitabilityPdfCreator {
                   children: [
                     Text('Доходы'),
                     Text(
-                      '${form.price}',
+                      form.incomeFormatted,
                       style: Theme.of(context).tableHeader,
                     ),
                   ],
@@ -151,7 +150,7 @@ class ProfitabilityPdfCreator {
                   children: [
                     Text('Расходы (без налога)'),
                     Text(
-                      '${form.expenses}',
+                      form.expensesFormatted,
                       style: Theme.of(context).tableHeader,
                     ),
                   ],
@@ -161,7 +160,7 @@ class ProfitabilityPdfCreator {
                   children: [
                     Text('Расходы (с налогом)'),
                     Text(
-                      '${form.expensesWithTax}',
+                      form.expensesWithTaxFormatted,
                       style: Theme.of(context).tableHeader,
                     ),
                   ],
@@ -171,7 +170,7 @@ class ProfitabilityPdfCreator {
                   children: [
                     Text('Прибыль'),
                     Text(
-                      '${form.profit}',
+                      form.profitFormatted,
                       style: Theme.of(context).tableHeader,
                     ),
                   ],

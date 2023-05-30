@@ -16,18 +16,18 @@ mixin _$PricingForm on PricingFormBase, Store {
       (_$priceBeforeRCDComputed ??= Computed<double>(() => super.priceBeforeRCD,
               name: 'PricingFormBase.priceBeforeRCD'))
           .value;
+  Computed<double>? _$priceComputed;
+
+  @override
+  double get price => (_$priceComputed ??=
+          Computed<double>(() => super.price, name: 'PricingFormBase.price'))
+      .value;
   Computed<String>? _$priceBeforeRCDFormattedComputed;
 
   @override
   String get priceBeforeRCDFormatted => (_$priceBeforeRCDFormattedComputed ??=
           Computed<String>(() => super.priceBeforeRCDFormatted,
               name: 'PricingFormBase.priceBeforeRCDFormatted'))
-      .value;
-  Computed<double>? _$priceComputed;
-
-  @override
-  double get price => (_$priceComputed ??=
-          Computed<double>(() => super.price, name: 'PricingFormBase.price'))
       .value;
   Computed<String>? _$priceFormattedComputed;
 
@@ -93,8 +93,8 @@ customerPrice: ${customerPrice},
 regularCustomerDiscount: ${regularCustomerDiscount},
 sellerDiscount: ${sellerDiscount},
 priceBeforeRCD: ${priceBeforeRCD},
-priceBeforeRCDFormatted: ${priceBeforeRCDFormatted},
 price: ${price},
+priceBeforeRCDFormatted: ${priceBeforeRCDFormatted},
 priceFormatted: ${priceFormatted}
     ''';
   }

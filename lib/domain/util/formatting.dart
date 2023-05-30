@@ -1,5 +1,6 @@
-import 'package:carewool_profitability_calculator/domain/util/strings.dart';
 import 'package:intl/intl.dart';
+
+import 'strings.dart';
 
 abstract final class Formatting {
   Formatting._();

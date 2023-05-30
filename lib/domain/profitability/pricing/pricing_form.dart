@@ -1,17 +1,14 @@
-import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../inputs/double_input.dart';
 import '../../inputs/discount_input.dart';
+import '../../util/formatting.dart';
 
 part 'pricing_form.g.dart';
 
 class PricingForm = PricingFormBase with _$PricingForm;
 
 abstract class PricingFormBase with Store {
-  final _formatter = NumberFormat()
-    ..minimumFractionDigits = 0
-    ..maximumFractionDigits = 2;
   final customerPriceInput = DoubleInput();
   final regularCustomerDiscountInput = DiscountInput();
   final sellerDiscountInput = DiscountInput();
@@ -36,16 +33,16 @@ abstract class PricingFormBase with Store {
   }
 
   @computed
-  String get priceBeforeRCDFormatted => _formatter.format(priceBeforeRCD);
-
-  @computed
   double get price {
     var coefficient = 1 - sellerDiscount / 100;
     return priceBeforeRCD / coefficient;
   }
 
   @computed
-  String get priceFormatted => _formatter.format(price);
+  String get priceBeforeRCDFormatted => Formatting.formatCostRu(priceBeforeRCD);
+
+  @computed
+  String get priceFormatted => Formatting.formatCostRu(price);
 
   void initListeners() {
     customerPriceInput.controller.addListener(() {
