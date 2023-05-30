@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-import '../../../../../../domain/profitability/storage_selector/storage_selector.dart';
+import '../../../../../../domain/profitability/logistics/logistics_calculator.dart';
 import 'storage_info_widget.dart';
 
 class StorageSelectorWidget extends StatelessWidget {
   final _searchController = TextEditingController();
-  final StorageSelector selector;
+  final LogisticsCalculator logistics;
 
-  StorageSelectorWidget({super.key, required this.selector});
+  StorageSelectorWidget({required this.logistics, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class StorageSelectorWidget extends StatelessWidget {
                 hintText: 'Введите название склада',
                 suffixIcon: IconButton(
                   onPressed: () {
-                    selector.selected = null;
+                    logistics.storageSelector.selected = null;
                     _searchController.clear();
                   },
                   icon: const Icon(Icons.clear),
@@ -38,14 +38,14 @@ class StorageSelectorWidget extends StatelessWidget {
               ),
             ),
             suggestionsCallback: (pattern) async {
-              return await selector.search(pattern);
+              return await logistics.storageSelector.search(pattern);
             },
             itemBuilder: (context, suggestion) {
-              return ListTile(title: Text(suggestion.name!));
+              return ListTile(title: Text(suggestion.name));
             },
             onSuggestionSelected: (suggestion) {
-              selector.selected = suggestion;
-              _searchController.text = suggestion.name!;
+              logistics.storageSelector.selected = suggestion;
+              _searchController.text = suggestion.name;
             },
             loadingBuilder: (_) {
               return const Center(child: CircularProgressIndicator());
@@ -67,21 +67,21 @@ class StorageSelectorWidget extends StatelessWidget {
               );
             },
           ),
-          Observer(
-            builder: (context) {
-              return selector.selected != null
-                  ? StorageInfoWidget(storage: selector.selected!)
-                  : const Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Center(
-                        child: Text(
-                          'Выберите склад',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    );
-            },
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Observer(builder: (context) {
+              if (logistics.storageSelector.selected == null) {
+                return Text(
+                  'Выберите склад',
+                  style: TextStyle(color: Colors.red[600]),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
           ),
+          Observer(builder: (context) {
+            return StorageInfoWidget(storage: logistics.selected);
+          }),
         ],
       ),
     );

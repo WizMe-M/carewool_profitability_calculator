@@ -815,21 +815,20 @@ const StorageSchema = CollectionSchema(
   name: r'Storage',
   id: 1211984339887552882,
   properties: {
-    r'name': PropertySchema(
+    r'costCoefficient': PropertySchema(
       id: 0,
+      name: r'costCoefficient',
+      type: IsarType.double,
+    ),
+    r'name': PropertySchema(
+      id: 1,
       name: r'name',
       type: IsarType.string,
     ),
     r'nameWords': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'nameWords',
       type: IsarType.stringList,
-    ),
-    r'tariffs': PropertySchema(
-      id: 2,
-      name: r'tariffs',
-      type: IsarType.objectList,
-      target: r'Tariff',
     )
   },
   estimateSize: _storageEstimateSize,
@@ -861,7 +860,7 @@ const StorageSchema = CollectionSchema(
       linkName: r'storages',
     )
   },
-  embeddedSchemas: {r'Tariff': TariffSchema},
+  embeddedSchemas: {},
   getId: _storageGetId,
   getLinks: _storageGetLinks,
   attach: _storageAttach,
@@ -882,14 +881,6 @@ int _storageEstimateSize(
       bytesCount += value.length * 3;
     }
   }
-  bytesCount += 3 + object.tariffs.length * 3;
-  {
-    final offsets = allOffsets[Tariff]!;
-    for (var i = 0; i < object.tariffs.length; i++) {
-      final value = object.tariffs[i];
-      bytesCount += TariffSchema.estimateSize(value, offsets, allOffsets);
-    }
-  }
   return bytesCount;
 }
 
@@ -899,14 +890,9 @@ void _storageSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.name);
-  writer.writeStringList(offsets[1], object.nameWords);
-  writer.writeObjectList<Tariff>(
-    offsets[2],
-    allOffsets,
-    TariffSchema.serialize,
-    object.tariffs,
-  );
+  writer.writeDouble(offsets[0], object.costCoefficient);
+  writer.writeString(offsets[1], object.name);
+  writer.writeStringList(offsets[2], object.nameWords);
 }
 
 Storage _storageDeserialize(
@@ -916,15 +902,9 @@ Storage _storageDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Storage();
+  object.costCoefficient = reader.readDouble(offsets[0]);
   object.id = id;
-  object.name = reader.readString(offsets[0]);
-  object.tariffs = reader.readObjectList<Tariff>(
-        offsets[2],
-        TariffSchema.deserialize,
-        allOffsets,
-        Tariff(),
-      ) ??
-      [];
+  object.name = reader.readString(offsets[1]);
   return object;
 }
 
@@ -936,17 +916,11 @@ P _storageDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 1:
-      return (reader.readStringList(offset) ?? []) as P;
+      return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readObjectList<Tariff>(
-            offset,
-            TariffSchema.deserialize,
-            allOffsets,
-            Tariff(),
-          ) ??
-          []) as P;
+      return (reader.readStringList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -1188,6 +1162,69 @@ extension StorageQueryWhere on QueryBuilder<Storage, Storage, QWhereClause> {
 
 extension StorageQueryFilter
     on QueryBuilder<Storage, Storage, QFilterCondition> {
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> costCoefficientEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'costCoefficient',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition>
+      costCoefficientGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'costCoefficient',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> costCoefficientLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'costCoefficient',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> costCoefficientBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'costCoefficient',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
   QueryBuilder<Storage, Storage, QAfterFilterCondition> idIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -1605,102 +1642,10 @@ extension StorageQueryFilter
       );
     });
   }
-
-  QueryBuilder<Storage, Storage, QAfterFilterCondition> tariffsLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'tariffs',
-        length,
-        true,
-        length,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Storage, Storage, QAfterFilterCondition> tariffsIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'tariffs',
-        0,
-        true,
-        0,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Storage, Storage, QAfterFilterCondition> tariffsIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'tariffs',
-        0,
-        false,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Storage, Storage, QAfterFilterCondition> tariffsLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'tariffs',
-        0,
-        true,
-        length,
-        include,
-      );
-    });
-  }
-
-  QueryBuilder<Storage, Storage, QAfterFilterCondition>
-      tariffsLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'tariffs',
-        length,
-        include,
-        999999,
-        true,
-      );
-    });
-  }
-
-  QueryBuilder<Storage, Storage, QAfterFilterCondition> tariffsLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.listLength(
-        r'tariffs',
-        lower,
-        includeLower,
-        upper,
-        includeUpper,
-      );
-    });
-  }
 }
 
 extension StorageQueryObject
-    on QueryBuilder<Storage, Storage, QFilterCondition> {
-  QueryBuilder<Storage, Storage, QAfterFilterCondition> tariffsElement(
-      FilterQuery<Tariff> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'tariffs');
-    });
-  }
-}
+    on QueryBuilder<Storage, Storage, QFilterCondition> {}
 
 extension StorageQueryLinks
     on QueryBuilder<Storage, Storage, QFilterCondition> {
@@ -1762,6 +1707,18 @@ extension StorageQueryLinks
 }
 
 extension StorageQuerySortBy on QueryBuilder<Storage, Storage, QSortBy> {
+  QueryBuilder<Storage, Storage, QAfterSortBy> sortByCostCoefficient() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'costCoefficient', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterSortBy> sortByCostCoefficientDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'costCoefficient', Sort.desc);
+    });
+  }
+
   QueryBuilder<Storage, Storage, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1777,6 +1734,18 @@ extension StorageQuerySortBy on QueryBuilder<Storage, Storage, QSortBy> {
 
 extension StorageQuerySortThenBy
     on QueryBuilder<Storage, Storage, QSortThenBy> {
+  QueryBuilder<Storage, Storage, QAfterSortBy> thenByCostCoefficient() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'costCoefficient', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Storage, Storage, QAfterSortBy> thenByCostCoefficientDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'costCoefficient', Sort.desc);
+    });
+  }
+
   QueryBuilder<Storage, Storage, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -1804,6 +1773,12 @@ extension StorageQuerySortThenBy
 
 extension StorageQueryWhereDistinct
     on QueryBuilder<Storage, Storage, QDistinct> {
+  QueryBuilder<Storage, Storage, QDistinct> distinctByCostCoefficient() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'costCoefficient');
+    });
+  }
+
   QueryBuilder<Storage, Storage, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1826,6 +1801,12 @@ extension StorageQueryProperty
     });
   }
 
+  QueryBuilder<Storage, double, QQueryOperations> costCoefficientProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'costCoefficient');
+    });
+  }
+
   QueryBuilder<Storage, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
@@ -1837,352 +1818,4 @@ extension StorageQueryProperty
       return query.addPropertyName(r'nameWords');
     });
   }
-
-  QueryBuilder<Storage, List<Tariff>, QQueryOperations> tariffsProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'tariffs');
-    });
-  }
 }
-
-// **************************************************************************
-// IsarEmbeddedGenerator
-// **************************************************************************
-
-// coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
-
-const TariffSchema = Schema(
-  name: r'Tariff',
-  id: 7950035533870099206,
-  properties: {
-    r'baseCost': PropertySchema(
-      id: 0,
-      name: r'baseCost',
-      type: IsarType.double,
-    ),
-    r'costPerLiter': PropertySchema(
-      id: 1,
-      name: r'costPerLiter',
-      type: IsarType.double,
-    ),
-    r'name': PropertySchema(
-      id: 2,
-      name: r'name',
-      type: IsarType.string,
-    )
-  },
-  estimateSize: _tariffEstimateSize,
-  serialize: _tariffSerialize,
-  deserialize: _tariffDeserialize,
-  deserializeProp: _tariffDeserializeProp,
-);
-
-int _tariffEstimateSize(
-  Tariff object,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  var bytesCount = offsets.last;
-  bytesCount += 3 + object.name.length * 3;
-  return bytesCount;
-}
-
-void _tariffSerialize(
-  Tariff object,
-  IsarWriter writer,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  writer.writeDouble(offsets[0], object.baseCost);
-  writer.writeDouble(offsets[1], object.costPerLiter);
-  writer.writeString(offsets[2], object.name);
-}
-
-Tariff _tariffDeserialize(
-  Id id,
-  IsarReader reader,
-  List<int> offsets,
-  Map<Type, List<int>> allOffsets,
-) {
-  final object = Tariff();
-  object.baseCost = reader.readDouble(offsets[0]);
-  object.costPerLiter = reader.readDouble(offsets[1]);
-  object.name = reader.readString(offsets[2]);
-  return object;
-}
-
-P _tariffDeserializeProp<P>(
-  IsarReader reader,
-  int propertyId,
-  int offset,
-  Map<Type, List<int>> allOffsets,
-) {
-  switch (propertyId) {
-    case 0:
-      return (reader.readDouble(offset)) as P;
-    case 1:
-      return (reader.readDouble(offset)) as P;
-    case 2:
-      return (reader.readString(offset)) as P;
-    default:
-      throw IsarError('Unknown property with id $propertyId');
-  }
-}
-
-extension TariffQueryFilter on QueryBuilder<Tariff, Tariff, QFilterCondition> {
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> baseCostEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'baseCost',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> baseCostGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'baseCost',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> baseCostLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'baseCost',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> baseCostBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'baseCost',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> costPerLiterEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'costPerLiter',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> costPerLiterGreaterThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'costPerLiter',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> costPerLiterLessThan(
-    double value, {
-    bool include = false,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'costPerLiter',
-        value: value,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> costPerLiterBetween(
-    double lower,
-    double upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    double epsilon = Query.epsilon,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'costPerLiter',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        epsilon: epsilon,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> nameEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> nameGreaterThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> nameLessThan(
-    String value, {
-    bool include = false,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> nameBetween(
-    String lower,
-    String upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'name',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> nameStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> nameEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> nameContains(String value,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'name',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> nameMatches(
-      String pattern,
-      {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'name',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> nameIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'name',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<Tariff, Tariff, QAfterFilterCondition> nameIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'name',
-        value: '',
-      ));
-    });
-  }
-}
-
-extension TariffQueryObject on QueryBuilder<Tariff, Tariff, QFilterCondition> {}

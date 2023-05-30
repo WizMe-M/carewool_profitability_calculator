@@ -58,60 +58,57 @@ mixin _$SizeForm on SizeFormBase, Store {
               name: 'SizeFormBase.isExtraLargeProduct'))
       .value;
 
-  late final _$widthValueAtom =
-      Atom(name: 'SizeFormBase.widthValue', context: context);
+  late final _$widthAtom = Atom(name: 'SizeFormBase.width', context: context);
 
   @override
-  double get widthValue {
-    _$widthValueAtom.reportRead();
-    return super.widthValue;
+  double get width {
+    _$widthAtom.reportRead();
+    return super.width;
   }
 
   @override
-  set widthValue(double value) {
-    _$widthValueAtom.reportWrite(value, super.widthValue, () {
-      super.widthValue = value;
+  set width(double value) {
+    _$widthAtom.reportWrite(value, super.width, () {
+      super.width = value;
     });
   }
 
-  late final _$heightValueAtom =
-      Atom(name: 'SizeFormBase.heightValue', context: context);
+  late final _$heightAtom = Atom(name: 'SizeFormBase.height', context: context);
 
   @override
-  double get heightValue {
-    _$heightValueAtom.reportRead();
-    return super.heightValue;
+  double get height {
+    _$heightAtom.reportRead();
+    return super.height;
   }
 
   @override
-  set heightValue(double value) {
-    _$heightValueAtom.reportWrite(value, super.heightValue, () {
-      super.heightValue = value;
+  set height(double value) {
+    _$heightAtom.reportWrite(value, super.height, () {
+      super.height = value;
     });
   }
 
-  late final _$lengthValueAtom =
-      Atom(name: 'SizeFormBase.lengthValue', context: context);
+  late final _$lengthAtom = Atom(name: 'SizeFormBase.length', context: context);
 
   @override
-  double get lengthValue {
-    _$lengthValueAtom.reportRead();
-    return super.lengthValue;
+  double get length {
+    _$lengthAtom.reportRead();
+    return super.length;
   }
 
   @override
-  set lengthValue(double value) {
-    _$lengthValueAtom.reportWrite(value, super.lengthValue, () {
-      super.lengthValue = value;
+  set length(double value) {
+    _$lengthAtom.reportWrite(value, super.length, () {
+      super.length = value;
     });
   }
 
   @override
   String toString() {
     return '''
-widthValue: ${widthValue},
-heightValue: ${heightValue},
-lengthValue: ${lengthValue},
+width: ${width},
+height: ${height},
+length: ${length},
 widthFormatted: ${widthFormatted},
 heightFormatted: ${heightFormatted},
 lengthFormatted: ${lengthFormatted},

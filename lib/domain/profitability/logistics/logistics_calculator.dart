@@ -1,0 +1,53 @@
+import 'dart:math';
+
+import 'package:mobx/mobx.dart';
+
+import '../../model/storage.dart';
+import '../../util/formatting.dart';
+import '../size_form/size_form.dart';
+import '../storage_selector/storage_selector.dart';
+
+part 'logistics_calculator.g.dart';
+
+class LogisticsCalculator = LogisticsCalculatorBase with _$LogisticsCalculator;
+
+abstract class LogisticsCalculatorBase with Store {
+  static const double minExtraLargeCost = 1000;
+
+  final StorageSelector storageSelector;
+  final size = SizeForm();
+
+  LogisticsCalculatorBase(this.storageSelector);
+
+  String get minExtraLargeCostFormatted {
+    return Formatting.formatCostRu(minExtraLargeCost);
+  }
+
+  @computed
+  Storage get selected {
+    if (storageSelector.selected != null) {
+      var storage = storageSelector.selected;
+      return Storage(storage!);
+    }
+    return DefaultStorage();
+  }
+
+  @computed
+  double get costForSize {
+    var additionalCost = size.overLiterCap * selected.additionalLogistics;
+    return selected.baseLogistics + additionalCost;
+  }
+
+  @computed
+  double get costForExtraLarge {
+    return max<double>(minExtraLargeCost, costForSize);
+  }
+
+  @computed
+  double get totalCost {
+    return size.isExtraLargeProduct ? costForExtraLarge : costForSize;
+  }
+
+  @computed
+  String get totalCostFormatted => Formatting.formatCostRu(totalCost);
+}

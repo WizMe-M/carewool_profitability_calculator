@@ -3,9 +3,9 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart';
 import 'package:printing/printing.dart';
 
-import '../../../profitability/profitability_form.dart';
-import '../../../util/strings.dart';
-import '../../file.dart';
+import '../../profitability/profitability_form.dart';
+import '../../util/strings.dart';
+import '../file.dart';
 
 class ProfitabilityPdfCreator {
   final Font font;
@@ -54,7 +54,7 @@ class ProfitabilityPdfCreator {
                 TableRow(
                   children: [
                     Text('Продукция'),
-                    Text('${form.costPrice.productName}'),
+                    Text(form.costPrice.productName),
                   ],
                 ),
                 TableRow(
@@ -66,37 +66,37 @@ class ProfitabilityPdfCreator {
                 TableRow(
                   children: [
                     Text('Длина'),
-                    Text('${form.sizeForm.lengthValue}'),
+                    Text('${form.logistics.size.length}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Ширина'),
-                    Text('${form.sizeForm.widthValue}'),
+                    Text('${form.logistics.size.width}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Высота'),
-                    Text('${form.sizeForm.heightValue}'),
+                    Text('${form.logistics.size.height}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Объём'),
-                    Text('${form.sizeForm.volumeInLiters}'),
+                    Text('${form.logistics.size.volumeInLiters}'),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Склад'),
-                    Text('${form.storageSelector.selected?.name}'),
+                    Text(form.logistics.selected.name),
                   ],
                 ),
                 TableRow(
                   children: [
                     Text('Логистика $rubleCurrency'),
-                    Text('${form.logisticTotalCost}'),
+                    Text(form.logistics.totalCostFormatted),
                   ],
                 ),
                 TableRow(

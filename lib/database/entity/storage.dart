@@ -17,26 +17,19 @@ class StorageUpload {
 class Storage {
   Id? id;
   late String name;
-  late List<Tariff> tariffs = [];
+
+  /// Coeffient of the logistics and storing costs.
+  ///
+  /// Default value is 100% (as 100)
+  late double costCoefficient;
 
   @Backlink(to: 'storages')
   final IsarLinks<StorageUpload> upload = IsarLinks();
 
   Storage();
 
-  Storage.withValues(this.name, this.tariffs);
+  Storage.withValues(this.name, this.costCoefficient);
 
   @Index(type: IndexType.value, caseSensitive: false)
   List<String> get nameWords => Isar.splitWords(name);
-}
-
-@embedded
-class Tariff {
-  late String name;
-  late double baseCost;
-  late double costPerLiter;
-
-  Tariff();
-
-  Tariff.withValues(this.name, this.baseCost, this.costPerLiter);
 }

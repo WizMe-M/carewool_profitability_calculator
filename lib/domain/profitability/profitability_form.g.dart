@@ -9,56 +9,6 @@ part of 'profitability_form.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ProfitabilityForm on ProfitabilityFormBase, Store {
-  Computed<Tariff?>? _$logisticTariffComputed;
-
-  @override
-  Tariff? get logisticTariff => (_$logisticTariffComputed ??= Computed<Tariff?>(
-          () => super.logisticTariff,
-          name: 'ProfitabilityFormBase.logisticTariff'))
-      .value;
-  Computed<double>? _$logisticBaseCostComputed;
-
-  @override
-  double get logisticBaseCost => (_$logisticBaseCostComputed ??=
-          Computed<double>(() => super.logisticBaseCost,
-              name: 'ProfitabilityFormBase.logisticBaseCost'))
-      .value;
-  Computed<double>? _$logisticCostPerLiterComputed;
-
-  @override
-  double get logisticCostPerLiter => (_$logisticCostPerLiterComputed ??=
-          Computed<double>(() => super.logisticCostPerLiter,
-              name: 'ProfitabilityFormBase.logisticCostPerLiter'))
-      .value;
-  Computed<double>? _$logisticCostForSizeComputed;
-
-  @override
-  double get logisticCostForSize => (_$logisticCostForSizeComputed ??=
-          Computed<double>(() => super.logisticCostForSize,
-              name: 'ProfitabilityFormBase.logisticCostForSize'))
-      .value;
-  Computed<double>? _$logisticCostForExtraLargeComputed;
-
-  @override
-  double get logisticCostForExtraLarge =>
-      (_$logisticCostForExtraLargeComputed ??= Computed<double>(
-              () => super.logisticCostForExtraLarge,
-              name: 'ProfitabilityFormBase.logisticCostForExtraLarge'))
-          .value;
-  Computed<double>? _$logisticTotalCostComputed;
-
-  @override
-  double get logisticTotalCost => (_$logisticTotalCostComputed ??=
-          Computed<double>(() => super.logisticTotalCost,
-              name: 'ProfitabilityFormBase.logisticTotalCost'))
-      .value;
-  Computed<double>? _$paidAcceptanceCostComputed;
-
-  @override
-  double get paidAcceptanceCost => (_$paidAcceptanceCostComputed ??=
-          Computed<double>(() => super.paidAcceptanceCost,
-              name: 'ProfitabilityFormBase.paidAcceptanceCost'))
-      .value;
   Computed<double>? _$priceComputed;
 
   @override
@@ -107,6 +57,58 @@ mixin _$ProfitabilityForm on ProfitabilityFormBase, Store {
       (_$profitabilityComputed ??= Computed<double>(() => super.profitability,
               name: 'ProfitabilityFormBase.profitability'))
           .value;
+  Computed<String>? _$incomeFormattedComputed;
+
+  @override
+  String get incomeFormatted => (_$incomeFormattedComputed ??= Computed<String>(
+          () => super.incomeFormatted,
+          name: 'ProfitabilityFormBase.incomeFormatted'))
+      .value;
+  Computed<String>? _$expenseProductionFormattedComputed;
+
+  @override
+  String get expenseProductionFormatted =>
+      (_$expenseProductionFormattedComputed ??= Computed<String>(
+              () => super.expenseProductionFormatted,
+              name: 'ProfitabilityFormBase.expenseProductionFormatted'))
+          .value;
+  Computed<String>? _$expensesCommissionFormattedComputed;
+
+  @override
+  String get expensesCommissionFormatted =>
+      (_$expensesCommissionFormattedComputed ??= Computed<String>(
+              () => super.expensesCommissionFormatted,
+              name: 'ProfitabilityFormBase.expensesCommissionFormatted'))
+          .value;
+  Computed<String>? _$expensesLogisticsFormattedComputed;
+
+  @override
+  String get expensesLogisticsFormatted =>
+      (_$expensesLogisticsFormattedComputed ??= Computed<String>(
+              () => super.expensesLogisticsFormatted,
+              name: 'ProfitabilityFormBase.expensesLogisticsFormatted'))
+          .value;
+  Computed<String>? _$expensesTaxFormattedComputed;
+
+  @override
+  String get expensesTaxFormatted => (_$expensesTaxFormattedComputed ??=
+          Computed<String>(() => super.expensesTaxFormatted,
+              name: 'ProfitabilityFormBase.expensesTaxFormatted'))
+      .value;
+  Computed<String>? _$expensesFormattedComputed;
+
+  @override
+  String get expensesFormatted => (_$expensesFormattedComputed ??=
+          Computed<String>(() => super.expensesFormatted,
+              name: 'ProfitabilityFormBase.expensesFormatted'))
+      .value;
+  Computed<String>? _$profitFormattedComputed;
+
+  @override
+  String get profitFormatted => (_$profitFormattedComputed ??= Computed<String>(
+          () => super.profitFormatted,
+          name: 'ProfitabilityFormBase.profitFormatted'))
+      .value;
   Computed<String>? _$profitabilityFormattedComputed;
 
   @override
@@ -135,13 +137,6 @@ mixin _$ProfitabilityForm on ProfitabilityFormBase, Store {
   String toString() {
     return '''
 selectedTax: ${selectedTax},
-logisticTariff: ${logisticTariff},
-logisticBaseCost: ${logisticBaseCost},
-logisticCostPerLiter: ${logisticCostPerLiter},
-logisticCostForSize: ${logisticCostForSize},
-logisticCostForExtraLarge: ${logisticCostForExtraLarge},
-logisticTotalCost: ${logisticTotalCost},
-paidAcceptanceCost: ${paidAcceptanceCost},
 price: ${price},
 commissionForCost: ${commissionForCost},
 expenses: ${expenses},
@@ -149,6 +144,13 @@ taxSize: ${taxSize},
 expensesWithTax: ${expensesWithTax},
 profit: ${profit},
 profitability: ${profitability},
+incomeFormatted: ${incomeFormatted},
+expenseProductionFormatted: ${expenseProductionFormatted},
+expensesCommissionFormatted: ${expensesCommissionFormatted},
+expensesLogisticsFormatted: ${expensesLogisticsFormatted},
+expensesTaxFormatted: ${expensesTaxFormatted},
+expensesFormatted: ${expensesFormatted},
+profitFormatted: ${profitFormatted},
 profitabilityFormatted: ${profitabilityFormatted}
     ''';
   }

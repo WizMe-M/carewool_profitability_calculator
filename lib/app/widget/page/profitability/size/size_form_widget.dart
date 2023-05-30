@@ -23,23 +23,23 @@ class SizeFormWidget extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: SizeInputWidget(
-                    controller: form.width.controller,
+                    controller: form.widthInput.controller,
                     label: 'Ширина',
-                    validate: form.width.validate,
+                    validate: form.widthInput.validate,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: SizeInputWidget(
-                    controller: form.height.controller,
+                    controller: form.heightInput.controller,
                     label: 'Высота',
-                    validate: form.height.validate,
+                    validate: form.heightInput.validate,
                   ),
                 ),
                 SizeInputWidget(
-                  controller: form.length.controller,
+                  controller: form.lengthInput.controller,
                   label: 'Длина',
-                  validate: form.length.validate,
+                  validate: form.lengthInput.validate,
                   action: TextInputAction.done,
                 ),
               ],

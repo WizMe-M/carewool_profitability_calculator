@@ -1,54 +1,49 @@
-import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
+import 'dart:math';
+
 import 'package:mobx/mobx.dart';
 
 import '../../inputs/double_input.dart';
+import '../../util/formatting.dart';
 
 part 'size_form.g.dart';
 
 class SizeForm = SizeFormBase with _$SizeForm;
 
 abstract class SizeFormBase with Store {
-  final Logger _logger = GetIt.I.get();
-  final NumberFormat _formatter = NumberFormat()
-    ..minimumFractionDigits = 0
-    ..maximumFractionDigits = 2;
-
   /// Input for width
-  final width = DoubleInput();
+  final widthInput = DoubleInput();
 
   /// Input for height
-  final height = DoubleInput();
+  final heightInput = DoubleInput();
 
   /// Input for length
-  final length = DoubleInput();
+  final lengthInput = DoubleInput();
 
   @observable
-  double widthValue = 0;
+  double width = 0;
 
   @observable
-  double heightValue = 0;
+  double height = 0;
 
   @observable
-  double lengthValue = 0;
+  double length = 0;
 
   SizeFormBase() {
     initListeners();
   }
 
   @computed
-  String get widthFormatted => _formatter.format(widthValue);
+  String get widthFormatted => Formatting.formatTwoFractionDigits(width);
 
   @computed
-  String get heightFormatted => _formatter.format(heightValue);
+  String get heightFormatted => Formatting.formatTwoFractionDigits(height);
 
   @computed
-  String get lengthFormatted => _formatter.format(lengthValue);
+  String get lengthFormatted => Formatting.formatTwoFractionDigits(length);
 
   /// Volume in milliliters
   @computed
-  double get volume => widthValue * heightValue * lengthValue;
+  double get volume => width * height * length;
 
   /// Ceiled volume in liters
   @computed
@@ -56,42 +51,36 @@ abstract class SizeFormBase with Store {
 
   /// Value of volume over liter cap (5) in liters
   @computed
-  int get overLiterCap {
-    var over = volumeInLiters - 5;
-    return over > 0 ? over : 0;
-  }
+  int get overLiterCap => max<int>(volumeInLiters - 5, 0);
 
-  /// Whether is size extra large
-  /// (if so, it'll be calculated cargo delivery logistics cost)
+  /// Is the size extra large?
   ///
   /// It is, if
   /// - at least one size is more than 120cm
   /// - sum of sizes is over 200cm
   @computed
   bool get isExtraLargeProduct {
-    _logger.i('Extra-large product check');
-    var maxMoreThan120 =
-        lengthValue > 120 || heightValue > 120 || widthValue > 120;
-    var sumSizeMoreThan200 = lengthValue + heightValue + widthValue > 200;
+    var maxMoreThan120 = length > 120 || height > 120 || width > 120;
+    var sumSizeMoreThan200 = length + height + width > 200;
     return maxMoreThan120 || sumSizeMoreThan200;
   }
 
   void initListeners() {
-    width.controller.addListener(() {
-      widthValue = width.value;
+    widthInput.controller.addListener(() {
+      width = widthInput.value;
     });
-    height.controller.addListener(() {
-      heightValue = height.value;
+    heightInput.controller.addListener(() {
+      height = heightInput.value;
     });
-    length.controller.addListener(() {
-      lengthValue = length.value;
+    lengthInput.controller.addListener(() {
+      length = lengthInput.value;
     });
   }
 
   /// CLears all size form's inputs
   void clear() {
-    width.clear();
-    height.clear();
-    length.clear();
+    widthInput.clear();
+    heightInput.clear();
+    lengthInput.clear();
   }
 }

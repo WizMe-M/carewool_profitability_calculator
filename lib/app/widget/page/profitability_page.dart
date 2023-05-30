@@ -7,7 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../database/entity/commission.dart';
 import '../../../database/entity/cost_price.dart';
 import '../../../database/entity/storage.dart';
-import '../../../domain/data_transfer/export/pdf/profitability_pdf_creator.dart';
+import '../../../domain/data_transfer/pdf/profitability_pdf_creator.dart';
 import '../../../domain/data_transfer/mime_type_enum.dart';
 import '../../../domain/file_dialog/file_dialog.dart';
 import '../../../domain/profitability/profitability_form.dart';
@@ -62,9 +62,9 @@ class ProfitabilityPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                StorageSelectorWidget(selector: _form.storageSelector),
-                SizeFormWidget(form: _form.sizeForm),
-                LogisticResultWidget(profitabilityForm: _form),
+                StorageSelectorWidget(logistics: _form.logistics),
+                SizeFormWidget(form: _form.logistics.size),
+                LogisticResultWidget(logistics: _form.logistics),
                 CommissionSelectorWidget(selector: _form.categorySelector),
                 PricingFormWidget(form: _form.pricingForm),
                 TaxSelectorWidget(form: _form),

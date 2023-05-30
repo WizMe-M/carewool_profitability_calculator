@@ -5,10 +5,10 @@ class ProfitabilityValidator extends Validator<ProfitabilityForm> {
   @override
   Set<String> validate(ProfitabilityForm object) {
     var errors = <String>{};
-    if (object.sizeForm.volume <= 0) {
+    if (object.logistics.size.volume <= 0) {
       errors.add('Все размеры должны быть больше 0');
     }
-    if (object.storageSelector.selected == null) {
+    if (object.logistics.storageSelector.selected == null) {
       errors.add('Склад должен быть выбран');
     }
     if (object.categorySelector.selected == null) {
