@@ -8,10 +8,10 @@ import '../../database/entity/storage.dart';
 import '../../database/entity/cost_price.dart';
 import '../../database/simple_taxation_system_enum.dart';
 import '../util/formatting.dart';
-import 'commission_selector/commission_selector.dart';
+import 'pricing/commission_selector.dart';
 import 'logistics/logistics_calculator.dart';
 import 'pricing/pricing_calculator.dart';
-import 'storage_selector/storage_selector.dart';
+import 'logistics/storage_selector.dart';
 
 part 'profitability_form.g.dart';
 
@@ -67,6 +67,12 @@ abstract class ProfitabilityFormBase with Store {
   double get profitability => profit / income;
 
   // -----------------------------------------------------------------------
+
+  @computed
+  String get taxFormatted => Formatting.formatPercentage(selectedTax.taxSize);
+
+  @computed
+  String get taxSizeFormatted => Formatting.formatCostRu(taxSize);
 
   /// Formatted expenses on logistics
   @computed

@@ -51,6 +51,20 @@ mixin _$ProfitabilityForm on ProfitabilityFormBase, Store {
       (_$profitabilityComputed ??= Computed<double>(() => super.profitability,
               name: 'ProfitabilityFormBase.profitability'))
           .value;
+  Computed<String>? _$taxFormattedComputed;
+
+  @override
+  String get taxFormatted =>
+      (_$taxFormattedComputed ??= Computed<String>(() => super.taxFormatted,
+              name: 'ProfitabilityFormBase.taxFormatted'))
+          .value;
+  Computed<String>? _$taxSizeFormattedComputed;
+
+  @override
+  String get taxSizeFormatted => (_$taxSizeFormattedComputed ??=
+          Computed<String>(() => super.taxSizeFormatted,
+              name: 'ProfitabilityFormBase.taxSizeFormatted'))
+      .value;
   Computed<String>? _$incomeFormattedComputed;
 
   @override
@@ -144,6 +158,8 @@ taxSize: ${taxSize},
 expensesWithTax: ${expensesWithTax},
 profit: ${profit},
 profitability: ${profitability},
+taxFormatted: ${taxFormatted},
+taxSizeFormatted: ${taxSizeFormatted},
 incomeFormatted: ${incomeFormatted},
 expenseProductionFormatted: ${expenseProductionFormatted},
 expensesCommissionFormatted: ${expensesCommissionFormatted},

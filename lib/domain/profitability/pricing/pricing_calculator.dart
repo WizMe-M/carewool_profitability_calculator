@@ -2,7 +2,7 @@ import 'package:mobx/mobx.dart';
 
 import '../../model/commission.dart';
 import '../../util/formatting.dart';
-import '../commission_selector/commission_selector.dart';
+import 'commission_selector.dart';
 import 'pricing_form.dart';
 
 part 'pricing_calculator.g.dart';

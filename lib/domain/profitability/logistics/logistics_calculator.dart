@@ -4,8 +4,8 @@ import 'package:mobx/mobx.dart';
 
 import '../../model/storage.dart';
 import '../../util/formatting.dart';
-import '../size_form/size_form.dart';
-import '../storage_selector/storage_selector.dart';
+import 'size_form.dart';
+import 'storage_selector.dart';
 
 part 'logistics_calculator.g.dart';
 
