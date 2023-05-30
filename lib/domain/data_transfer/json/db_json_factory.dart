@@ -1,3 +1,4 @@
+import 'package:carewool_profitability_calculator/database/entity/profitability.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 
@@ -21,7 +22,7 @@ class DbJsonFactory {
       if (toExport.contains(DataToExport.profitabilityCalculations))
         JsonBlock(
           DataToExport.profitabilityCalculations.blockName,
-          await _isar.costPrices.where().exportJson(),
+          await _isar.profitabilityCalcs.where().exportJson(),
         )
     ];
     var dbData = DatabaseData(toExport, blocks);

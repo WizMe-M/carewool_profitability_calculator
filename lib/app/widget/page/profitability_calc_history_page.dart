@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 
 import '../../../database/entity/profitability.dart';
+import '../../../domain/data_transfer/json/data_to_export_enum.dart';
+import '../../../domain/data_transfer/json/database_exporter.dart';
 import '../../navigation/app_router.dart';
 import '../side_bar.dart';
 
@@ -14,6 +16,8 @@ class ProfitabilityCalcHistoryPage extends StatelessWidget {
   final NumberFormat _number = NumberFormat()
     ..minimumFractionDigits = 0
     ..maximumFractionDigits = 2;
+
+  final DatabaseExporter _exporter = GetIt.I.get();
   final Isar _isar = GetIt.I.get();
 
   ProfitabilityCalcHistoryPage({super.key});
@@ -28,6 +32,13 @@ class ProfitabilityCalcHistoryPage extends StatelessWidget {
           style: TextStyle(fontSize: 17),
         ),
         actions: [
+          IconButton(
+            onPressed: () {
+              _exporter.export({DataToExport.profitabilityCalculations});
+            },
+            icon: const Icon(Icons.download),
+            tooltip: 'Экспортировать данные',
+          ),
           IconButton(
             onPressed: () {
               context.router.push(StartNewProfitabilityRoute());

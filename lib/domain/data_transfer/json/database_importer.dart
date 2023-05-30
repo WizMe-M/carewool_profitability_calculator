@@ -15,7 +15,8 @@ class DatabaseImporter {
     if (file == null) return;
 
     var jsonString = await file.readAsString();
-    var map = json.decode(jsonString) as Map<String, dynamic>;
+    var decoded = json.decode(jsonString);
+    var map = decoded  as Map<String, dynamic>;
     var dbData = DatabaseData.fromJson(map);
 
     _loader.loadImportData(dbData);

@@ -11,6 +11,7 @@ import '../widget/page/cost_price_page.dart';
 import '../widget/page/default_page.dart';
 import '../widget/page/edit_cost_price_page.dart';
 import '../widget/page/excel_upload_page.dart';
+import '../widget/page/import_page.dart';
 import '../widget/page/profitability_calc_history_page.dart';
 import '../widget/page/start_new_profitability_page.dart';
 import '../widget/page/profitability_page.dart';
@@ -30,6 +31,7 @@ class AppRouter extends _$AppRouter {
       AutoRoute(page: StartNewProfitabilityRoute.page),
       AutoRoute(page: ProfitabilityRoute.page),
       AutoRoute(page: ProfitabilityCalcHistoryRoute.page),
+      AutoRoute(page: ImportRoute.page),
     ];
   }
 }

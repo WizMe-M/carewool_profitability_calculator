@@ -18,11 +18,11 @@ class DatabaseExporter {
   final _date = DateFormat('dd.MM.yy HH:mm:ss');
 
   Future<void> export(Set<DataToExport> toExport) async {
-    var jsonCopy = _factory.createDatabaseJsonCopy(toExport: toExport);
-    var bytes = Uint8List.fromList(utf8.encode(jsonCopy.toString()));
+    var jsonCopy = await _factory.createDatabaseJsonCopy(toExport: toExport);
+    var bytes = Uint8List.fromList(utf8.encode(json.encode(jsonCopy)));
 
     var now = _date.format(DateTime.now());
-    var fileName = 'carewool-db $now';
+    var fileName = 'carewool-db $now.json';
     var file = File(jsonCopy, fileName, bytes);
 
     _fileDialog.pickDirectoryAndSaveFile(file, MimeType.json).then((path) {
