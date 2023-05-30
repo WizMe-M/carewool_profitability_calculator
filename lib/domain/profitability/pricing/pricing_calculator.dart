@@ -36,6 +36,6 @@ abstract class PricingCalculatorBase with Store {
 
   @computed
   String get commissionSizeFormatted {
-    return Formatting.formatPercentage(commissionSize);
+    return Formatting.formatCostRu(commissionSize);
   }
 }

@@ -8,7 +8,8 @@ import '../../util/strings.dart';
 import '../file.dart';
 
 class ProfitabilityPdfCreator {
-  final Font font;
+  final Font regular;
+  final Font bold;
   final ThemeData textTheme;
 
   final importantRowDecoration = BoxDecoration(
@@ -16,15 +17,23 @@ class ProfitabilityPdfCreator {
     color: PdfColors.blue200,
   );
 
-  ProfitabilityPdfCreator._(this.font)
+  ProfitabilityPdfCreator._(this.regular, this.bold)
       : textTheme = ThemeData(
-          defaultTextStyle: TextStyle(font: font),
-          tableHeader: TextStyle(font: font, fontWeight: FontWeight.bold),
+          defaultTextStyle: TextStyle(
+            font: regular,
+            fontSize: 14,
+          ),
+          tableHeader: TextStyle(
+            font: bold,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
         );
 
   static Future<ProfitabilityPdfCreator> init() async {
-    var font = await PdfGoogleFonts.pTSansRegular();
-    var saver = ProfitabilityPdfCreator._(font);
+    var regularFont = await PdfGoogleFonts.pTSansRegular();
+    var boldFont = await PdfGoogleFonts.pTSansBold();
+    var saver = ProfitabilityPdfCreator._(regularFont, boldFont);
     return saver;
   }
 
@@ -43,148 +52,97 @@ class ProfitabilityPdfCreator {
           build: (context) {
             return Table(
               border: TableBorder.all(),
-              // TODO: add normal table bounds and borders
               children: [
-                TableRow(
-                  children: [
-                    Text('Параметр'),
-                    Text('Значение'),
-                  ],
-                  decoration: importantRowDecoration,
+                NormalTableRow(
+                  'Параметр',
+                  'Значение',
+                  importantRowDecoration,
                 ),
-                TableRow(
-                  children: [
-                    Text('Продукция'),
-                    Text(form.costPrice.productName),
-                  ],
+                NormalTableRow(
+                  'Продукция',
+                  form.costPrice.productName,
                 ),
-                TableRow(
-                  children: [
-                    Text('Себестоимость'),
-                    Text(form.expenseProductionFormatted),
-                  ],
+                NormalTableRow(
+                  'Себестоимость $rubleCurrency',
+                  form.expenseProductionFormatted,
                 ),
-                TableRow(
-                  children: [
-                    Text('Длина'),
-                    Text(form.logistics.size.lengthFormatted),
-                  ],
+                NormalTableRow(
+                  'Длина см',
+                  '${form.logistics.size.lengthFormatted} см',
                 ),
-                TableRow(
-                  children: [
-                    Text('Ширина'),
-                    Text(form.logistics.size.widthFormatted),
-                  ],
+                NormalTableRow(
+                  'Ширина см',
+                  '${form.logistics.size.widthFormatted} см',
                 ),
-                TableRow(
-                  children: [
-                    Text('Высота'),
-                    Text(form.logistics.size.heightFormatted),
-                  ],
+                NormalTableRow(
+                  'Высота см',
+                  '${form.logistics.size.heightFormatted} см',
                 ),
-                TableRow(
-                  children: [
-                    Text('Объём'),
-                    Text('${form.logistics.size.volumeInLiters}л'),
-                  ],
+                NormalTableRow(
+                  'Объём л',
+                  '${form.logistics.size.volumeInLiters}л',
                 ),
-                TableRow(
-                  children: [
-                    Text('Склад'),
-                    Text(form.logistics.selected.name),
-                  ],
+                NormalTableRow(
+                  'Склад',
+                  form.logistics.selected.name,
                 ),
-                TableRow(
-                  children: [
-                    Text('Логистика $rubleCurrency'),
-                    Text(form.logistics.totalCostFormatted),
-                  ],
+                NormalTableRow(
+                  'Логистика $rubleCurrency',
+                  form.logistics.totalCostFormatted,
                 ),
-                TableRow(
-                  children: [
-                    Text('Цена продажи'),
-                    Text(form.pricing.form.priceBeforeRCDFormatted),
-                  ],
+                NormalTableRow(
+                  'Цена продажи $rubleCurrency',
+                  form.pricing.form.priceBeforeRCDFormatted,
                 ),
-                TableRow(
-                  children: [
-                    Text('Исходная цена'),
-                    Text(form.pricing.form.priceFormatted),
-                  ],
+                NormalTableRow(
+                  'Исходная цена $rubleCurrency',
+                  form.pricing.form.priceFormatted,
                 ),
-                TableRow(
-                  children: [
-                    Text('Комиссия %'),
-                    Text(form.pricing.commissionFormatted),
-                  ],
+                NormalTableRow(
+                  'Комиссия %',
+                  form.pricing.commissionFormatted,
                 ),
-                TableRow(
-                  children: [
-                    Text('Комиссия $rubleCurrency'),
-                    Text(form.expensesCommissionFormatted),
-                  ],
+                NormalTableRow(
+                  'Комиссия $rubleCurrency',
+                  form.expensesCommissionFormatted,
                 ),
-                TableRow(
-                  children: [
-                    Text('Налог %'),
-                    Text('${form.selectedTax.taxSize}'),
-                  ],
+                NormalTableRow(
+                  'Налог %',
+                  form.taxFormatted,
                 ),
-                TableRow(
-                  children: [
-                    Text('Налог $rubleCurrency'),
-                    Text('${form.taxSize}'),
-                  ],
+                NormalTableRow(
+                  'Налог $rubleCurrency',
+                  form.taxSizeFormatted,
                 ),
-                TableRow(
-                  children: [
-                    Text('Доходы'),
-                    Text(
-                      form.incomeFormatted,
-                      style: Theme.of(context).tableHeader,
-                    ),
-                  ],
-                  decoration: importantRowDecoration,
+                NormalTableRow(
+                  'Доходы',
+                  form.incomeFormatted,
+                  importantRowDecoration,
+                  Theme.of(context).tableHeader,
                 ),
-                TableRow(
-                  children: [
-                    Text('Расходы (без налога)'),
-                    Text(
-                      form.expensesFormatted,
-                      style: Theme.of(context).tableHeader,
-                    ),
-                  ],
-                  decoration: importantRowDecoration,
+                NormalTableRow(
+                  'Расходы (без налога)',
+                  form.expensesFormatted,
+                  importantRowDecoration,
+                  Theme.of(context).tableHeader,
                 ),
-                TableRow(
-                  children: [
-                    Text('Расходы (с налогом)'),
-                    Text(
-                      form.expensesWithTaxFormatted,
-                      style: Theme.of(context).tableHeader,
-                    ),
-                  ],
-                  decoration: importantRowDecoration,
+                NormalTableRow(
+                  'Расходы (с налогом)',
+                  form.expensesWithTaxFormatted,
+                  importantRowDecoration,
+                  Theme.of(context).tableHeader,
                 ),
-                TableRow(
-                  children: [
-                    Text('Прибыль'),
-                    Text(
-                      form.profitFormatted,
-                      style: Theme.of(context).tableHeader,
-                    ),
-                  ],
-                  decoration: importantRowDecoration,
+                NormalTableRow(
+                  'Прибыль',
+                  form.profitFormatted,
+                  importantRowDecoration,
+                  Theme.of(context).tableHeader,
                 ),
-                TableRow(
-                  children: [
-                    Text('Рентабельность'),
-                    Text(
-                      form.profitabilityFormatted,
-                      style: Theme.of(context).tableHeader,
-                    ),
-                  ],
-                  decoration: importantRowDecoration,
+                NormalTableRow(
+                  'Рентабельность',
+                  form.profitabilityFormatted,
+                  importantRowDecoration,
+                  Theme.of(context).tableHeader,
                 ),
               ],
             );
@@ -195,5 +153,36 @@ class ProfitabilityPdfCreator {
     var bytes = await pdf.save();
     var name = _createFileName(form);
     return File(form, name, bytes);
+  }
+}
+
+class NormalTableRow extends TableRow {
+  const NormalTableRow._({required super.children, super.decoration});
+
+  factory NormalTableRow(
+    String leftCell,
+    String rightCell, [
+    BoxDecoration? decoration,
+    TextStyle? textStyle,
+  ]) {
+    return NormalTableRow._(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(4),
+          child: Text(
+            leftCell,
+            style: textStyle,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(4),
+          child: Text(
+            rightCell,
+            style: textStyle,
+          ),
+        ),
+      ],
+      decoration: decoration,
+    );
   }
 }
