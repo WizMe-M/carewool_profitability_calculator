@@ -7,12 +7,15 @@ import 'package:isar/isar.dart';
 import '../../../database/entity/cost_price.dart';
 import '../../../domain/cost_price/form/cost_price_form.dart';
 import '../../../domain/cost_price/form/edit/edit_wrap.dart';
+import '../../../domain/data_transfer/json/database_exporter.dart';
+import '../../../domain/data_transfer/json/data_to_export_enum.dart';
 import '../../../domain/util/strings.dart';
 import '../../navigation/app_router.dart';
 import '../side_bar.dart';
 
 @RoutePage()
 class CostPriceHistoryPage extends StatelessWidget {
+  final DatabaseExporter _exporter = GetIt.I.get();
   final Isar _isar = GetIt.I.get();
 
   CostPriceHistoryPage({super.key});
@@ -27,6 +30,13 @@ class CostPriceHistoryPage extends StatelessWidget {
           style: TextStyle(fontSize: 18),
         ),
         actions: [
+          IconButton(
+            onPressed: () {
+              _exporter.export({DataToExport.costPriceCalculations});
+            },
+            icon: const Icon(Icons.download),
+            tooltip: 'Экспортировать данные',
+          ),
           IconButton(
             onPressed: () {
               var form = CostPriceForm.defaultTemplate();
@@ -85,7 +95,7 @@ class CostPriceHistoryPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   var costPrice = data[index];
                   var savedDate = DateFormat('dd.MM.yyyy HH:mm')
-                      .format(costPrice.savedDate!.toLocal());
+                      .format(costPrice.savedDate.toLocal());
 
                   return ListTile(
                     title: Text(

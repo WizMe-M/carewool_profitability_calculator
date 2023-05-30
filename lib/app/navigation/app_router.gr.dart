@@ -57,6 +57,22 @@ abstract class _$AppRouter extends RootStackRouter {
         child: ExcelUploadPage(key: args.key),
       );
     },
+    ImportRoute.name: (routeData) {
+      final args = routeData.argsAs<ImportRouteArgs>(
+          orElse: () => const ImportRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ImportPage(key: args.key),
+      );
+    },
+    ProfitabilityCalcHistoryRoute.name: (routeData) {
+      final args = routeData.argsAs<ProfitabilityCalcHistoryRouteArgs>(
+          orElse: () => const ProfitabilityCalcHistoryRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ProfitabilityCalcHistoryPage(key: args.key),
+      );
+    },
     ProfitabilityRoute.name: (routeData) {
       final args = routeData.argsAs<ProfitabilityRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -75,14 +91,6 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: StartNewProfitabilityPage(key: args.key),
-      );
-    },
-    ProfitabilityCalcHistoryRoute.name: (routeData) {
-      final args = routeData.argsAs<ProfitabilityCalcHistoryRouteArgs>(
-          orElse: () => const ProfitabilityCalcHistoryRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ProfitabilityCalcHistoryPage(key: args.key),
       );
     },
   };
@@ -237,6 +245,64 @@ class ExcelUploadRouteArgs {
 }
 
 /// generated route for
+/// [ImportPage]
+class ImportRoute extends PageRouteInfo<ImportRouteArgs> {
+  ImportRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ImportRoute.name,
+          args: ImportRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'ImportRoute';
+
+  static const PageInfo<ImportRouteArgs> page = PageInfo<ImportRouteArgs>(name);
+}
+
+class ImportRouteArgs {
+  const ImportRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ImportRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
+/// [ProfitabilityCalcHistoryPage]
+class ProfitabilityCalcHistoryRoute
+    extends PageRouteInfo<ProfitabilityCalcHistoryRouteArgs> {
+  ProfitabilityCalcHistoryRoute({
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ProfitabilityCalcHistoryRoute.name,
+          args: ProfitabilityCalcHistoryRouteArgs(key: key),
+          initialChildren: children,
+        );
+
+  static const String name = 'ProfitabilityCalcHistoryRoute';
+
+  static const PageInfo<ProfitabilityCalcHistoryRouteArgs> page =
+      PageInfo<ProfitabilityCalcHistoryRouteArgs>(name);
+}
+
+class ProfitabilityCalcHistoryRouteArgs {
+  const ProfitabilityCalcHistoryRouteArgs({this.key});
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ProfitabilityCalcHistoryRouteArgs{key: $key}';
+  }
+}
+
+/// generated route for
 /// [ProfitabilityPage]
 class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
   ProfitabilityRoute({
@@ -311,35 +377,5 @@ class StartNewProfitabilityRouteArgs {
   @override
   String toString() {
     return 'StartNewProfitabilityRouteArgs{key: $key}';
-  }
-}
-
-/// generated route for
-/// [ProfitabilityCalcHistoryPage]
-class ProfitabilityCalcHistoryRoute
-    extends PageRouteInfo<ProfitabilityCalcHistoryRouteArgs> {
-  ProfitabilityCalcHistoryRoute({
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ProfitabilityCalcHistoryRoute.name,
-          args: ProfitabilityCalcHistoryRouteArgs(key: key),
-          initialChildren: children,
-        );
-
-  static const String name = 'ProfitabilityCalcHistoryRoute';
-
-  static const PageInfo<ProfitabilityCalcHistoryRouteArgs> page =
-      PageInfo<ProfitabilityCalcHistoryRouteArgs>(name);
-}
-
-class ProfitabilityCalcHistoryRouteArgs {
-  const ProfitabilityCalcHistoryRouteArgs({this.key});
-
-  final Key? key;
-
-  @override
-  String toString() {
-    return 'ProfitabilityCalcHistoryRouteArgs{key: $key}';
   }
 }

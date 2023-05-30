@@ -58,12 +58,7 @@ int _templateEstimateSize(
           TemplateBlockSchema.estimateSize(value, offsets, allOffsets);
     }
   }
-  {
-    final value = object.name;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
 
@@ -97,7 +92,7 @@ Template _templateDeserialize(
       ) ??
       [];
   object.id = id;
-  object.name = reader.readStringOrNull(offsets[1]);
+  object.name = reader.readString(offsets[1]);
   return object;
 }
 
@@ -117,7 +112,7 @@ P _templateDeserializeProp<P>(
           ) ??
           []) as P;
     case 1:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -365,24 +360,8 @@ extension TemplateQueryFilter
     });
   }
 
-  QueryBuilder<Template, Template, QAfterFilterCondition> nameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'name',
-      ));
-    });
-  }
-
-  QueryBuilder<Template, Template, QAfterFilterCondition> nameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'name',
-      ));
-    });
-  }
-
   QueryBuilder<Template, Template, QAfterFilterCondition> nameEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -395,7 +374,7 @@ extension TemplateQueryFilter
   }
 
   QueryBuilder<Template, Template, QAfterFilterCondition> nameGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -410,7 +389,7 @@ extension TemplateQueryFilter
   }
 
   QueryBuilder<Template, Template, QAfterFilterCondition> nameLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -425,8 +404,8 @@ extension TemplateQueryFilter
   }
 
   QueryBuilder<Template, Template, QAfterFilterCondition> nameBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -591,7 +570,7 @@ extension TemplateQueryProperty
     });
   }
 
-  QueryBuilder<Template, String?, QQueryOperations> nameProperty() {
+  QueryBuilder<Template, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
     });
@@ -632,12 +611,7 @@ int _templateBlockEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  {
-    final value = object.name;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.partNames.length * 3;
   {
     for (var i = 0; i < object.partNames.length; i++) {
@@ -665,7 +639,7 @@ TemplateBlock _templateBlockDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = TemplateBlock();
-  object.name = reader.readStringOrNull(offsets[0]);
+  object.name = reader.readString(offsets[0]);
   object.partNames = reader.readStringList(offsets[1]) ?? [];
   return object;
 }
@@ -678,7 +652,7 @@ P _templateBlockDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 1:
       return (reader.readStringList(offset) ?? []) as P;
     default:
@@ -688,26 +662,8 @@ P _templateBlockDeserializeProp<P>(
 
 extension TemplateBlockQueryFilter
     on QueryBuilder<TemplateBlock, TemplateBlock, QFilterCondition> {
-  QueryBuilder<TemplateBlock, TemplateBlock, QAfterFilterCondition>
-      nameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'name',
-      ));
-    });
-  }
-
-  QueryBuilder<TemplateBlock, TemplateBlock, QAfterFilterCondition>
-      nameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'name',
-      ));
-    });
-  }
-
   QueryBuilder<TemplateBlock, TemplateBlock, QAfterFilterCondition> nameEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -721,7 +677,7 @@ extension TemplateBlockQueryFilter
 
   QueryBuilder<TemplateBlock, TemplateBlock, QAfterFilterCondition>
       nameGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -737,7 +693,7 @@ extension TemplateBlockQueryFilter
 
   QueryBuilder<TemplateBlock, TemplateBlock, QAfterFilterCondition>
       nameLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -752,8 +708,8 @@ extension TemplateBlockQueryFilter
   }
 
   QueryBuilder<TemplateBlock, TemplateBlock, QAfterFilterCondition> nameBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,

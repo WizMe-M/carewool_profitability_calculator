@@ -5,22 +5,30 @@ part 'cost_price.g.dart';
 @collection
 class CostPrice {
   Id? id;
-  String? productName;
-  DateTime? savedDate;
-  List<Block>? blocks;
-  double? total;
+  late String productName;
+  late DateTime savedDate;
+  late List<Block> blocks;
+  late double total;
 
   CostPrice(this.productName, this.savedDate, this.blocks, this.total);
 }
 
 @embedded
 class Block {
-  String? name;
-  List<Part>? parts;
+  late String name;
+  late List<Part> parts;
+
+  Block();
+
+  Block.withValues(this.name, this.parts);
 }
 
 @embedded
 class Part {
-  String? name;
-  double? cost;
+  late String name;
+  late double cost;
+
+  Part();
+
+  Part.withValues(this.name, this.cost);
 }

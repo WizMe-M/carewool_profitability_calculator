@@ -16,10 +16,10 @@ class CommissionParser extends ExcelSheetParser<Commission> {
       var fbs = sheet.valueOf<double>(3, i);
 
       var commission = Commission()
-        ..category = categoryName
-        ..itemName = itemName
-        ..fbo = fbo
-        ..fbs = fbs;
+        ..category = categoryName ?? ''
+        ..itemName = itemName ?? ''
+        ..fbo = fbo ?? 0
+        ..fbs = fbs ?? 0;
       list.add(commission);
     }
     return list;

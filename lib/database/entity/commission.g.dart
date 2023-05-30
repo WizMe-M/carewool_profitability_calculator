@@ -894,18 +894,8 @@ int _commissionEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  {
-    final value = object.category;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.itemName;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.category.length * 3;
+  bytesCount += 3 + object.itemName.length * 3;
   bytesCount += 3 + object.tagWords.length * 3;
   {
     for (var i = 0; i < object.tagWords.length; i++) {
@@ -936,11 +926,11 @@ Commission _commissionDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Commission();
-  object.category = reader.readStringOrNull(offsets[0]);
-  object.fbo = reader.readDoubleOrNull(offsets[1]);
-  object.fbs = reader.readDoubleOrNull(offsets[2]);
+  object.category = reader.readString(offsets[0]);
+  object.fbo = reader.readDouble(offsets[1]);
+  object.fbs = reader.readDouble(offsets[2]);
   object.id = id;
-  object.itemName = reader.readStringOrNull(offsets[3]);
+  object.itemName = reader.readString(offsets[3]);
   return object;
 }
 
@@ -952,13 +942,13 @@ P _commissionDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 2:
-      return (reader.readDoubleOrNull(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 3:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 4:
       return (reader.readStringList(offset) ?? []) as P;
     default:
@@ -1208,25 +1198,8 @@ extension CommissionQueryWhere
 
 extension CommissionQueryFilter
     on QueryBuilder<Commission, Commission, QFilterCondition> {
-  QueryBuilder<Commission, Commission, QAfterFilterCondition> categoryIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'category',
-      ));
-    });
-  }
-
-  QueryBuilder<Commission, Commission, QAfterFilterCondition>
-      categoryIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'category',
-      ));
-    });
-  }
-
   QueryBuilder<Commission, Commission, QAfterFilterCondition> categoryEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1240,7 +1213,7 @@ extension CommissionQueryFilter
 
   QueryBuilder<Commission, Commission, QAfterFilterCondition>
       categoryGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1255,7 +1228,7 @@ extension CommissionQueryFilter
   }
 
   QueryBuilder<Commission, Commission, QAfterFilterCondition> categoryLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1270,8 +1243,8 @@ extension CommissionQueryFilter
   }
 
   QueryBuilder<Commission, Commission, QAfterFilterCondition> categoryBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -1359,24 +1332,8 @@ extension CommissionQueryFilter
     });
   }
 
-  QueryBuilder<Commission, Commission, QAfterFilterCondition> fboIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'fbo',
-      ));
-    });
-  }
-
-  QueryBuilder<Commission, Commission, QAfterFilterCondition> fboIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'fbo',
-      ));
-    });
-  }
-
   QueryBuilder<Commission, Commission, QAfterFilterCondition> fboEqualTo(
-    double? value, {
+    double value, {
     double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1389,7 +1346,7 @@ extension CommissionQueryFilter
   }
 
   QueryBuilder<Commission, Commission, QAfterFilterCondition> fboGreaterThan(
-    double? value, {
+    double value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
@@ -1404,7 +1361,7 @@ extension CommissionQueryFilter
   }
 
   QueryBuilder<Commission, Commission, QAfterFilterCondition> fboLessThan(
-    double? value, {
+    double value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
@@ -1419,8 +1376,8 @@ extension CommissionQueryFilter
   }
 
   QueryBuilder<Commission, Commission, QAfterFilterCondition> fboBetween(
-    double? lower,
-    double? upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
     double epsilon = Query.epsilon,
@@ -1437,24 +1394,8 @@ extension CommissionQueryFilter
     });
   }
 
-  QueryBuilder<Commission, Commission, QAfterFilterCondition> fbsIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'fbs',
-      ));
-    });
-  }
-
-  QueryBuilder<Commission, Commission, QAfterFilterCondition> fbsIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'fbs',
-      ));
-    });
-  }
-
   QueryBuilder<Commission, Commission, QAfterFilterCondition> fbsEqualTo(
-    double? value, {
+    double value, {
     double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1467,7 +1408,7 @@ extension CommissionQueryFilter
   }
 
   QueryBuilder<Commission, Commission, QAfterFilterCondition> fbsGreaterThan(
-    double? value, {
+    double value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
@@ -1482,7 +1423,7 @@ extension CommissionQueryFilter
   }
 
   QueryBuilder<Commission, Commission, QAfterFilterCondition> fbsLessThan(
-    double? value, {
+    double value, {
     bool include = false,
     double epsilon = Query.epsilon,
   }) {
@@ -1497,8 +1438,8 @@ extension CommissionQueryFilter
   }
 
   QueryBuilder<Commission, Commission, QAfterFilterCondition> fbsBetween(
-    double? lower,
-    double? upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
     double epsilon = Query.epsilon,
@@ -1584,25 +1525,8 @@ extension CommissionQueryFilter
     });
   }
 
-  QueryBuilder<Commission, Commission, QAfterFilterCondition> itemNameIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'itemName',
-      ));
-    });
-  }
-
-  QueryBuilder<Commission, Commission, QAfterFilterCondition>
-      itemNameIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'itemName',
-      ));
-    });
-  }
-
   QueryBuilder<Commission, Commission, QAfterFilterCondition> itemNameEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1616,7 +1540,7 @@ extension CommissionQueryFilter
 
   QueryBuilder<Commission, Commission, QAfterFilterCondition>
       itemNameGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1631,7 +1555,7 @@ extension CommissionQueryFilter
   }
 
   QueryBuilder<Commission, Commission, QAfterFilterCondition> itemNameLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1646,8 +1570,8 @@ extension CommissionQueryFilter
   }
 
   QueryBuilder<Commission, Commission, QAfterFilterCondition> itemNameBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -2137,25 +2061,25 @@ extension CommissionQueryProperty
     });
   }
 
-  QueryBuilder<Commission, String?, QQueryOperations> categoryProperty() {
+  QueryBuilder<Commission, String, QQueryOperations> categoryProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'category');
     });
   }
 
-  QueryBuilder<Commission, double?, QQueryOperations> fboProperty() {
+  QueryBuilder<Commission, double, QQueryOperations> fboProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'fbo');
     });
   }
 
-  QueryBuilder<Commission, double?, QQueryOperations> fbsProperty() {
+  QueryBuilder<Commission, double, QQueryOperations> fbsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'fbs');
     });
   }
 
-  QueryBuilder<Commission, String?, QQueryOperations> itemNameProperty() {
+  QueryBuilder<Commission, String, QQueryOperations> itemNameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'itemName');
     });

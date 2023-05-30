@@ -1,6 +1,5 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -8,7 +7,9 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../database/entity/commission.dart';
 import '../../../database/entity/cost_price.dart';
 import '../../../database/entity/storage.dart';
-import '../../../domain/pdf/profitability_pdf_saver.dart';
+import '../../../domain/data_transfer/export/pdf/profitability_pdf_creator.dart';
+import '../../../domain/data_transfer/mime_type_enum.dart';
+import '../../../domain/file_dialog/file_dialog.dart';
 import '../../../domain/profitability/profitability_form.dart';
 import '../side_bar.dart';
 import 'profitability/pricing/pricing_form_widget.dart';
@@ -24,6 +25,7 @@ import 'profitability/selector/tax_selector_widget.dart';
 class ProfitabilityPage extends StatelessWidget {
   final Logger _logger = GetIt.I.get();
   final ProfitabilityPdfCreator _pdf = GetIt.I.get();
+  final FileDialog _fileDialog = GetIt.I.get();
   final ProfitabilityForm _form;
   final CostPrice costPrice;
 
@@ -90,23 +92,9 @@ class ProfitabilityPage extends StatelessWidget {
       return;
     }
 
-    var fileName = _pdf.createFileName(_form);
-    _pdf.create(_form).then((bytes) async {
-      if (!await FlutterFileDialog.isPickDirectorySupported()) {
-        _logger.e('Picking directory not supported');
-        return;
-      }
-
-      final pickedDirectory = await FlutterFileDialog.pickDirectory();
-      if (pickedDirectory == null) return;
-
-      FlutterFileDialog.saveFileToDirectory(
-        directory: pickedDirectory,
-        data: bytes,
-        mimeType: 'application/pdf',
-        fileName: fileName,
-        replace: true,
-      ).then((path) {
+    _pdf.create(_form).then((pdf) {
+      _fileDialog.pickDirectoryAndSaveFile(pdf, MimeType.pdf).then((path) {
+        if (path == null) return;
         messenger.showSnackBar(
           const SnackBar(
             content: Text('Файл успешно сохранен'),

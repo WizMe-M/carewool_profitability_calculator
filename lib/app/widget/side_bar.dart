@@ -58,6 +58,14 @@ class SideBar extends StatelessWidget {
                   : const LinearProgressIndicator();
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.upload_file),
+            title: const Text('Импортировать данные'),
+            onTap: () {
+              context.router.push(ImportRoute());
+            },
+          ),
+          const Divider(),
           const ListTile(
             title: Text(
               'Себестоимость',
