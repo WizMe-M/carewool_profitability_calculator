@@ -23,14 +23,12 @@ void main() async {
 }
 
 void _registerDependencies() {
-  var logger = Logger(printer: PrettyPrinter(printEmojis: false));
-
   GetIt.instance
     ..registerSingletonAsync<ProfitabilityPdfCreator>(
       () => ProfitabilityPdfCreator.init(),
     )
     ..registerSingletonAsync<Isar>(() => openIsarDatabase())
-    ..registerSingleton(logger)
+    ..registerSingleton(Logger(printer: PrettyPrinter(printEmojis: false)))
     ..registerSingleton(FileDialog())
     ..registerSingletonWithDependencies(
       () => DbJsonFactory(),
@@ -56,6 +54,4 @@ void _registerDependencies() {
       () => SideBar(),
       dependsOn: [Isar],
     );
-
-  logger.i('All dependencies registered');
 }

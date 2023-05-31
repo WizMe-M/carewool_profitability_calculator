@@ -108,12 +108,12 @@ class SideBar extends StatelessWidget {
           FutureBuilder(
             future: lastUpdateFuture,
             builder: (context, snapshot) {
-              var updated = DateFormat('dd.MM.yy').format(snapshot.data!);
               return ListTile(
                 leading: const Icon(Icons.update),
                 title: const Text('Актуализация данных WB'),
                 subtitle: snapshot.hasData
-                    ? Text('Последнее обновление: $updated')
+                    ? Text('Последнее обновление: '
+                        '${DateFormat('dd.MM.yy').format(snapshot.data!)}')
                     : null,
                 onTap: () => context.router.push(ExcelUploadRoute()),
               );

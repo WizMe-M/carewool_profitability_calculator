@@ -10,9 +10,9 @@ class DatabaseImporter {
   final FileDialog _fileDialog = GetIt.I.get();
   final DbJsonLoader _loader = GetIt.I.get();
 
-  Future<void> import() async {
+  Future<DatabaseData?> import() async {
     var file = await _fileDialog.pickFile(MimeType.json);
-    if (file == null) return;
+    if (file == null) return null;
 
     var jsonString = await file.readAsString();
     var decoded = json.decode(jsonString);
@@ -20,5 +20,6 @@ class DatabaseImporter {
     var dbData = DatabaseData.fromJson(map);
 
     _loader.loadImportData(dbData);
+    return dbData;
   }
 }
