@@ -19,7 +19,10 @@ class ExcelUploadPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Импорт', style: TextStyle(fontSize: 18)),
+        title: const Text(
+          'Актуализация данных WildBerries',
+          style: TextStyle(fontSize: 18),
+        ),
       ),
       drawer: GetIt.I.get<SideBar>(),
       body: SafeArea(
@@ -36,7 +39,7 @@ class ExcelUploadPage extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 32),
                 child: Text(
-                  'Импортируйте данные из Excel-файлов для использования '
+                  'Загрузите данные из Excel-файлов для использования '
                   'их в расчетах рентабельности',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16),

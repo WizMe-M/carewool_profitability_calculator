@@ -1,5 +1,4 @@
 import 'package:excel/excel.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
@@ -7,6 +6,8 @@ import 'package:logger/logger.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../database/entity/storage.dart';
+import '../data_transfer/mime_type_enum.dart';
+import '../file_dialog/file_dialog.dart';
 import 'import_excel_status_enum.dart';
 import 'parsing/storage_parser.dart';
 
@@ -17,7 +18,8 @@ class StorageUploader = StorageUploaderBase with _$StorageUploader;
 abstract class StorageUploaderBase with Store {
   final Logger _logger = GetIt.I.get();
   final Isar _isar = GetIt.I.get();
-  final StorageParser _parser = StorageParser();
+  final FileDialog _dialog = GetIt.I.get();
+  final _parser = StorageParser();
 
   @observable
   StorageUpload? lastUpload;
@@ -43,23 +45,16 @@ abstract class StorageUploaderBase with Store {
   @action
   Future<void> upload() async {
     status = ImportExcelStatus.downloadingFile;
-    var pickedFile = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['xlsx', 'xls'],
-      withData: true,
-    );
-
-    if (pickedFile == null) {
+    var file = await _dialog.pickFile(MimeType.excel);
+    if (file == null) {
       _logger.w('File was not picked');
       status = ImportExcelStatus.notExecuting;
       return;
     }
 
-    var file = pickedFile.files.single;
-    _logger.i('Picked file. Path: "${file.path}"');
-
     status = ImportExcelStatus.importing;
-    var excel = await compute((bytes) => Excel.decodeBytes(bytes), file.bytes!);
+    var bytes = await file.readAsBytes();
+    var excel = await compute((bytes) => Excel.decodeBytes(bytes), bytes);
 
     var sheetName = excel.getDefaultSheet();
     if (sheetName == null) {
@@ -77,7 +72,7 @@ abstract class StorageUploaderBase with Store {
     }
 
     var upload = StorageUpload()
-      ..fileName = file.name
+      ..fileName = file.path.split('/').last
       ..uploadTime = DateTime.now()
       ..storages.addAll(storages);
     _isar.writeTxn(() async {

@@ -11,7 +11,7 @@ class DatabaseImporter {
   final DbJsonLoader _loader = GetIt.I.get();
 
   Future<void> import() async {
-    var file = await _fileDialog.pickFile({MimeType.json});
+    var file = await _fileDialog.pickFile(MimeType.json);
     if (file == null) return;
 
     var jsonString = await file.readAsString();
