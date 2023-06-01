@@ -1,8 +1,8 @@
-import 'package:carewool_profitability_calculator/database/entity/profitability.dart';
 import 'package:get_it/get_it.dart';
 import 'package:isar/isar.dart';
 
 import '../../../database/entity/cost_price.dart';
+import '../../../database/entity/profitability.dart';
 import 'data_to_export_enum.dart';
 import 'structure/database_data.dart';
 import 'structure/json_block.dart';

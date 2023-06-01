@@ -43,8 +43,9 @@ class SaveButton extends StatelessWidget {
     var entity = form.toEntity();
     _isar.writeTxn(() async {
       await _isar.profitabilityCalcs.put(entity);
-      entity.commission.save();
-      entity.storage.save();
+      await entity.commission.save();
+      await entity.storage.save();
+      await entity.costPrice.save();
     }).then((value) {
       messenger.showSnackBar(
         const SnackBar(

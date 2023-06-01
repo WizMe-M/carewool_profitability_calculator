@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../../database/entity/commission.dart';
 import '../../../../database/entity/cost_price.dart';
 import '../../../../database/entity/storage.dart';
+import '../../../../domain/profitability/profitability_form.dart';
 import '../../../../domain/util/strings.dart';
 import '../../../navigation/app_router.dart';
 
@@ -48,17 +49,19 @@ class CostPriceSelectorWidget extends StatelessWidget {
                   '${costPrice.productName} '
                   '(${costPrice.total}$rubleCurrency)',
                 ),
-                subtitle: Text(_dateFormat.format(costPrice.savedDate!)),
+                subtitle: Text(_dateFormat.format(costPrice.savedDate)),
                 trailing: IconButton.outlined(
                   icon: const Icon(Icons.navigate_next),
                   onPressed: () {
                     context.router.push(
-                    ProfitabilityRoute(
-                      costPrice: costPrice,
-                      lastCommissionUpload: lastCommissionUpload,
-                      lastStorageUpload: lastStorageUpload,
-                    ),
-                  );
+                      ProfitabilityRoute(
+                        form: ProfitabilityForm(
+                          costPrice: costPrice,
+                          commissions: lastCommissionUpload,
+                          storages: lastStorageUpload,
+                        ),
+                      ),
+                    );
                   },
                 ),
               );

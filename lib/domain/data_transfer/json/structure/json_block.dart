@@ -9,4 +9,6 @@ class JsonBlock {
   final List<Map<String, dynamic>> data;
 
   JsonBlock(this.name, this.data);
+
+  int get count => data.length;
 }

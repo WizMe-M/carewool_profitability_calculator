@@ -14,6 +14,9 @@ class App extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
         useMaterial3: true,
+        pageTransitionsTheme: const PageTransitionsTheme(builders: {
+          TargetPlatform.android: OpenUpwardsPageTransitionsBuilder()
+        }),
       ),
       routerConfig: _router.config(),
     );

@@ -17,10 +17,10 @@ class FormTemplate {
 
   factory FormTemplate.fromEntity({required Template template}) {
     return FormTemplate(
-      name: template.name!,
+      name: template.name,
       structure: ObservableMap.of({
         for (var templateBlock in template.blocks)
-          templateBlock.name!: ObservableList.of(templateBlock.partNames)
+          templateBlock.name: ObservableList.of(templateBlock.partNames)
       }),
     );
   }

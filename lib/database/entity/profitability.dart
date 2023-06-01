@@ -2,6 +2,7 @@ import 'package:isar/isar.dart';
 
 import '../simple_taxation_system_enum.dart';
 import 'commission.dart';
+import 'cost_price.dart';
 import 'storage.dart';
 
 part 'profitability.g.dart';
@@ -11,8 +12,7 @@ class ProfitabilityCalc {
   Id? id;
 
   late DateTime savedDate;
-  late String productName;
-  late double costPrice;
+
   late double profitability;
   late Size size;
   late Pricing pricing;
@@ -22,13 +22,12 @@ class ProfitabilityCalc {
 
   final IsarLink<Storage> storage = IsarLink();
   final IsarLink<Commission> commission = IsarLink();
+  final IsarLink<CostPrice> costPrice = IsarLink();
 
   ProfitabilityCalc();
 
   ProfitabilityCalc.withValues(
     this.savedDate,
-    this.productName,
-    this.costPrice,
     this.profitability,
     this.size,
     this.pricing,

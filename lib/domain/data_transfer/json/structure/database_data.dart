@@ -44,4 +44,19 @@ class DatabaseData {
       for (var block in blocks) block.name: block.data
     };
   }
+
+  String getInfo() {
+    var info = StringBuffer();
+    for (var block in blocks) {
+      info.write('\n');
+      if (block.name == DataToExport.costPriceCalculations.blockName) {
+        info.write('Расчёты себестоимости');
+      } else if (block.name ==
+          DataToExport.profitabilityCalculations.blockName) {
+        info.write('Расчёты рентабельности');
+      }
+      info.write(' в количестве ${block.count} ед.');
+    }
+    return info.toString();
+  }
 }

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
-import '../../../../../domain/util/strings.dart';
-import '../../../../../domain/profitability/profitability_form.dart';
+import '../../../../../domain/profitability/logistics/logistics_calculator.dart';
 
 class LogisticResultWidget extends StatelessWidget {
-  final ProfitabilityForm profitabilityForm;
+  final LogisticsCalculator logistics;
 
-  const LogisticResultWidget({required this.profitabilityForm, super.key});
+  const LogisticResultWidget({required this.logistics, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,14 +18,17 @@ class LogisticResultWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              'Стоимость логистики: ${profitabilityForm.logisticTotalCost}$rubleCurrency',
+              'Стоимость логистики: ${logistics.totalCostFormatted}',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
             ),
-            if (profitabilityForm.sizeForm.isExtraLargeProduct)
-              const Text('*Минимальная стоимость для СКГТ: 1000$rubleCurrency'),
+            if (logistics.size.isExtraLargeProduct)
+              Text(
+                '*Минимальная стоимость для СКГТ: '
+                '${logistics.minExtraLargeCostFormatted}',
+              ),
           ],
         ),
       ),

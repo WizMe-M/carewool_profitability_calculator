@@ -34,11 +34,12 @@ class FileDialog {
   /// Picks file with [MimeType]s filter.
   ///
   /// Returns picked [io.File]
-  Future<io.File?> pickFile(Set<MimeType> mimeTypes) async {
+  Future<io.File?> pickFile([MimeType? mimeType]) async {
     var path = await FlutterFileDialog.pickFile(
       params: OpenFileDialogParams(
         copyFileToCacheDir: true,
-        mimeTypesFilter: mimeTypes.map((e) => e.name).toList(),
+        mimeTypesFilter: mimeType?.mimeNames,
+        fileExtensionsFilter: mimeType?.extensions,
       ),
     );
     return path != null ? io.File(path) : null;

@@ -78,9 +78,7 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: ProfitabilityPage(
-          costPrice: args.costPrice,
-          lastCommissionUpload: args.lastCommissionUpload,
-          lastStorageUpload: args.lastStorageUpload,
+          form: args.form,
           key: args.key,
         ),
       );
@@ -306,17 +304,13 @@ class ProfitabilityCalcHistoryRouteArgs {
 /// [ProfitabilityPage]
 class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
   ProfitabilityRoute({
-    required CostPrice costPrice,
-    required CommissionUpload lastCommissionUpload,
-    required StorageUpload lastStorageUpload,
+    required ProfitabilityForm form,
     Key? key,
     List<PageRouteInfo>? children,
   }) : super(
           ProfitabilityRoute.name,
           args: ProfitabilityRouteArgs(
-            costPrice: costPrice,
-            lastCommissionUpload: lastCommissionUpload,
-            lastStorageUpload: lastStorageUpload,
+            form: form,
             key: key,
           ),
           initialChildren: children,
@@ -330,23 +324,17 @@ class ProfitabilityRoute extends PageRouteInfo<ProfitabilityRouteArgs> {
 
 class ProfitabilityRouteArgs {
   const ProfitabilityRouteArgs({
-    required this.costPrice,
-    required this.lastCommissionUpload,
-    required this.lastStorageUpload,
+    required this.form,
     this.key,
   });
 
-  final CostPrice costPrice;
-
-  final CommissionUpload lastCommissionUpload;
-
-  final StorageUpload lastStorageUpload;
+  final ProfitabilityForm form;
 
   final Key? key;
 
   @override
   String toString() {
-    return 'ProfitabilityRouteArgs{costPrice: $costPrice, lastCommissionUpload: $lastCommissionUpload, lastStorageUpload: $lastStorageUpload, key: $key}';
+    return 'ProfitabilityRouteArgs{form: $form, key: $key}';
   }
 }
 

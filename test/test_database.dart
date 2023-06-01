@@ -45,8 +45,6 @@ Future<Isar> initTestDatabase() async {
 
     var profitability = ProfitabilityCalc.withValues(
       DateTime.now(),
-      costPrice.productName,
-      costPrice.total,
       14,
       Size.withValues(12, 15, 20),
       Pricing.withValues(200, 5, 10),

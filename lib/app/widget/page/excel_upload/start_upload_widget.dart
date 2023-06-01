@@ -25,7 +25,7 @@ class StartUploadWidget extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Скачайте файл с ',
+                    text: 'Выгрузите Excel с ',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   TextSpan(
@@ -45,7 +45,7 @@ class StartUploadWidget extends StatelessWidget {
                       },
                   ),
                   TextSpan(
-                    text: '(раздел "Логистика, хранение, приёмка")',
+                    text: '(Коэффициенты складов yyyy-MM-dd.xlsx)',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
@@ -59,8 +59,7 @@ class StartUploadWidget extends StatelessWidget {
                     ? null
                     : () async => await uploader.storageUploader.upload(),
                 child: const Text(
-                  'Импортировать файл\n'
-                  '"Логистика, хранение, приёмка гггг-мм-дд"',
+                  'Загрузить коэффициенты склада',
                   textAlign: TextAlign.center,
                 ),
               );
@@ -87,7 +86,7 @@ class StartUploadWidget extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(
-                      text: 'Скачайте файл с ',
+                      text: 'Выгрузите Excel с ',
                       style: Theme.of(context).textTheme.bodyMedium,),
                   TextSpan(
                     text: 'сайта WB\n',
@@ -106,7 +105,7 @@ class StartUploadWidget extends StatelessWidget {
                       },
                   ),
                   TextSpan(
-                    text: '(раздел "Коммиссия")',
+                    text: '(Коммиссия.xlsx)',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
@@ -119,7 +118,7 @@ class StartUploadWidget extends StatelessWidget {
                 onPressed: uploader.isExecuting
                     ? null
                     : () async => await uploader.commissionUploader.upload(),
-                child: const Text('Импортировать файл "Комиссия"'),
+                child: const Text('Загрузить комиссии'),
               );
             },
           ),

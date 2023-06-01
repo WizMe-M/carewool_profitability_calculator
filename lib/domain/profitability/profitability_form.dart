@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../database/entity/commission.dart';
@@ -8,25 +7,21 @@ import '../../database/entity/profitability.dart';
 import '../../database/entity/storage.dart';
 import '../../database/entity/cost_price.dart';
 import '../../database/simple_taxation_system_enum.dart';
-import 'commission_selector/commission_selector.dart';
-import 'pricing/pricing_form.dart';
-import 'size_form/size_form.dart';
-import 'storage_selector/storage_selector.dart';
+import '../util/formatting.dart';
+import 'pricing/commission_selector.dart';
+import 'pricing/pricing_calculator.dart';
+import 'logistics/logistics_calculator.dart';
+import 'logistics/size_form.dart';
+import 'logistics/storage_selector.dart';
 
 part 'profitability_form.g.dart';
 
 class ProfitabilityForm = ProfitabilityFormBase with _$ProfitabilityForm;
 
 abstract class ProfitabilityFormBase with Store {
-  final NumberFormat _format = NumberFormat()
-    ..minimumFractionDigits = 0
-    ..maximumFractionDigits = 2;
   final CostPrice costPrice;
-  final StorageSelector storageSelector;
-  final CommissionSelector categorySelector;
-
-  final sizeForm = SizeForm();
-  final pricingForm = PricingForm();
+  final LogisticsCalculator logistics;
+  final PricingCalculator pricing;
 
   @observable
   SimpleTaxationSystem selectedTax = SimpleTaxationSystem.perIncome;
@@ -35,58 +30,33 @@ abstract class ProfitabilityFormBase with Store {
     required this.costPrice,
     required CommissionUpload commissions,
     required StorageUpload storages,
-  })  : storageSelector = StorageSelector(upload: storages),
-        categorySelector = CommissionSelector(upload: commissions);
+  })  : pricing = PricingCalculator(CommissionSelector(upload: commissions)),
+        logistics = LogisticsCalculator(StorageSelector(upload: storages));
 
-  @computed
-  Tariff? get logisticTariff => storageSelector.selected?.tariffs
-      .firstWhere((tariff) => tariff.name == 'Логистика');
-
-  @computed
-  double get logisticBaseCost => logisticTariff?.baseCost ?? 0;
-
-  @computed
-  double get logisticCostPerLiter => logisticTariff?.costPerLiter ?? 0;
-
-  @computed
-  double get logisticCostForSize =>
-      logisticBaseCost + logisticCostPerLiter * sizeForm.overLiterCap;
-
-  @computed
-  double get logisticCostForExtraLarge {
-    return sizeForm.isExtraLargeProduct
-        ? max<double>(1000, logisticCostForSize)
-        : logisticCostForSize;
-  }
-
-  /// Total logistics cost for inputted sizes of product
-  @computed
-  double get logisticTotalCost =>
-      logisticTariff != null ? logisticCostForExtraLarge : 0;
-
-  /// Cost of paid acceptance, if it's included in storage tariffs
-  @computed
-  double get paidAcceptanceCost {
-    var acceptanceTariff = storageSelector.selected?.tariffs
-        .firstWhere((tariff) => tariff.name == 'Приёмка');
-    return acceptanceTariff?.baseCost ?? 0;
-  }
+  ProfitabilityFormBase.fromCalc({required ProfitabilityCalc calc})
+      : costPrice = calc.costPrice.value!,
+        pricing = PricingCalculator.withPrices(
+          CommissionSelector.fromSelected(commission: calc.commission.value!),
+          calc.pricing,
+        ),
+        logistics = LogisticsCalculator.withSizes(
+          StorageSelector.fromSelected(storage: calc.storage.value!),
+          SizeForm.withSize(
+            calc.size.width,
+            calc.size.height,
+            calc.size.length,
+          ),
+        );
 
   // Income for one saled production
   @computed
-  double get price => pricingForm.priceBeforeRCD;
-
-  /// Commission on sale for set [price]
-  @computed
-  double get commissionForCost => price * categorySelector.fbsCommission / 100;
+  double get income => pricing.form.priceBeforeRCD;
 
   /// Expenses on sale
   @computed
-  double get expenses =>
-      costPrice.total! +
-      commissionForCost +
-      logisticTotalCost +
-      paidAcceptanceCost;
+  double get expenses {
+    return costPrice.total + pricing.commissionSize + logistics.totalCost;
+  }
 
   /// Amount of tax to pay
   @computed
@@ -94,9 +64,9 @@ abstract class ProfitabilityFormBase with Store {
     var tax = selectedTax.taxSize / 100;
     switch (selectedTax) {
       case SimpleTaxationSystem.perIncome:
-        return price * tax;
+        return income * tax;
       case SimpleTaxationSystem.perProfit:
-        return max<double>(0, price - expenses) * tax;
+        return max<double>(0, income - expenses) * tax;
     }
   }
 
@@ -106,35 +76,87 @@ abstract class ProfitabilityFormBase with Store {
 
   /// Profit from production sale
   @computed
-  double get profit => price - expensesWithTax;
+  double get profit => income - expensesWithTax;
 
   /// Profitability of sale (from 0 to 1)
   @computed
-  double get profitability => profit / price;
+  double get profitability => profit / income;
 
-  /// Profitability of sale (from 0 to 1)
+  // -----------------------------------------------------------------------
+
   @computed
-  String get profitabilityFormatted => _format.format(profitability * 100);
+  String get taxFormatted => Formatting.formatPercentage(selectedTax.taxSize);
+
+  @computed
+  String get taxSizeFormatted => Formatting.formatCostRu(taxSize);
+
+  /// Formatted expenses on logistics
+  @computed
+  String get incomeFormatted => Formatting.formatCostRu(income);
+
+  /// Formatted expenses on logistics
+  @computed
+  String get expenseProductionFormatted {
+    return Formatting.formatCostRu(costPrice.total);
+  }
+
+  /// Formatted expenses on logistics
+  @computed
+  String get expensesCommissionFormatted => pricing.commissionSizeFormatted;
+
+  /// Formatted expenses on logistics
+  @computed
+  String get expensesLogisticsFormatted {
+    return Formatting.formatCostRu(logistics.totalCost);
+  }
+
+  /// Formatted expenses on tax
+  @computed
+  String get expensesTaxFormatted => Formatting.formatCostRu(taxSize);
+
+  /// Formatted total expenses
+  @computed
+  String get expensesFormatted => Formatting.formatCostRu(expenses);
+
+  /// Formatted total expenses
+  @computed
+  String get expensesWithTaxFormatted {
+    return Formatting.formatCostRu(expensesWithTax);
+  }
+
+  /// Formatted profit
+  @computed
+  String get profitFormatted => Formatting.formatCostRu(profit);
+
+  /// Formatted profitability (from 0 to 100%)
+  @computed
+  String get profitabilityFormatted {
+    return Formatting.formatPercentage(profitability * 100);
+  }
+
+  // -----------------------------------------------------------------------
 
   ProfitabilityCalc toEntity() {
-    var size = Size()
-      ..width = sizeForm.width.value
-      ..length = sizeForm.length.value
-      ..height = sizeForm.height.value;
-    var pricing = Pricing()
-      ..customerPrice = pricingForm.customerPrice
-      ..regularCustomerDiscount = pricingForm.regularCustomerDiscount
-      ..sellerDiscount = pricingForm.sellerDiscount;
-    var entity = ProfitabilityCalc()
-      ..savedDate = DateTime.now()
-      ..productName = costPrice.productName!
-      ..costPrice = costPrice.total!
-      ..profitability = profitability
-      ..pricing = pricing
-      ..size = size
-      ..tax = selectedTax
-      ..commission.value = categorySelector.selected
-      ..storage.value = storageSelector.selected;
+    var size = Size.withValues(
+      logistics.size.width,
+      logistics.size.height,
+      logistics.size.length,
+    );
+    var pricingEntity = Pricing.withValues(
+      pricing.form.customerPrice,
+      pricing.form.regularCustomerDiscount,
+      pricing.form.sellerDiscount,
+    );
+    var entity = ProfitabilityCalc.withValues(
+      DateTime.now(),
+      profitability,
+      size,
+      pricingEntity,
+      selectedTax,
+    )
+      ..commission.value = pricing.commissionSelector.selected
+      ..storage.value = logistics.storageSelector.selected
+      ..costPrice.value = costPrice;
     return entity;
   }
 }
