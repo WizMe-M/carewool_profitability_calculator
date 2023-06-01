@@ -1,8 +1,8 @@
 name: carewool_profitability_calculator
-description: Course and diploma project
+description: Profitability and cost price calculator for Carewool
 publish_to: 'none'
 
-version: 0.3.2+6
+version: 0.3.3+7
 
 environment:
   sdk: '>=3.0.0-286.0.dev <4.0.0'
