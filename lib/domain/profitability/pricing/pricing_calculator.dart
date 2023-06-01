@@ -1,5 +1,6 @@
 import 'package:mobx/mobx.dart';
 
+import '../../../database/entity/profitability.dart';
 import '../../model/commission.dart';
 import '../../util/formatting.dart';
 import 'commission_selector.dart';
@@ -11,9 +12,16 @@ class PricingCalculator = PricingCalculatorBase with _$PricingCalculator;
 
 abstract class PricingCalculatorBase with Store {
   final CommissionSelector commissionSelector;
-  final form = PricingForm();
+  final PricingForm form;
 
-  PricingCalculatorBase(this.commissionSelector);
+  PricingCalculatorBase(this.commissionSelector) : form = PricingForm();
+
+  PricingCalculatorBase.withPrices(this.commissionSelector, Pricing pricing)
+      : form = PricingForm.withData(
+          pricing.customerPrice,
+          pricing.regularCustomerDiscount,
+          pricing.sellerDiscount,
+        );
 
   @computed
   Commission get selected {

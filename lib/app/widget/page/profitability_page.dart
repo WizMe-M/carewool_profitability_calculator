@@ -4,9 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../database/entity/commission.dart';
-import '../../../database/entity/cost_price.dart';
-import '../../../database/entity/storage.dart';
 import '../../../domain/data_transfer/pdf/profitability_pdf_creator.dart';
 import '../../../domain/data_transfer/mime_type_enum.dart';
 import '../../../domain/file_dialog/file_dialog.dart';
@@ -26,19 +23,9 @@ class ProfitabilityPage extends StatelessWidget {
   final Logger _logger = GetIt.I.get();
   final ProfitabilityPdfCreator _pdf = GetIt.I.get();
   final FileDialog _fileDialog = GetIt.I.get();
-  final ProfitabilityForm _form;
-  final CostPrice costPrice;
+  final ProfitabilityForm form;
 
-  ProfitabilityPage({
-    required this.costPrice,
-    required CommissionUpload lastCommissionUpload,
-    required StorageUpload lastStorageUpload,
-    super.key,
-  }) : _form = ProfitabilityForm(
-          costPrice: costPrice,
-          commissions: lastCommissionUpload,
-          storages: lastStorageUpload,
-        );
+  ProfitabilityPage({required this.form, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -62,14 +49,14 @@ class ProfitabilityPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                StorageSelectorWidget(logistics: _form.logistics),
-                SizeFormWidget(form: _form.logistics.size),
-                LogisticResultWidget(logistics: _form.logistics),
-                CommissionSelectorWidget(pricing: _form.pricing),
-                PricingFormWidget(form: _form.pricing.form),
-                TaxSelectorWidget(form: _form),
-                CalculationsResultWidget(form: _form),
-                SaveButton(form: _form),
+                StorageSelectorWidget(logistics: form.logistics),
+                SizeFormWidget(form: form.logistics.size),
+                LogisticResultWidget(logistics: form.logistics),
+                CommissionSelectorWidget(pricing: form.pricing),
+                PricingFormWidget(form: form.pricing.form),
+                TaxSelectorWidget(form: form),
+                CalculationsResultWidget(form: form),
+                SaveButton(form: form),
               ],
             ),
           ),
@@ -92,7 +79,7 @@ class ProfitabilityPage extends StatelessWidget {
       return;
     }
 
-    _pdf.create(_form).then((pdf) {
+    _pdf.create(form).then((pdf) {
       _fileDialog.pickDirectoryAndSaveFile(pdf, MimeType.pdf).then((path) {
         if (path == null) return;
         messenger.showSnackBar(

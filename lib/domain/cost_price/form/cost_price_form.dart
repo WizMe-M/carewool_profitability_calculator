@@ -58,19 +58,19 @@ abstract class CostPriceFormBase with Store {
       : this.fromTemplate(template: FormTemplate.standard());
 
   CostPriceFormBase.fromEntity({required CostPrice costPrice}) {
-    productNameController.text = costPrice.productName!;
+    productNameController.text = costPrice.productName;
     var formatter = NumberFormat()
       ..minimumFractionDigits = 0
       ..maximumFractionDigits = 2;
 
-    for (var block in costPrice.blocks!) {
+    for (var block in costPrice.blocks) {
       blocks.add(
         FormBlock(
-          title: block.name!,
-          inputs: block.parts!
+          title: block.name,
+          inputs: block.parts
               .map((part) => CostPriceInput.withText(
-                    label: part.name!,
-                    text: part.cost! > 0 ? formatter.format(part.cost) : '',
+                    label: part.name,
+                    text: part.cost > 0 ? formatter.format(part.cost) : '',
                   ))
               .toList(),
         ),

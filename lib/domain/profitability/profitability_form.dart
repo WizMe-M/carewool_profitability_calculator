@@ -9,8 +9,9 @@ import '../../database/entity/cost_price.dart';
 import '../../database/simple_taxation_system_enum.dart';
 import '../util/formatting.dart';
 import 'pricing/commission_selector.dart';
-import 'logistics/logistics_calculator.dart';
 import 'pricing/pricing_calculator.dart';
+import 'logistics/logistics_calculator.dart';
+import 'logistics/size_form.dart';
 import 'logistics/storage_selector.dart';
 
 part 'profitability_form.g.dart';
@@ -31,6 +32,21 @@ abstract class ProfitabilityFormBase with Store {
     required StorageUpload storages,
   })  : pricing = PricingCalculator(CommissionSelector(upload: commissions)),
         logistics = LogisticsCalculator(StorageSelector(upload: storages));
+
+  ProfitabilityFormBase.fromCalc({required ProfitabilityCalc calc})
+      : costPrice = calc.costPrice.value!,
+        pricing = PricingCalculator.withPrices(
+          CommissionSelector.fromSelected(commission: calc.commission.value!),
+          calc.pricing,
+        ),
+        logistics = LogisticsCalculator.withSizes(
+          StorageSelector.fromSelected(storage: calc.storage.value!),
+          SizeForm.withSize(
+            calc.size.width,
+            calc.size.height,
+            calc.size.length,
+          ),
+        );
 
   // Income for one saled production
   @computed
@@ -133,15 +149,14 @@ abstract class ProfitabilityFormBase with Store {
     );
     var entity = ProfitabilityCalc.withValues(
       DateTime.now(),
-      costPrice.productName,
-      costPrice.total,
       profitability,
       size,
       pricingEntity,
       selectedTax,
     )
       ..commission.value = pricing.commissionSelector.selected
-      ..storage.value = logistics.storageSelector.selected;
+      ..storage.value = logistics.storageSelector.selected
+      ..costPrice.value = costPrice;
     return entity;
   }
 }

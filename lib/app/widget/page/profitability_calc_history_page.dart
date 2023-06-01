@@ -7,6 +7,7 @@ import 'package:isar/isar.dart';
 import '../../../database/entity/profitability.dart';
 import '../../../domain/data_transfer/json/data_to_export_enum.dart';
 import '../../../domain/data_transfer/json/database_exporter.dart';
+import '../../../domain/profitability/profitability_form.dart';
 import '../../navigation/app_router.dart';
 import '../side_bar.dart';
 
@@ -94,7 +95,7 @@ class ProfitabilityCalcHistoryPage extends StatelessWidget {
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   var item = data[index];
-                  var name = item.productName;
+                  var name = item.costPrice.value?.productName;
                   var percent = _number.format(item.profitability * 100);
                   return ListTile(
                     title: Text('$name ($percent%)'),
@@ -110,6 +111,13 @@ class ProfitabilityCalcHistoryPage extends StatelessWidget {
                         ),
                       ],
                     ),
+                    onTap: () {
+                      context.router.push(
+                        ProfitabilityRoute(
+                          form: ProfitabilityForm.fromCalc(calc: item),
+                        ),
+                      );
+                    },
                   );
                 },
                 separatorBuilder: (_, __) => const Divider(),

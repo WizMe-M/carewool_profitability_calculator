@@ -15,6 +15,10 @@ abstract class StorageSelectorBase with Store {
 
   StorageSelectorBase({required this.upload});
 
+  StorageSelectorBase.fromSelected({required Storage storage})
+      : upload = storage.upload.value!,
+        selected = storage;
+
   Future<List<Storage>> search(String pattern) async {
     var words = Isar.splitWords(pattern);
     var searchResults = await upload.storages

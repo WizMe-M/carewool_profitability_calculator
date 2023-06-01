@@ -9,6 +9,7 @@ import '../../../../database/entity/commission.dart';
 import '../../../../database/entity/storage.dart';
 import '../../../../database/entity/cost_price.dart';
 import '../../../../domain/cost_price/form/cost_price_form.dart';
+import '../../../../domain/profitability/profitability_form.dart';
 import '../../../../domain/util/strings.dart';
 import '../../../navigation/app_router.dart';
 
@@ -149,9 +150,11 @@ class BottomTotalBar extends StatelessWidget {
     } else {
       context.router.push(
         ProfitabilityRoute(
-          costPrice: costPrice,
-          lastCommissionUpload: commissionUpload,
-          lastStorageUpload: storageUpload,
+          form: ProfitabilityForm(
+            costPrice: costPrice,
+            commissions: commissionUpload,
+            storages: storageUpload,
+          ),
         ),
       );
     }

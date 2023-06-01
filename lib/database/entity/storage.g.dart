@@ -856,7 +856,7 @@ const StorageSchema = CollectionSchema(
       id: 7925296032143477193,
       name: r'upload',
       target: r'StorageUpload',
-      single: false,
+      single: true,
       linkName: r'storages',
     )
   },
@@ -1656,52 +1656,9 @@ extension StorageQueryLinks
     });
   }
 
-  QueryBuilder<Storage, Storage, QAfterFilterCondition> uploadLengthEqualTo(
-      int length) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'upload', length, true, length, true);
-    });
-  }
-
-  QueryBuilder<Storage, Storage, QAfterFilterCondition> uploadIsEmpty() {
+  QueryBuilder<Storage, Storage, QAfterFilterCondition> uploadIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'upload', 0, true, 0, true);
-    });
-  }
-
-  QueryBuilder<Storage, Storage, QAfterFilterCondition> uploadIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'upload', 0, false, 999999, true);
-    });
-  }
-
-  QueryBuilder<Storage, Storage, QAfterFilterCondition> uploadLengthLessThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'upload', 0, true, length, include);
-    });
-  }
-
-  QueryBuilder<Storage, Storage, QAfterFilterCondition> uploadLengthGreaterThan(
-    int length, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'upload', length, include, 999999, true);
-    });
-  }
-
-  QueryBuilder<Storage, Storage, QAfterFilterCondition> uploadLengthBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(
-          r'upload', lower, includeLower, upper, includeUpper);
     });
   }
 }

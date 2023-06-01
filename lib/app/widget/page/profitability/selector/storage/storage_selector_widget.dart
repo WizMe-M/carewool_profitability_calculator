@@ -13,60 +13,65 @@ class StorageSelectorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var searchField = TypeAheadField(
+      textFieldConfiguration: TextFieldConfiguration(
+        controller: _searchController,
+        style: DefaultTextStyle.of(context)
+            .style
+            .copyWith(fontStyle: FontStyle.italic),
+        decoration: InputDecoration(
+          border: const OutlineInputBorder(),
+          labelText: 'Склады',
+          hintText: 'Введите название склада',
+          suffixIcon: IconButton(
+            onPressed: () {
+              logistics.storageSelector.selected = null;
+              _searchController.clear();
+            },
+            icon: const Icon(Icons.clear),
+          ),
+        ),
+      ),
+      suggestionsCallback: (pattern) async {
+        return await logistics.storageSelector.search(pattern);
+      },
+      itemBuilder: (context, suggestion) {
+        return ListTile(title: Text(suggestion.name));
+      },
+      onSuggestionSelected: (suggestion) {
+        logistics.storageSelector.selected = suggestion;
+        _searchController.text = suggestion.name;
+      },
+      loadingBuilder: (_) {
+        return const Center(child: CircularProgressIndicator());
+      },
+      errorBuilder: (context, error) {
+        return const Center(
+          child: Text('Произошла ошибка. Попробуйте еще раз'),
+        );
+      },
+      noItemsFoundBuilder: (context) {
+        return const Center(
+          child: Text(
+            'Не найдено складов',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+        );
+      },
+    );
+    if (logistics.storageSelector.selected != null) {
+      searchField.onSuggestionSelected(logistics.storageSelector.selected!);
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TypeAheadField(
-            textFieldConfiguration: TextFieldConfiguration(
-              controller: _searchController,
-              style: DefaultTextStyle.of(context)
-                  .style
-                  .copyWith(fontStyle: FontStyle.italic),
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                labelText: 'Склады',
-                hintText: 'Введите название склада',
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    logistics.storageSelector.selected = null;
-                    _searchController.clear();
-                  },
-                  icon: const Icon(Icons.clear),
-                ),
-              ),
-            ),
-            suggestionsCallback: (pattern) async {
-              return await logistics.storageSelector.search(pattern);
-            },
-            itemBuilder: (context, suggestion) {
-              return ListTile(title: Text(suggestion.name));
-            },
-            onSuggestionSelected: (suggestion) {
-              logistics.storageSelector.selected = suggestion;
-              _searchController.text = suggestion.name;
-            },
-            loadingBuilder: (_) {
-              return const Center(child: CircularProgressIndicator());
-            },
-            errorBuilder: (context, error) {
-              return const Center(
-                child: Text('Произошла ошибка. Попробуйте еще раз'),
-              );
-            },
-            noItemsFoundBuilder: (context) {
-              return const Center(
-                child: Text(
-                  'Не найдено складов',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-              );
-            },
-          ),
+          searchField,
           Padding(
             padding: const EdgeInsets.all(8),
             child: Observer(builder: (context) {

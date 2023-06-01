@@ -9,11 +9,30 @@ part 'pricing_form.g.dart';
 class PricingForm = PricingFormBase with _$PricingForm;
 
 abstract class PricingFormBase with Store {
-  final customerPriceInput = DoubleInput();
-  final regularCustomerDiscountInput = DiscountInput();
-  final sellerDiscountInput = DiscountInput();
+  final DoubleInput customerPriceInput;
+  final DiscountInput regularCustomerDiscountInput;
+  final DiscountInput sellerDiscountInput;
 
-  PricingFormBase() {
+  PricingFormBase()
+      : customerPriceInput = DoubleInput(),
+        regularCustomerDiscountInput = DiscountInput(),
+        sellerDiscountInput = DiscountInput() {
+    initListeners();
+  }
+
+  PricingFormBase.withData(
+    double customerPrice,
+    int regularCustomerDiscount,
+    int sellerDiscount,
+  )   : customerPriceInput = DoubleInput.withText(
+          customerPrice.toString(),
+        ),
+        regularCustomerDiscountInput = DiscountInput.withText(
+          regularCustomerDiscount.toString(),
+        ),
+        sellerDiscountInput = DiscountInput.withText(
+          sellerDiscount.toString(),
+        ) {
     initListeners();
   }
 

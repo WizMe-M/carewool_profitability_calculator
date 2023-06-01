@@ -24,7 +24,7 @@ class Storage {
   late double costCoefficient;
 
   @Backlink(to: 'storages')
-  final IsarLinks<StorageUpload> upload = IsarLinks();
+  final IsarLink<StorageUpload> upload = IsarLink();
 
   Storage();
 

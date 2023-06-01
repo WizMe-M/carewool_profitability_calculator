@@ -15,9 +15,11 @@ abstract class LogisticsCalculatorBase with Store {
   static const double minExtraLargeCost = 1000;
 
   final StorageSelector storageSelector;
-  final size = SizeForm();
+  final SizeForm size;
 
-  LogisticsCalculatorBase(this.storageSelector);
+  LogisticsCalculatorBase(this.storageSelector) : size = SizeForm();
+
+  LogisticsCalculatorBase.withSizes(this.storageSelector, this.size);
 
   String get minExtraLargeCostFormatted {
     return Formatting.formatCostRu(minExtraLargeCost);

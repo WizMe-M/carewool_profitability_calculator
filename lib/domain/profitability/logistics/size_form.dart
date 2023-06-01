@@ -11,13 +11,13 @@ class SizeForm = SizeFormBase with _$SizeForm;
 
 abstract class SizeFormBase with Store {
   /// Input for width
-  final widthInput = DoubleInput();
+  final DoubleInput widthInput;
 
   /// Input for height
-  final heightInput = DoubleInput();
+  final DoubleInput heightInput;
 
   /// Input for length
-  final lengthInput = DoubleInput();
+  final DoubleInput lengthInput;
 
   @observable
   double width = 0;
@@ -28,7 +28,17 @@ abstract class SizeFormBase with Store {
   @observable
   double length = 0;
 
-  SizeFormBase() {
+  SizeFormBase()
+      : widthInput = DoubleInput(),
+        heightInput = DoubleInput(),
+        lengthInput = DoubleInput() {
+    initListeners();
+  }
+
+  SizeFormBase.withSize(double width, double height, double length)
+      : widthInput = DoubleInput.withText(width.toString()),
+        heightInput = DoubleInput.withText(height.toString()),
+        lengthInput = DoubleInput.withText(length.toString()) {
     initListeners();
   }
 
