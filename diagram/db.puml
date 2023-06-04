@@ -1,0 +1,118 @@
+@startuml
+set namespaceSeparator ::
+
+class "carewool_profitability_calculator::CommissionUpload" {
+  +int? id
+  +String fileName
+  +DateTime uploadTime
+  +IsarLinks<Commission> commissions
+}
+
+class "carewool_profitability_calculator::Commission" {
+  +int? id
+  +String category
+  +String itemName
+  +double fbo
+  +double fbs
+  +IsarLink<CommissionUpload> upload
+  +List<String> tagWords
+}
+
+"carewool_profitability_calculator::Commission" o-- "carewool_profitability_calculator::CommissionUpload"
+"carewool_profitability_calculator::CommissionUpload" o-- "carewool_profitability_calculator::Commission"
+
+class "carewool_profitability_calculator::CostPrice" {
+  +int? id
+  +String productName
+  +DateTime savedDate
+  +List<Block> blocks
+  +double total
+}
+
+class "carewool_profitability_calculator::Block" {
+  +String name
+  +List<Part> parts
+}
+
+class "carewool_profitability_calculator::Part" {
+  +String name
+  +double cost
+}
+
+"carewool_profitability_calculator::CostPrice" o-- "carewool_profitability_calculator::Block"
+"carewool_profitability_calculator::Block" o-- "carewool_profitability_calculator::Part"
+
+
+class "carewool_profitability_calculator::ProfitabilityCalc" {
+  +int? id
+  +DateTime savedDate
+  +double profitability
+  +Size size
+  +Pricing pricing
+  +SimpleTaxationSystem tax
+  +IsarLink<Storage> storage
+  +IsarLink<Commission> commission
+  +IsarLink<CostPrice> costPrice
+}
+
+"carewool_profitability_calculator::ProfitabilityCalc" o-- "carewool_profitability_calculator::Size"
+"carewool_profitability_calculator::ProfitabilityCalc" o-- "carewool_profitability_calculator::Pricing"
+"carewool_profitability_calculator::ProfitabilityCalc" o-- "carewool_profitability_calculator::SimpleTaxationSystem"
+
+class "carewool_profitability_calculator::Size" {
+  +double width
+  +double height
+  +double length
+}
+
+class "carewool_profitability_calculator::Pricing" {
+  +double customerPrice
+  +int regularCustomerDiscount
+  +int sellerDiscount
+}
+
+class "carewool_profitability_calculator::StorageUpload" {
+  +int? id
+  +String fileName
+  +DateTime uploadTime
+  +IsarLinks<Storage> storages
+}
+
+class "carewool_profitability_calculator::Storage" {
+  +int? id
+  +String name
+  +double costCoefficient
+  +IsarLink<StorageUpload> upload
+  +List<String> nameWords
+}
+
+"carewool_profitability_calculator::Storage" o-- "carewool_profitability_calculator::StorageUpload"
+"carewool_profitability_calculator::StorageUpload" o-- "carewool_profitability_calculator::Storage"
+"carewool_profitability_calculator::ProfitabilityCalc" o-- "carewool_profitability_calculator::Storage"
+"carewool_profitability_calculator::ProfitabilityCalc" o-- "carewool_profitability_calculator::Commission"
+"carewool_profitability_calculator::ProfitabilityCalc" o-- "carewool_profitability_calculator::CostPrice"
+
+class "carewool_profitability_calculator::Template" {
+  +int? id
+  +String name
+  +List<TemplateBlock> blocks
+}
+
+class "carewool_profitability_calculator::TemplateBlock" {
+  +String name
+  +List<String> partNames
+}
+
+"carewool_profitability_calculator::Template" o-- "carewool_profitability_calculator::TemplateBlock"
+
+class "carewool_profitability_calculator::SimpleTaxationSystem" {
+  +int index
+  {static} +List<SimpleTaxationSystem> values
+  {static} +SimpleTaxationSystem perIncome
+}
+
+"carewool_profitability_calculator::SimpleTaxationSystem" o-- "carewool_profitability_calculator::SimpleTaxationSystem"
+"dart::core::Enum" <|-- "carewool_profitability_calculator::SimpleTaxationSystem"
+
+
+@enduml

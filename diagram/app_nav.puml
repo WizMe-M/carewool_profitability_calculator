@@ -1,0 +1,63 @@
+@startuml
+set namespaceSeparator ::
+
+class "carewool_profitability_calculator::CostPriceHistoryRoute" {
+  {static} +String name
+  {static} +PageInfo<CostPriceHistoryRouteArgs> page
+}
+
+class "carewool_profitability_calculator::CostCalculatorRoute" {
+  {static} +String name
+  {static} +PageInfo<CostCalculatorRouteArgs> page
+}
+class "carewool_profitability_calculator::DefaultRoute" {
+  {static} +String name
+  {static} +PageInfo<void> page
+}
+
+class "carewool_profitability_calculator::EditCostPriceRoute" {
+  {static} +String name
+  {static} +PageInfo<EditCostPriceRouteArgs> page
+}
+
+class "carewool_profitability_calculator::ExcelUploadRoute" {
+  {static} +String name
+  {static} +PageInfo<ExcelUploadRouteArgs> page
+}
+
+class "carewool_profitability_calculator::ImportRoute" {
+  {static} +String name
+  {static} +PageInfo<ImportRouteArgs> page
+}
+
+class "carewool_profitability_calculator::ProfitabilityCalcHistoryRoute" {
+  {static} +String name
+  {static} +PageInfo<ProfitabilityCalcHistoryRouteArgs> page
+}
+
+class "carewool_profitability_calculator::ProfitabilityRoute" {
+  {static} +String name
+  {static} +PageInfo<ProfitabilityRouteArgs> page
+}
+
+class "carewool_profitability_calculator::StartNewProfitabilityRoute" {
+  {static} +String name
+  {static} +PageInfo<StartNewProfitabilityRouteArgs> page
+}
+
+class "carewool_profitability_calculator::AppRouter" {
+  +List<AutoRoute> routes
+}
+
+"carewool_profitability_calculator::AppRouter" --o "carewool_profitability_calculator::DefaultRoute"
+"carewool_profitability_calculator::AppRouter" --o "carewool_profitability_calculator::ImportRoute"
+"carewool_profitability_calculator::AppRouter" --o "carewool_profitability_calculator::ProfitabilityRoute"
+"carewool_profitability_calculator::AppRouter" --o "carewool_profitability_calculator::CostCalculatorRoute"
+"carewool_profitability_calculator::AppRouter" --o "carewool_profitability_calculator::ExcelUploadRoute"
+"carewool_profitability_calculator::AppRouter" --o "carewool_profitability_calculator::CostPriceHistoryRoute"
+"carewool_profitability_calculator::AppRouter" --o "carewool_profitability_calculator::EditCostPriceRoute"
+"carewool_profitability_calculator::AppRouter" --o "carewool_profitability_calculator::ProfitabilityCalcHistoryRoute"
+"carewool_profitability_calculator::AppRouter" --o "carewool_profitability_calculator::StartNewProfitabilityRoute"
+
+
+@enduml

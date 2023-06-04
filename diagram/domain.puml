@@ -1,0 +1,564 @@
+@startuml
+set namespaceSeparator ::
+
+class "carewool_profitability_calculator::CostPriceForm" {
+}
+
+"carewool_profitability_calculator::CostPriceFormBase" <|-- "carewool_profitability_calculator::CostPriceForm"
+
+abstract class "carewool_profitability_calculator::CostPriceFormBase" {
+  -Logger _logger
+  -NumberFormat _costFormatter
+  -StreamSubscription<dynamic>? _changesStreamSub
+  -double _costPrice
+  +List<FormBlock> blocks
+  +List<CostPriceInput> allInputs
+  +TextEditingController productNameController
+  +String formattedCostPrice
+  +String productName
+  +bool areInputsValid
+  +bool isProductNameNotEmpty
+  +bool isCostPricePositive
+  +bool isValid
+  +CostPrice toEntity()
+  -void _calculateCostPrice()
+  +void reset()
+  +void initForm()
+  +void setAllInputs()
+  +void subscribeToInputStreams()
+  +void unsubscribeFromInputStreams()
+}
+
+"carewool_profitability_calculator::CostPriceFormBase" o-- "logger::Logger"
+"carewool_profitability_calculator::CostPriceFormBase" o-- "intl::NumberFormat"
+"carewool_profitability_calculator::CostPriceFormBase" o-- "dart::async::StreamSubscription<dynamic>"
+"carewool_profitability_calculator::CostPriceFormBase" o-- "flutter::TextEditingController"
+"mobx::Store" <|-- "carewool_profitability_calculator::CostPriceFormBase"
+
+class "carewool_profitability_calculator::EditWrap" {
+}
+
+"carewool_profitability_calculator::EditWrapBase" <|-- "carewool_profitability_calculator::EditWrap"
+
+abstract class "carewool_profitability_calculator::EditWrapBase" {
+  -CostPrice _costPrice
+  +CostPriceForm form
+  +void resetChanges()
+  +CostPrice toEntity()
+}
+
+"carewool_profitability_calculator::EditWrapBase" o-- "carewool_profitability_calculator::CostPrice"
+"carewool_profitability_calculator::EditWrapBase" o-- "carewool_profitability_calculator::CostPriceForm"
+"mobx::Store" <|-- "carewool_profitability_calculator::EditWrapBase"
+
+class "carewool_profitability_calculator::.::FormBlock" {
+  +String title
+  +List<CostPriceInput> inputs
+}
+
+class "carewool_profitability_calculator::::CostPriceInput" {
+  -StreamController<dynamic>? _streamController
+  +String label
+  +Stream<dynamic>? stream
+  +void onInputChanged()
+  +void addControllerListeners()
+  +void removeControllerListeners()
+}
+
+"carewool_profitability_calculator::::CostPriceInput" o-- "dart::async::StreamController<dynamic>"
+"carewool_profitability_calculator::::CostPriceInput" o-- "dart::async::Stream<dynamic>"
+"carewool_profitability_calculator::::DoubleInput" <|-- "carewool_profitability_calculator::CostPriceInput"
+
+class "carewool_profitability_calculator::::FormTemplate" {
+  +String name
+  +ObservableMap<String, ObservableList<String>> structure
+  +Template toEntity()
+}
+
+"carewool_profitability_calculator::FormTemplate" o-- "mobx::ObservableMap"
+
+class "carewool_profitability_calculator::::File" {
+  +T source
+  +String fileName
+  +Uint8List fileData
+}
+
+"carewool_profitability_calculator::::File" o-- "dart::typed_data::Uint8List"
+
+class "carewool_profitability_calculator::::DatabaseExporter" {
+  -DbJsonFactory _factory
+  -Logger _logger
+  -FileDialog _fileDialog
+  -DateFormat _date
+  +dynamic export()
+}
+
+"carewool_profitability_calculator::::DatabaseExporter" o-- "carewool_profitability_calculator::DbJsonFactory"
+"carewool_profitability_calculator::DatabaseExporter" o-- "logger::Logger"
+"carewool_profitability_calculator::::DatabaseExporter" o-- "carewool_profitability_calculator::FileDialog"
+"carewool_profitability_calculator::::DatabaseExporter" o-- "intl::DateFormat"
+
+class "carewool_profitability_calculator::::DatabaseImporter" {
+  -FileDialog _fileDialog
+  -DbJsonLoader _loader
+  +dynamic import()
+}
+
+"carewool_profitability_calculator::::DatabaseImporter" o-- "carewool_profitability_calculator::FileDialog"
+"carewool_profitability_calculator::::DatabaseImporter" o-- "carewool_profitability_calculator::DbJsonLoader"
+
+class "carewool_profitability_calculator::::DataToExport" {
+  +int index
+  {static} +List<DataToExport> values
+  {static} +DataToExport costPriceCalculations
+}
+
+"carewool_profitability_calculator::::DataToExport" o-- "carewool_profitability_calculator::DataToExport"
+"dart::core::Enum" <|-- "carewool_profitability_calculator::::DataToExport"
+
+class "carewool_profitability_calculator::::DbJsonFactory" {
+  -Isar _isar
+  +dynamic createDatabaseJsonCopy()
+}
+
+"carewool_profitability_calculator::::DbJsonFactory" o-- "isar::Isar"
+
+class "carewool_profitability_calculator::::DbJsonLoader" {
+  -Isar _isar
+  -Logger _logger
+  +void loadImportData()
+}
+
+"carewool_profitability_calculator::::DbJsonLoader" o-- "isar::Isar"
+"carewool_profitability_calculator::::DbJsonLoader" o-- "logger::Logger"
+
+class "carewool_profitability_calculator::::DatabaseData" {
+  +Set<DataToExport> toExport
+  +List<JsonBlock> blocks
+  +Map<String, dynamic> toJson()
+  +String getInfo()
+}
+
+class "carewool_profitability_calculator::::JsonBlock" {
+  +String name
+  +List<Map<String, dynamic>> data
+  +int count
+}
+
+class "carewool_profitability_calculator::::MimeType" {
+  +int index
+  {static} +List<MimeType> values
+  {static} +MimeType pdf
+}
+
+"carewool_profitability_calculator::MimeType" o-- "carewool_profitability_calculator::MimeType"
+"dart::core::Enum" <|-- "carewool_profitability_calculator::::MimeType"
+
+class "carewool_profitability_calculator::::ProfitabilityPdfCreator" {
+  +Font regular
+  +Font bold
+  +ThemeData textTheme
+  +BoxDecoration importantRowDecoration
+  {static} +dynamic init()
+  {static} -String _createFileName()
+  +dynamic create()
+}
+
+"carewool_profitability_calculator::::ProfitabilityPdfCreator" o-- "pdf::Font"
+"carewool_profitability_calculator::::ProfitabilityPdfCreator" o-- "pdf::ThemeData"
+"carewool_profitability_calculator::::ProfitabilityPdfCreator" o-- "pdf::BoxDecoration"
+
+class "carewool_profitability_calculator::::NormalTableRow" {
+}
+
+"pdf::TableRow" <|-- "carewool_profitability_calculator::::NormalTableRow"
+
+class "carewool_profitability_calculator::::JsonParseError" {
+  +dynamic json
+  +Type parsingType
+  +String missingKey
+  +String toString()
+}
+
+"dart::core::Error" <|-- "carewool_profitability_calculator::::JsonParseError"
+
+class "carewool_profitability_calculator::::CommissionUploader" {
+}
+
+"carewool_profitability_calculator::::CommissionUploaderBase" <|-- "carewool_profitability_calculator::CommissionUploader"
+
+abstract class "carewool_profitability_calculator::::CommissionUploaderBase" {
+  -Logger _logger
+  -Isar _isar
+  -FileDialog _dialog
+  -CommissionParser _parser
+  +CommissionUpload? lastUpload
+  +ImportExcelStatus status
+  +DateTime? lastUpdated
+  +bool isExecuting
+  +dynamic fetch()
+  +dynamic upload()
+}
+
+"carewool_profitability_calculator::CommissionUploaderBase" o-- "logger::Logger"
+"carewool_profitability_calculator::CommissionUploaderBase" o-- "isar::Isar"
+"carewool_profitability_calculator::CommissionUploaderBase" o-- "carewool_profitability_calculator::FileDialog"
+"carewool_profitability_calculator::CommissionUploaderBase" o-- "carewool_profitability_calculator::CommissionParser"
+"carewool_profitability_calculator::CommissionUploaderBase" o-- "carewool_profitability_calculator::CommissionUpload"
+"carewool_profitability_calculator::CommissionUploaderBase" o-- "carewool_profitability_calculator::ImportExcelStatus"
+"mobx::Store" <|-- "carewool_profitability_calculator::CommissionUploaderBase"
+
+class "carewool_profitability_calculator::ExcelUploader" {
+}
+
+"carewool_profitability_calculator::ExcelUploaderBase" <|-- "carewool_profitability_calculator::ExcelUploader"
+
+abstract class "carewool_profitability_calculator::ExcelUploaderBase" {
+  +CommissionUploader commissionUploader
+  +StorageUploader storageUploader
+  +bool isFetching
+  +bool isExecuting
+  +ImportExcelStatus currentStatus
+  +DateTime? lastUpdateTime
+  +dynamic fetch()
+}
+
+"carewool_profitability_calculator::ExcelUploaderBase" o-- "carewool_profitability_calculator::CommissionUploader"
+"carewool_profitability_calculator::ExcelUploaderBase" o-- "carewool_profitability_calculator::StorageUploader"
+"carewool_profitability_calculator::ExcelUploaderBase" o-- "carewool_profitability_calculator::ImportExcelStatus"
+"mobx::Store" <|-- "carewool_profitability_calculator::ExcelUploaderBase"
+
+class "carewool_profitability_calculator::ImportExcelStatus" {
+  +int index
+  {static} +List<ImportExcelStatus> values
+  {static} +ImportExcelStatus notExecuting
+}
+
+"carewool_profitability_calculator::ImportExcelStatus" o-- "carewool_profitability_calculator::ImportExcelStatus"
+"dart::core::Enum" <|-- "carewool_profitability_calculator::ImportExcelStatus"
+
+class "carewool_profitability_calculator::CommissionParser" {
+  +List<Commission> parse()
+}
+
+"carewool_profitability_calculator::ExcelSheetParser" <|-- "carewool_profitability_calculator::CommissionParser"
+
+abstract class "carewool_profitability_calculator::ExcelSheetParser" {
+  +List<T> parse()
+}
+
+class "carewool_profitability_calculator::StorageParser" {
+  +List<Storage> parse()
+}
+
+"carewool_profitability_calculator::ExcelSheetParser" <|-- "carewool_profitability_calculator::StorageParser"
+
+class "carewool_profitability_calculator::StorageUploader" {
+}
+
+"carewool_profitability_calculator::StorageUploaderBase" <|-- "carewool_profitability_calculator::StorageUploader"
+
+abstract class "carewool_profitability_calculator::StorageUploaderBase" {
+  -Logger _logger
+  -Isar _isar
+  -FileDialog _dialog
+  -StorageParser _parser
+  +StorageUpload? lastUpload
+  +ImportExcelStatus status
+  +DateTime? lastUpdated
+  +bool isExecuting
+  +dynamic fetch()
+  +dynamic upload()
+}
+
+"carewool_profitability_calculator::StorageUploaderBase" o-- "logger::Logger"
+"carewool_profitability_calculator::StorageUploaderBase" o-- "isar::Isar"
+"carewool_profitability_calculator::StorageUploaderBase" o-- "carewool_profitability_calculator::FileDialog"
+"carewool_profitability_calculator::StorageUploaderBase" o-- "carewool_profitability_calculator::StorageParser"
+"carewool_profitability_calculator::StorageUploaderBase" o-- "carewool_profitability_calculator::StorageUpload"
+"carewool_profitability_calculator::StorageUploaderBase" o-- "carewool_profitability_calculator::ImportExcelStatus"
+"mobx::Store" <|-- "carewool_profitability_calculator::StorageUploaderBase"
+
+class "carewool_profitability_calculator::FileDialog" {
+  +dynamic tryPickDirectory()
+  +dynamic pickDirectoryAndSaveFile()
+  +dynamic pickFile()
+}
+
+class "carewool_profitability_calculator::DiscountInput" {
+  -DiscountValidator _validator
+  +Validator<String?> validator
+  +int defaultValue
+  +int? parseInput()
+}
+
+"carewool_profitability_calculator::DiscountInput" o-- "carewool_profitability_calculator::DiscountValidator"
+"carewool_profitability_calculator::DiscountInput" o-- "carewool_profitability_calculator::Validator<String>"
+"carewool_profitability_calculator::Input" <|-- "carewool_profitability_calculator::DiscountInput"
+
+class "carewool_profitability_calculator::DoubleInput" {
+  -PositiveDoubleValidator _validator
+  +Validator<String?> validator
+  +double defaultValue
+  +double? parseInput()
+}
+
+"carewool_profitability_calculator::DoubleInput" o-- "carewool_profitability_calculator::PositiveDoubleValidator"
+"carewool_profitability_calculator::DoubleInput" o-- "carewool_profitability_calculator::Validator<String>"
+"carewool_profitability_calculator::Input" <|-- "carewool_profitability_calculator::DoubleInput"
+
+abstract class "carewool_profitability_calculator::Input" {
+  +Validator<String?> validator
+  +TextEditingController controller
+  +String text
+  +bool isValid
+  +T defaultValue
+  +T value
+  +String? validate()
+  +T? parseInput()
+  +void clear()
+  +void dispose()
+}
+
+"carewool_profitability_calculator::Input" o-- "carewool_profitability_calculator::Validator<String>"
+"carewool_profitability_calculator::Input" o-- "flutter::TextEditingController"
+
+class "carewool_profitability_calculator::Commission" {
+  +Commission entity
+  +String category
+  +String itemName
+  +double fbo
+  +double fbs
+  +String fboFormatted
+  +String fbsFormatted
+}
+
+"carewool_profitability_calculator::Commission" o-- "carewool_profitability_calculator::Commission"
+
+class "carewool_profitability_calculator::Storage" {
+  +Storage entity
+  +String name
+  +double coefficient
+  +double baseLogistics
+  +double additionalLogistics
+  +String coefficientFormatted
+  +String baseLogisticsFormatted
+  +String additionalLogisticsFormatted
+}
+
+"carewool_profitability_calculator::Storage" o-- "carewool_profitability_calculator::Storage"
+
+class "carewool_profitability_calculator::LogisticsCalculator" {
+}
+
+"carewool_profitability_calculator::LogisticsCalculatorBase" <|-- "carewool_profitability_calculator::LogisticsCalculator"
+
+abstract class "carewool_profitability_calculator::LogisticsCalculatorBase" {
+  {static} +double minExtraLargeCost
+  +StorageSelector storageSelector
+  +SizeForm size
+  +String minExtraLargeCostFormatted
+  +Storage selected
+  +double costForSize
+  +double costForExtraLarge
+  +double totalCost
+  +String totalCostFormatted
+}
+
+"carewool_profitability_calculator::LogisticsCalculatorBase" o-- "carewool_profitability_calculator::StorageSelector"
+"carewool_profitability_calculator::LogisticsCalculatorBase" o-- "carewool_profitability_calculator::SizeForm"
+"carewool_profitability_calculator::LogisticsCalculatorBase" o-- "carewool_profitability_calculator::Storage"
+"mobx::Store" <|-- "carewool_profitability_calculator::LogisticsCalculatorBase"
+
+class "carewool_profitability_calculator::SizeForm" {
+}
+
+"carewool_profitability_calculator::SizeFormBase" <|-- "carewool_profitability_calculator::SizeForm"
+
+abstract class "carewool_profitability_calculator::SizeFormBase" {
+  +DoubleInput widthInput
+  +DoubleInput heightInput
+  +DoubleInput lengthInput
+  +double width
+  +double height
+  +double length
+  +String widthFormatted
+  +String heightFormatted
+  +String lengthFormatted
+  +double volume
+  +int volumeInLiters
+  +int overLiterCap
+  +bool isExtraLargeProduct
+  +void initListeners()
+  +void clear()
+}
+
+"carewool_profitability_calculator::SizeFormBase" o-- "carewool_profitability_calculator::DoubleInput"
+"mobx::Store" <|-- "carewool_profitability_calculator::SizeFormBase"
+
+class "carewool_profitability_calculator::StorageSelector" {
+}
+
+"carewool_profitability_calculator::StorageSelectorBase" <|-- "carewool_profitability_calculator::StorageSelector"
+
+abstract class "carewool_profitability_calculator::StorageSelectorBase" {
+  +StorageUpload upload
+  +Storage? selected
+  +dynamic search()
+}
+
+"carewool_profitability_calculator::StorageSelectorBase" o-- "carewool_profitability_calculator::StorageUpload"
+"carewool_profitability_calculator::StorageSelectorBase" o-- "carewool_profitability_calculator::Storage"
+"mobx::Store" <|-- "carewool_profitability_calculator::StorageSelectorBase"
+
+class "carewool_profitability_calculator::CommissionSelector" {
+}
+
+"carewool_profitability_calculator::CommissionSelectorBase" <|-- "carewool_profitability_calculator::CommissionSelector"
+
+abstract class "carewool_profitability_calculator::CommissionSelectorBase" {
+  +CommissionUpload upload
+  +Commission? selected
+  +dynamic search()
+}
+
+"carewool_profitability_calculator::CommissionSelectorBase" o-- "carewool_profitability_calculator::CommissionUpload"
+"carewool_profitability_calculator::CommissionSelectorBase" o-- "carewool_profitability_calculator::Commission"
+"mobx::Store" <|-- "carewool_profitability_calculator::CommissionSelectorBase"
+
+class "carewool_profitability_calculator::PricingCalculator" {
+}
+
+"carewool_profitability_calculator::PricingCalculatorBase" <|-- "carewool_profitability_calculator::PricingCalculator"
+
+abstract class "carewool_profitability_calculator::PricingCalculatorBase" {
+  +CommissionSelector commissionSelector
+  +PricingForm form
+  +Commission selected
+  +double commission
+  +double commissionSize
+  +String commissionFormatted
+  +String commissionSizeFormatted
+}
+
+"carewool_profitability_calculator::PricingCalculatorBase" o-- "carewool_profitability_calculator::CommissionSelector"
+"carewool_profitability_calculator::PricingCalculatorBase" o-- "carewool_profitability_calculator::PricingForm"
+"carewool_profitability_calculator::PricingCalculatorBase" o-- "carewool_profitability_calculator::Commission"
+"mobx::Store" <|-- "carewool_profitability_calculator::PricingCalculatorBase"
+
+class "carewool_profitability_calculator::PricingForm" {
+}
+
+"carewool_profitability_calculator::PricingFormBase" <|-- "carewool_profitability_calculator::PricingForm"
+
+abstract class "carewool_profitability_calculator::PricingFormBase" {
+  +DoubleInput customerPriceInput
+  +DiscountInput regularCustomerDiscountInput
+  +DiscountInput sellerDiscountInput
+  +double customerPrice
+  +int regularCustomerDiscount
+  +int sellerDiscount
+  +double priceBeforeRCD
+  +double price
+  +String priceBeforeRCDFormatted
+  +String priceFormatted
+  +void initListeners()
+}
+
+"carewool_profitability_calculator::PricingFormBase" o-- "carewool_profitability_calculator::DoubleInput"
+"carewool_profitability_calculator::PricingFormBase" o-- "carewool_profitability_calculator::DiscountInput"
+"mobx::Store" <|-- "carewool_profitability_calculator::PricingFormBase"
+
+class "carewool_profitability_calculator::ProfitabilityForm" {
+}
+
+"carewool_profitability_calculator::ProfitabilityFormBase" <|-- "carewool_profitability_calculator::ProfitabilityForm"
+
+abstract class "carewool_profitability_calculator::ProfitabilityFormBase" {
+  +CostPrice costPrice
+  +LogisticsCalculator logistics
+  +PricingCalculator pricing
+  +SimpleTaxationSystem selectedTax
+  +double income
+  +double expenses
+  +double taxSize
+  +double expensesWithTax
+  +double profit
+  +double profitability
+  +String taxFormatted
+  +String taxSizeFormatted
+  +String incomeFormatted
+  +String expenseProductionFormatted
+  +String expensesCommissionFormatted
+  +String expensesLogisticsFormatted
+  +String expensesTaxFormatted
+  +String expensesFormatted
+  +String expensesWithTaxFormatted
+  +String profitFormatted
+  +String profitabilityFormatted
+  +ProfitabilityCalc toEntity()
+}
+
+"carewool_profitability_calculator::ProfitabilityFormBase" o-- "carewool_profitability_calculator::CostPrice"
+"carewool_profitability_calculator::ProfitabilityFormBase" o-- "carewool_profitability_calculator::LogisticsCalculator"
+"carewool_profitability_calculator::ProfitabilityFormBase" o-- "carewool_profitability_calculator::PricingCalculator"
+"carewool_profitability_calculator::ProfitabilityFormBase" o-- "carewool_profitability_calculator::SimpleTaxationSystem"
+"mobx::Store" <|-- "carewool_profitability_calculator::ProfitabilityFormBase"
+
+class "carewool_profitability_calculator::DataLoader" {
+  -Logger _logger
+  -Isar _isar
+  +List<CostPrice> costPrices
+  +CommissionUpload? lastCommissionUpload
+  +StorageUpload? lastStorageUpload
+  +dynamic fetchData()
+}
+
+"carewool_profitability_calculator::::DataLoader" o-- "logger::Logger"
+"carewool_profitability_calculator::DataLoader" o-- "isar::Isar"
+"carewool_profitability_calculator::DataLoader" o-- "carewool_profitability_calculator::CommissionUpload"
+"carewool_profitability_calculator::DataLoader" o-- "carewool_profitability_calculator::StorageUpload"
+
+class "carewool_profitability_calculator::LoadError" {
+  +int index
+  {static} +List<LoadError> values
+  {static} +LoadError missingUploads
+}
+
+"carewool_profitability_calculator::LoadError" o-- "carewool_profitability_calculator::LoadError"
+"dart::core::Enum" <|-- "carewool_profitability_calculator::LoadError"
+
+abstract class "carewool_profitability_calculator::Formatting" {
+  {static} -NumberFormat _costFormat
+  {static} +String formatTwoFractionDigits()
+  {static} +String formatCostRu()
+  {static} +String formatPercentage()
+}
+
+"carewool_profitability_calculator::Formatting" o-- "intl::NumberFormat"
+
+class "carewool_profitability_calculator::DiscountValidator" {
+  +Set<String> validate()
+}
+
+"carewool_profitability_calculator::Validator" <|-- "carewool_profitability_calculator::DiscountValidator"
+
+class "carewool_profitability_calculator::PositiveDoubleValidator" {
+  +Set<String> validate()
+}
+
+"carewool_profitability_calculator::Validator" <|-- "carewool_profitability_calculator::PositiveDoubleValidator"
+
+class "carewool_profitability_calculator::ProfitabilityValidator" {
+  +Set<String> validate()
+}
+
+"carewool_profitability_calculator::Validator" <|-- "carewool_profitability_calculator::ProfitabilityValidator"
+
+abstract class "carewool_profitability_calculator::Validator" {
+  +Set<String> validate()
+  +String? validateOnce()
+}
+
+
+@enduml

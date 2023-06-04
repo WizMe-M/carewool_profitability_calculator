@@ -1,0 +1,317 @@
+@startuml
+set namespaceSeparator ::
+
+class "carewool_profitability_calculator::App" {
+  -AppRouter _router
+  +Widget build()
+}
+
+"carewool_profitability_calculator::App" o-- "carewool_profitability_calculator::AppRouter"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::App"
+
+class "carewool_profitability_calculator::BottomTotalBar" {
+  -Isar _isar
+  -Logger _logger
+  +CostPriceForm form
+  +Widget build()
+  +dynamic saveProduct()
+  +void onProfitabilityTap()
+}
+
+"carewool_profitability_calculator::BottomTotalBar" o-- "isar::Isar"
+"carewool_profitability_calculator::BottomTotalBar" o-- "logger::Logger"
+"carewool_profitability_calculator::BottomTotalBar" o-- "carewool_profitability_calculator::CostPriceForm"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::BottomTotalBar"
+
+class "carewool_profitability_calculator::CostPriceFormWidget" {
+  +CostPriceForm form
+  +bool isNameLocked
+  +Widget build()
+}
+
+"carewool_profitability_calculator::CostPriceFormWidget" o-- "carewool_profitability_calculator::CostPriceForm"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::CostPriceFormWidget"
+
+class "carewool_profitability_calculator::CostPriceInputWidget" {
+  +Position position
+  +CostPriceInput input
+  +Widget build()
+}
+
+"carewool_profitability_calculator::CostPriceInputWidget" o-- "carewool_profitability_calculator::Position"
+"carewool_profitability_calculator::CostPriceInputWidget" o-- "carewool_profitability_calculator::CostPriceInput"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::CostPriceInputWidget"
+
+class "carewool_profitability_calculator::EditBottomTotalBar" {
+  -Isar _isar
+  -Logger _logger
+  +EditWrap editWrap
+  +Widget build()
+  +dynamic saveChanges()
+}
+
+"carewool_profitability_calculator::EditBottomTotalBar" o-- "isar::Isar"
+"carewool_profitability_calculator::EditBottomTotalBar" o-- "logger::Logger"
+"carewool_profitability_calculator::EditBottomTotalBar" o-- "carewool_profitability_calculator::EditWrap"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::EditBottomTotalBar"
+
+class "carewool_profitability_calculator::FormBlockWidget" {
+  +FormBlock block
+  +Widget build()
+}
+
+"carewool_profitability_calculator::FormBlockWidget" o-- "carewool_profitability_calculator::FormBlock"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::FormBlockWidget"
+
+class "carewool_profitability_calculator::Position" {
+  +int index
+  {static} +List<Position> values
+  {static} +Position first
+}
+
+"carewool_profitability_calculator::Position" o-- "carewool_profitability_calculator::Position"
+"dart::core::Enum" <|-- "carewool_profitability_calculator::Position"
+
+class "carewool_profitability_calculator::CostPriceHistoryPage" {
+  -DatabaseExporter _exporter
+  -Isar _isar
+  +Widget build()
+  +dynamic onRemoveAll()
+  +void onRemoveTap()
+}
+
+"carewool_profitability_calculator::CostPriceHistoryPage" o-- "carewool_profitability_calculator::DatabaseExporter"
+"carewool_profitability_calculator::CostPriceHistoryPage" o-- "isar::Isar"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::CostPriceHistoryPage"
+
+class "carewool_profitability_calculator::CostCalculatorPage" {
+  +CostPriceForm form
+  +Widget build()
+}
+
+"carewool_profitability_calculator::CostCalculatorPage" o-- "carewool_profitability_calculator::CostPriceForm"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::CostCalculatorPage"
+
+class "carewool_profitability_calculator::DefaultPage" {
+  +Widget build()
+}
+
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::DefaultPage"
+
+class "carewool_profitability_calculator::EditCostPricePage" {
+  +EditWrap editWrap
+  +Widget build()
+}
+
+"carewool_profitability_calculator::EditCostPricePage" o-- "carewool_profitability_calculator::EditWrap"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::EditCostPricePage"
+
+class "carewool_profitability_calculator::StartUploadWidget" {
+  -DateFormat _formatter
+  +ExcelUploader uploader
+  +Widget build()
+}
+
+"carewool_profitability_calculator::StartUploadWidget" o-- "intl::DateFormat"
+"carewool_profitability_calculator::StartUploadWidget" o-- "carewool_profitability_calculator::ExcelUploader"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::StartUploadWidget"
+
+class "carewool_profitability_calculator::UploadingWidget" {
+  +ExcelUploader uploader
+  +Widget build()
+}
+
+"carewool_profitability_calculator::UploadingWidget" o-- "carewool_profitability_calculator::ExcelUploader"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::UploadingWidget"
+
+class "carewool_profitability_calculator::ExcelUploadPage" {
+  -ExcelUploader _uploader
+  +Widget build()
+}
+
+"carewool_profitability_calculator::ExcelUploadPage" o-- "carewool_profitability_calculator::ExcelUploader"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::ExcelUploadPage"
+
+class "carewool_profitability_calculator::ImportPage" {
+  -Logger _logger
+  -DatabaseImporter _importer
+  +Widget build()
+  +dynamic importData()
+}
+
+"carewool_profitability_calculator::ImportPage" o-- "logger::Logger"
+"carewool_profitability_calculator::ImportPage" o-- "carewool_profitability_calculator::DatabaseImporter"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::ImportPage"
+
+class "carewool_profitability_calculator::PricingFormWidget" {
+  +PricingForm form
+  +Widget build()
+}
+
+"carewool_profitability_calculator::PricingFormWidget" o-- "carewool_profitability_calculator::PricingForm"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::PricingFormWidget"
+
+class "carewool_profitability_calculator::CalculationsResultWidget" {
+  +ProfitabilityForm form
+  +Widget build()
+}
+
+"carewool_profitability_calculator::CalculationsResultWidget" o-- "carewool_profitability_calculator::ProfitabilityForm"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::CalculationsResultWidget"
+
+class "carewool_profitability_calculator::LogisticResultWidget" {
+  +LogisticsCalculator logistics
+  +Widget build()
+}
+
+"carewool_profitability_calculator::LogisticResultWidget" o-- "carewool_profitability_calculator::LogisticsCalculator"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::LogisticResultWidget"
+
+class "carewool_profitability_calculator::SaveButton" {
+  -Isar _isar
+  +ProfitabilityForm form
+  +Widget build()
+  +dynamic saveProfitability()
+}
+
+"carewool_profitability_calculator::SaveButton" o-- "isar::Isar"
+"carewool_profitability_calculator::SaveButton" o-- "carewool_profitability_calculator::ProfitabilityForm"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::SaveButton"
+
+class "carewool_profitability_calculator::CommissionSelectorWidget" {
+  -TextEditingController _searchController
+  +PricingCalculator pricing
+  +Widget build()
+}
+
+"carewool_profitability_calculator::CommissionSelectorWidget" o-- "flutter::TextEditingController"
+"carewool_profitability_calculator::CommissionSelectorWidget" o-- "carewool_profitability_calculator::PricingCalculator"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::CommissionSelectorWidget"
+
+class "carewool_profitability_calculator::StorageInfoWidget" {
+  +Storage storage
+  +Widget build()
+}
+
+"carewool_profitability_calculator::StorageInfoWidget" o-- "carewool_profitability_calculator::Storage"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::StorageInfoWidget"
+
+class "carewool_profitability_calculator::StorageSelectorWidget" {
+  -TextEditingController _searchController
+  +LogisticsCalculator logistics
+  +Widget build()
+}
+
+"carewool_profitability_calculator::StorageSelectorWidget" o-- "flutter::TextEditingController"
+"carewool_profitability_calculator::StorageSelectorWidget" o-- "carewool_profitability_calculator::LogisticsCalculator"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::StorageSelectorWidget"
+
+class "carewool_profitability_calculator::TaxSelectorWidget" {
+  +ProfitabilityForm form
+  +Widget build()
+}
+
+"carewool_profitability_calculator::TaxSelectorWidget" o-- "carewool_profitability_calculator::ProfitabilityForm"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::TaxSelectorWidget"
+
+class "carewool_profitability_calculator::SizeFormWidget" {
+  +SizeForm form
+  +Widget build()
+}
+
+"carewool_profitability_calculator::SizeFormWidget" o-- "carewool_profitability_calculator::SizeForm"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::SizeFormWidget"
+
+class "carewool_profitability_calculator::SizeInputWidget" {
+  +String label
+  +TextEditingController controller
+  +String? Function(String?) validate
+  +TextInputAction action
+  +Widget build()
+}
+
+"carewool_profitability_calculator::SizeInputWidget" o-- "flutter::TextEditingController"
+"carewool_profitability_calculator::SizeInputWidget" o-- "null::String Function(String)"
+"carewool_profitability_calculator::SizeInputWidget" o-- "flutter::TextInputAction"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::SizeInputWidget"
+
+class "carewool_profitability_calculator::ProfitabilityCalcHistoryPage" {
+  -DateFormat _date
+  -NumberFormat _number
+  -Isar _isar
+  +Widget build()
+  +dynamic onRemoveAll()
+  +void onRemoveTap()
+}
+
+"carewool_profitability_calculator::ProfitabilityCalcHistoryPage" o-- "intl::DateFormat"
+"carewool_profitability_calculator::ProfitabilityCalcHistoryPage" o-- "intl::NumberFormat"
+"carewool_profitability_calculator::ProfitabilityCalcHistoryPage" o-- "isar::Isar"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::ProfitabilityCalcHistoryPage"
+
+class "carewool_profitability_calculator::ProfitabilityPage" {
+  -Logger _logger
+  -ProfitabilityPdfCreator _pdf
+  -FileDialog _fileDialog
+  +ProfitabilityForm form
+  +Widget build()
+  +dynamic exportPdf()
+}
+
+"carewool_profitability_calculator::ProfitabilityPage" o-- "logger::Logger"
+"carewool_profitability_calculator::ProfitabilityPage" o-- "carewool_profitability_calculator::ProfitabilityPdfCreator"
+"carewool_profitability_calculator::ProfitabilityPage" o-- "carewool_profitability_calculator::FileDialog"
+"carewool_profitability_calculator::ProfitabilityPage" o-- "carewool_profitability_calculator::ProfitabilityForm"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::ProfitabilityPage"
+
+class "carewool_profitability_calculator::CostPriceSelectorWidget" {
+  -DateFormat _dateFormat
+  +List<CostPrice> costPrices
+  +CommissionUpload lastCommissionUpload
+  +StorageUpload lastStorageUpload
+  +Widget build()
+}
+
+"carewool_profitability_calculator::CostPriceSelectorWidget" o-- "intl::DateFormat"
+"carewool_profitability_calculator::CostPriceSelectorWidget" o-- "carewool_profitability_calculator::CommissionUpload"
+"carewool_profitability_calculator::CostPriceSelectorWidget" o-- "carewool_profitability_calculator::StorageUpload"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::CostPriceSelectorWidget"
+
+class "carewool_profitability_calculator::LoadErrorWidget" {
+  +LoadError error
+  +Widget build()
+}
+
+"carewool_profitability_calculator::LoadErrorWidget" o-- "carewool_profitability_calculator::LoadError"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::LoadErrorWidget"
+
+class "carewool_profitability_calculator::StartNewProfitabilityPage" {
+  -DataLoader _loader
+  +Widget build()
+}
+
+"carewool_profitability_calculator::StartNewProfitabilityPage" o-- "carewool_profitability_calculator::DataLoader"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::StartNewProfitabilityPage"
+
+class "carewool_profitability_calculator::SideBar" {
+  -Isar _isar
+  -ExcelUploader _uploader
+  +dynamic costPricesFuture
+  +dynamic lastUpdateFuture
+  +dynamic profitabilityCalcFuture
+  +Widget build()
+}
+
+"carewool_profitability_calculator::SideBar" o-- "isar::Isar"
+"carewool_profitability_calculator::SideBar" o-- "carewool_profitability_calculator::ExcelUploader"
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::SideBar"
+
+class "carewool_profitability_calculator::Counter" {
+  +int count
+  +Widget build()
+}
+
+"flutter::StatelessWidget" <|-- "carewool_profitability_calculator::Counter"
+
+
+@enduml
