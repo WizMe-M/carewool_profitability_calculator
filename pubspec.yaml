@@ -54,3 +54,16 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
+
+  fonts:
+    - family: PTSans
+      fonts:
+        - asset: fonts/PTSans-Regular.ttf
+          weight: 400
+        - asset: fonts/PTSans-Bold.ttf
+          weight: 700
+        - asset: fonts/PTSans-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: fonts/PTSans-Italic.ttf
+          style: italic

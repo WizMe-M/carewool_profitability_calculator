@@ -31,8 +31,8 @@ class ProfitabilityPdfCreator {
         );
 
   static Future<ProfitabilityPdfCreator> init() async {
-    var regularFont = await PdfGoogleFonts.pTSansRegular();
-    var boldFont = await PdfGoogleFonts.pTSansBold();
+    var regularFont = await fontFromAssetBundle('fonts/PTSans-Regular.ttf');
+    var boldFont = await fontFromAssetBundle('fonts/PTSans-Bold.ttf');
     var saver = ProfitabilityPdfCreator._(regularFont, boldFont);
     return saver;
   }
