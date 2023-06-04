@@ -6,16 +6,13 @@ import 'package:isar/isar.dart';
 
 import '../../../database/entity/profitability.dart';
 import '../../../domain/profitability/profitability_form.dart';
+import '../../../domain/util/formatting.dart';
 import '../../navigation/app_router.dart';
 import '../side_bar.dart';
 
 @RoutePage()
 class ProfitabilityCalcHistoryPage extends StatelessWidget {
   final DateFormat _date = DateFormat('dd.MM.yyyy HH:mm');
-  final NumberFormat _number = NumberFormat()
-    ..minimumFractionDigits = 0
-    ..maximumFractionDigits = 2;
-
   final Isar _isar = GetIt.I.get();
 
   ProfitabilityCalcHistoryPage({super.key});
@@ -85,10 +82,27 @@ class ProfitabilityCalcHistoryPage extends StatelessWidget {
                 itemCount: data.length,
                 itemBuilder: (context, index) {
                   var item = data[index];
-                  var name = item.costPrice.value?.productName;
-                  var percent = _number.format(item.profitability * 100);
+                  var name = item.costPrice.value!.productName;
+                  var storage = item.storage.value!.name;
+                  var percent = Formatting.formatPercentage(item.profitability);
                   return ListTile(
-                    title: Text('$name ($percent%)'),
+                    title: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          TextSpan(
+                            text: ' | $percent | склад "$storage"',
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                        ],
+                      ),
+                    ),
                     subtitle: Text(_date.format(item.savedDate)),
                     trailing: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
