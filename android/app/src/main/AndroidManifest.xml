@@ -3,7 +3,7 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/carewool_icon"
-        android:label="Калькулятор себестоимости"
+        android:label="Калькулятор рентабельности"
         android:requestLegacyExternalStorage="true">
         <activity
             android:name=".MainActivity"
