@@ -48,7 +48,7 @@ class CalculationsResultWidget extends StatelessWidget {
         }),
         Observer(builder: (context) {
           return Text(
-            'Прибыль: ${form.profitabilityFormatted}',
+            'Прибыль: ${form.profitFormatted}',
             style: const TextStyle(fontWeight: FontWeight.bold),
           );
         }),
